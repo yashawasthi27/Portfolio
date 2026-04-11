@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yash Awasthi | Portfolio</title>
+    <style>
+        :root {
+            /* Day Mode (enhanced from mrugesh.dev) */
+            --bg-top: #6EE7B7;
+            --bg-mid: #FED7AA;
+            --bg-bottom: #99F6E4;
+            --wave1: rgba(153, 246, 228, 0.7);
+            --wave2: rgba(153, 246, 228, 0.5);
+            --wave3: rgba(153, 246, 228, 0.3);
+            --wave4: rgba(79, 209, 197, 1);
+            --text-color: #111827;
+            --btn-color: #fbc7a1;
+            --card-bg: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Night Mode Styles */
+        body.dark-mode {
+            --bg-top: #1e1b4b;
+            --bg-mid: #312e81;
+            --bg-bottom: #111827;
+            --wave1: rgba(30, 41, 59, 0.7);
+            --wave2: rgba(30, 41, 59, 0.5);
+            --wave3: rgba(30, 41, 59, 0.3);
+            --wave4: rgba(15, 23, 42, 1);
+            --text-color: #f3f4f6;
+            --btn-color: #4f46e5;
+            --card-bg: rgba(31, 41, 55, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body,
+        html {
+            height: 100%;
+            width: 100%;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 60%, var(--bg-bottom) 100%);
+            color: var(--text-color);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: color 1s ease;
+        }
+
+        .noise-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.12;
+            mix-blend-mode: overlay;
+        }
+
+        .waves-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+            z-index: 2;
+        }
+
+        .waves {
+            position: relative;
+            width: 100%;
+            height: 15vh;
+            min-height: 100px;
+            max-height: 150px;
+        }
+
+        .parallax>use {
+            animation: move-forever 25s cubic-bezier(.55, .5, .45, .5) infinite;
+        }
+
+        .parallax>use:nth-child(1) {
+            animation-delay: -2s;
+            animation-duration: 7s;
+        }
+
+        .parallax>use:nth-child(2) {
+            animation-delay: -3s;
+            animation-duration: 10s;
+        }
+
+        .parallax>use:nth-child(3) {
+            animation-delay: -4s;
+            animation-duration: 13s;
+        }
+
+        .parallax>use:nth-child(4) {
+            animation-delay: -5s;
+            animation-duration: 20s;
+        }
+
+        @keyframes move-forever {
+            0% {
+                transform: translate3d(-90px, 0, 0);
+            }
+
+            100% {
+                transform: translate3d(85px, 0, 0);
+            }
+        }
+
+        /* Canvas Birds Sky Layer */
+        #skyCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* --- Content Container --- */
+        .container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .profile-pic {
+            width: 12rem;
+            height: 12rem;
+            border-radius: 50%;
+            border: 0.25rem solid var(--text-color);
+            background: var(--card-bg);
+            margin-bottom: 1.5rem;
+            box-shadow: 0.6rem 0.6rem 0px rgba(0, 0, 0, 0.1);
+            object-fit: cover;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -0.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tagline {
+            font-size: 1.4rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+        }
+
+        .badge {
+            background: var(--card-bg);
+            padding: 0.4rem 1rem;
+            border: 0.15rem solid var(--text-color);
+            border-radius: 0.3rem;
+            font-weight: bold;
+            box-shadow: 0.25rem 0.25rem 0px var(--text-color);
+        }
+
+        .links {
+            margin-top: 3rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .btn {
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-color);
+            background: var(--btn-color);
+            padding: 0.8rem 1.8rem;
+            font-weight: 800;
+            border: 0.2rem solid var(--text-color);
+            border-radius: 0.5rem;
+            box-shadow: 0.35rem 0.35rem 0px var(--text-color);
+            transition: 0.2s ease-in-out;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .btn:hover {
+            transform: translate(-0.2rem, -0.2rem);
+            box-shadow: 0.5rem 0.5rem 0px var(--text-color);
+            background: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        #toast {
+            visibility: hidden;
+            min-width: 12rem;
+            background-color: var(--text-color);
+            color: var(--card-bg);
+            text-align: center;
+            border-radius: 0.3rem;
+            padding: 0.8rem;
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+
+        #toast.show {
+            visibility: visible;
+            animation: fade 3s;
+        }
+
+        @keyframes fade {
+
+            0%,
+            100% {
+                bottom: 0;
+                opacity: 0;
+            }
+
+            15%,
+            85% {
+                bottom: 2rem;
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Noise grain overlay -->
+    <svg class="noise-bg" viewBox="0 0 100vw 100vh" xmlns="http://www.w3.org/2000/svg">
+        <filter id="noiseFilter">
+            <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
+        </filter>
+        <rect width="100%" height="100%" filter="url(#noiseFilter)" />
+    </svg>
+
+    <!-- Animated Waves at bottom -->
+    <div class="waves-container">
+        <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+            viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+            <defs>
+                <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+            </defs>
+            <g class="parallax">
+                <use xlink:href="#gentle-wave" x="48" y="0" fill="var(--wave1)" />
+                <use xlink:href="#gentle-wave" x="48" y="3" fill="var(--wave2)" />
+                <use xlink:href="#gentle-wave" x="48" y="5" fill="var(--wave3)" />
+                <use xlink:href="#gentle-wave" x="48" y="7" fill="var(--wave4)" />
+            </g>
+        </svg>
+    </div>
+
+    <canvas id="skyCanvas"></canvas>
+
+    <div class="container">
+        <img src="image/orignal.png" alt="Yash Awasthi" class="profile-pic">
+        <h1>Yash Awasthi</h1>
+        <p class="tagline">Aspiring Data Analyst | Python | SQL | Power BI | Excel | AI Enthusiast | learner</p>
+        <div><span class="badge">Student @ SAGE University Bhopal</span></div>
+
+        <div class="links">
+            <a href="https://www.linkedin.com/in/yashawasthi27/" target="_blank" class="btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                    <rect x="2" y="9" width="4" height="12"></rect>
+                    <circle cx="4" cy="4" r="2"></circle>
+                </svg>
+                LinkedIn
+            </a>
+            <a href="https://github.com/yashawasthi27" target="_blank" class="btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+                    </path>
+                </svg>
+                GitHub
+            </a>
+            <a href="mailto:yashonwork247@gmail.com" class="btn" id="contactBtn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                Contact
+            </a>
+        </div>
+    </div>
+
+    <div id="toast">Email copied to clipboard!</div>
+
+    <script>
+        // 1. Time-based Theme Logic
+        function updateTheme() {
+            const hour = new Date().getHours();
+            // Dark mode if time is between 6 PM (18) and 6 AM (6)
+            const isNight = hour >= 18 || hour < 6;
+
+            if (isNight) {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+        }
+
+        // Run theme check immediately
+        updateTheme();
+
+        // 2. Clipboard/Contact Logic
+        document.getElementById('contactBtn').addEventListener('click', function (e) {
+            // Prevent link from trying to open mail app immediately if you just want the copy action
+            e.preventDefault();
+            const email = "yashonwork247@gmail.com";
+
+            navigator.clipboard.writeText(email).then(() => {
+                const toast = document.getElementById("toast");
+                toast.className = "show";
+                setTimeout(() => { toast.className = ""; }, 3000);
+            });
+        });
+
+        // 3. Canvas Birds Animation (Reference: mrugesh.dev)
+        const canvas = document.getElementById('skyCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let cw, ch;
+        function resize() {
+            cw = canvas.width = window.innerWidth;
+            ch = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        const birds = Array.from({ length: 14 }, () => ({
+            x: Math.random() * cw,
+            y: Math.random() * (ch * 0.5),
+            vx: Math.random() * 1.0 + 0.5,
+            vy: (Math.random() - 0.5) * 0.2,
+            wingPhase: Math.random() * Math.PI * 2,
+            wingSpeed: Math.random() * 0.1 + 0.05,
+            size: Math.random() * 0.6 + 0.4,
+            opacity: Math.random() * 0.2 + 0.4
+        }));
+
+        function drawBirds() {
+            ctx.clearRect(0, 0, cw, ch);
+            const isNight = document.body.classList.contains('dark-mode');
+
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            birds.forEach(b => {
+                b.x += b.vx;
+                b.y += Math.sin(b.wingPhase) * 0.3 + b.vy;
+                b.wingPhase += b.wingSpeed;
+
+                if (b.x > cw + 20) {
+                    b.x = -20;
+                    b.y = Math.random() * (ch * 0.5);
+                }
+
+                // Shallower wing flap for a sleeker look
+                const wingY = Math.sin(b.wingPhase) * 4 * b.size;
+
+                ctx.beginPath();
+                ctx.moveTo(b.x - 8 * b.size, b.y - 2 * b.size);
+                ctx.quadraticCurveTo(b.x - 4 * b.size, b.y - wingY, b.x, b.y);
+                ctx.quadraticCurveTo(b.x + 4 * b.size, b.y - wingY, b.x + 8 * b.size, b.y - 2 * b.size);
+
+                ctx.strokeStyle = isNight ? `rgba(255, 255, 255, ${b.opacity})` : `rgba(0, 0, 0, ${b.opacity})`;
+                ctx.lineWidth = 1.2 * b.size + 0.2; // Thinner lines
+                ctx.stroke();
+            });
+            requestAnimationFrame(drawBirds);
+        }
+        drawBirds();
+    </script>
+
+</body>
+
+</html>

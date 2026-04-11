@@ -20,20 +20,6 @@
             --card-bg: rgba(255, 255, 255, 0.6);
         }
 
-        /* Night Mode Styles */
-        body.dark-mode {
-            --bg-top: #1e1b4b;
-            --bg-mid: #312e81;
-            --bg-bottom: #111827;
-            --wave1: rgba(30, 41, 59, 0.7);
-            --wave2: rgba(30, 41, 59, 0.5);
-            --wave3: rgba(30, 41, 59, 0.3);
-            --wave4: rgba(15, 23, 42, 1);
-            --text-color: #f3f4f6;
-            --btn-color: #4f46e5;
-            --card-bg: rgba(31, 41, 55, 0.5);
-        }
-
         * {
             margin: 0;
             padding: 0;
@@ -389,22 +375,6 @@
     <div id="toast">Email copied to clipboard!</div>
 
     <script>
-        // 1. Time-based Theme Logic
-        function updateTheme() {
-            const hour = new Date().getHours();
-            // Dark mode if time is between 6 PM (18) and 6 AM (6)
-            const isNight = hour >= 18 || hour < 6;
-
-            if (isNight) {
-                document.body.classList.add('dark-mode');
-            } else {
-                document.body.classList.remove('dark-mode');
-            }
-        }
-
-        // Run theme check immediately
-        updateTheme();
-
         // 2. Clipboard/Contact Logic
         document.getElementById('contactBtn').addEventListener('click', function (e) {
             // Prevent link from trying to open mail app immediately if you just want the copy action
@@ -443,8 +413,6 @@
 
         function drawBirds() {
             ctx.clearRect(0, 0, cw, ch);
-            const isNight = document.body.classList.contains('dark-mode');
-
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
 
@@ -466,7 +434,7 @@
                 ctx.quadraticCurveTo(b.x - 4 * b.size, b.y - wingY, b.x, b.y);
                 ctx.quadraticCurveTo(b.x + 4 * b.size, b.y - wingY, b.x + 8 * b.size, b.y - 2 * b.size);
 
-                ctx.strokeStyle = isNight ? `rgba(255, 255, 255, ${b.opacity})` : `rgba(0, 0, 0, ${b.opacity})`;
+                ctx.strokeStyle = `rgba(0, 0, 0, ${b.opacity})`;
                 ctx.lineWidth = 1.2 * b.size + 0.2; // Thinner lines
                 ctx.stroke();
             });

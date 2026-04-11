@@ -9,7 +9,7 @@ Welcome to my personal portfolio repository! This is a refined, single-page web 
 - **Flocking Birds Canvas**: A lightweight, custom-built HTML5 `<canvas>` animation of flocking birds gracefully overlapping the background.
 - **Parallax Ocean Waves**: Animated, overlapping SVG waves located at the bottom of the screen to create a calm, atmospheric parallax drift effect.
 - **Noise Texture Overlay**: The entire webpage features a sophisticated soft-grain texture achieved entirely through SVG noise filters. 
-- **Clipboard Integration**: A clean, single-click copy-to-clipboard functionality to quickly grab my email address.
+- **Clipboard Integration**: A clean, single-click copy-to-clipboard functionality to quickly grab my email addres.
 
 ## 🛠️ Tech Stack
 

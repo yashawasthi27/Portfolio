@@ -2,7 +2,7 @@
 
 Welcome to my personal portfolio repository! This is a refined, single-page web portfolio showcasing my background as an aspiring Data Analyst and AI enthusiast and Student @ SAGE University Bhopal.
 
-![Portfolio Preview](./portfolio.png)
+![Portfolio Preview](./image/portfolio.png)
 ## ✨ Features
 
 - **Dynamic Day/Night Theme**: The website intelligently uses your local system time to dynamically switch between a bright "Day Mode" (mint and peach gradients) and a sleek "Night Mode" (midnight and indigo gradients).

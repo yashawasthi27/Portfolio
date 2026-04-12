@@ -5,7 +5,7 @@ Welcome to my personal portfolio repository! This is a refined, single-page web 
 ![Portfolio Preview](./image/portfolio.png)
 ## ✨ Features
 
-- **Dynamic Day/Night Theme**: The website intelligently uses your local system time to dynamically switch between a bright "Day Mode" (mint and peach gradients) and a sleek "Night Mode" (midnight and indigo gradients).
+- **Aesthetic Peach & Mint Theme**: A vibrant and professional color palette designed for a modern, clean look.
 - **Flocking Birds Canvas**: A lightweight, custom-built HTML5 `<canvas>` animation of flocking birds gracefully overlapping the background.
 - **Parallax Ocean Waves**: Animated, overlapping SVG waves located at the bottom of the screen to create a calm, atmospheric parallax drift effect.
 - **Noise Texture Overlay**: The entire webpage features a sophisticated soft-grain texture achieved entirely through SVG noise filters. 
@@ -15,7 +15,7 @@ Welcome to my personal portfolio repository! This is a refined, single-page web 
 
 - **HTML5**
 - **CSS3** (Custom Properties, Flexbox, SVG Parallax Animations)
-- **Vanilla JavaScript** (Canvas API for mathematical bird flight patterns, Clipboard API, Date Math)
+- **Vanilla JavaScript** (Canvas API for mathematical bird flight patterns, Clipboard API)
 
 ## 🚀 How to Run locally
 

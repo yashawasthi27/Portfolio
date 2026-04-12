@@ -19,22 +19,36 @@
             --text-color: #111827;
             --btn-color: #fbc7a1;
             --card-bg: rgba(255, 255, 255, 0.6);
+            --card-blur: blur(8px);
             --bird-color: rgba(0, 0, 0, 1);
         }
 
         body.night-mode {
-            /* Night Mode (Deep Space & Cyan) */
-            --bg-top: #020617;
-            --bg-mid: #0f172a;
-            --bg-bottom: #020617;
-            --wave1: rgba(6, 182, 212, 0.3);
-            --wave2: rgba(6, 182, 212, 0.15);
-            --wave3: rgba(6, 182, 212, 0.05);
-            --wave4: #020617;
-            --text-color: #f8fafc;
-            --btn-color: #0891b2;
-            --card-bg: rgba(15, 23, 42, 0.4);
-            --bird-color: rgba(255, 255, 255, 0.7);
+            /* Night Mode (Yellow & Black Cyberpunk) */
+            --bg-top: #000000;
+            --bg-mid: #0a0a0a;
+            --bg-bottom: #000000;
+            --wave1: rgba(250, 204, 21, 0.15);
+            --wave2: rgba(250, 204, 21, 0.08);
+            --wave3: rgba(10, 10, 10, 0.8);
+            --wave4: #000000;
+            --text-color: #ffffff;
+            --btn-color: #facc15;
+            --card-bg: rgba(20, 20, 20, 0.6);
+            --bird-color: rgba(250, 204, 21, 0.8);
+        }
+
+        body.night-mode .btn:hover {
+            background: #facc15;
+            color: #000000;
+            border-color: #facc15;
+            box-shadow: 0.5rem 0.5rem 0px #ffffff;
+        }
+
+        body.night-mode .badge {
+            border-color: #facc15;
+            color: #facc15;
+            box-shadow: 0.25rem 0.25rem 0px #facc15;
         }
 
         * {
@@ -140,6 +154,7 @@
             padding: 2rem 1.5rem;
             width: 100%;
             max-width: 800px;
+            backdrop-filter: var(--card-blur);
         }
 
         .profile-pic {
@@ -466,7 +481,7 @@
                 ctx.quadraticCurveTo(b.x - 4 * b.size, b.y - wingY, b.x, b.y);
                 ctx.quadraticCurveTo(b.x + 4 * b.size, b.y - wingY, b.x + 8 * b.size, b.y - 2 * b.size);
 
-                const birdBaseColor = document.body.classList.contains('night-mode') ? '255, 255, 255' : '0, 0, 0';
+                const birdBaseColor = document.body.classList.contains('night-mode') ? '250, 204, 21' : '0, 0, 0';
                 ctx.strokeStyle = `rgba(${birdBaseColor}, ${b.opacity})`;
                 ctx.lineWidth = 1.2 * b.size + 0.2; // Thinner lines
                 ctx.stroke();

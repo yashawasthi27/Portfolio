@@ -128,16 +128,6 @@
             max-width: 800px;
         }
 
-        .profile-pic {
-            width: 12rem;
-            height: 12rem;
-            border-radius: 50%;
-            border: 0.25rem solid var(--text-color);
-            background: var(--card-bg);
-            margin-bottom: 1.5rem;
-            box-shadow: 0.6rem 0.6rem 0px rgba(0, 0, 0, 0.1);
-            object-fit: cover;
-        }
 
         h1 {
             font-size: 3.5rem;
@@ -203,10 +193,13 @@
                 padding: 1.5rem 1rem;
             }
 
+            .profile-pic-container {
+                margin-bottom: 1rem;
+            }
+
             .profile-pic {
                 width: 8.5rem;
                 height: 8.5rem;
-                margin-bottom: 1rem;
                 border-width: 0.2rem;
                 box-shadow: 0.4rem 0.4rem 0px rgba(0, 0, 0, 0.1);
             }
@@ -308,6 +301,52 @@
                 opacity: 1;
             }
         }
+
+        @keyframes reveal {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .reveal-item {
+            opacity: 0;
+            animation: reveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.3s; }
+        .delay-3 { animation-delay: 0.5s; }
+        .delay-4 { animation-delay: 0.7s; }
+        .delay-5 { animation-delay: 0.9s; }
+
+        .profile-pic-container {
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: reveal 1s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards,
+                       float 5s ease-in-out 1.2s infinite;
+        }
+
+        .profile-pic {
+            width: 12rem;
+            height: 12rem;
+            border-radius: 50%;
+            border: 0.25rem solid var(--text-color);
+            background: var(--card-bg);
+            box-shadow: 0.6rem 0.6rem 0px rgba(0, 0, 0, 0.1);
+            object-fit: cover;
+            display: block;
+        }
     </style>
 </head>
 
@@ -340,14 +379,16 @@
     <canvas id="skyCanvas"></canvas>
 
     <div class="container">
-        <img src="images/orignal.png" alt="Yash Awasthi" class="profile-pic">
-        <h1>Yash Awasthi</h1>
-        <p class="tagline">Aspiring Data Analyst | AI Enthusiast | Learner | Skilled in Python, SQL, Excel, and Power BI
+        <div class="profile-pic-container">
+            <img src="images/orignal.png" alt="Yash Awasthi" class="profile-pic">
+        </div>
+        <h1 class="reveal-item delay-2">Yash Awasthi</h1>
+        <p class="tagline reveal-item delay-3">Aspiring Data Analyst | AI Enthusiast | Learner | Skilled in Python, SQL, Excel, and Power BI
         </p>
-        <div><span class="badge">Student @ SAGE University Bhopal</span></div>
+        <div class="reveal-item delay-4"><span class="badge">Student @ SAGE University Bhopal</span></div>
 
-        <div class="links">
-            <a href="https://www.linkedin.com/in/yashawasthi27/" target="_blank" class="btn">
+        <div class="links reveal-item delay-5">
+            <a href="https://www.linkedin.com/in/yashawasthi27/" class="btn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
@@ -356,7 +397,7 @@
                 </svg>
                 LinkedIn
             </a>
-            <a href="https://github.com/yashawasthi27" target="_blank" class="btn">
+            <a href="https://github.com/yashawasthi27" class="btn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path

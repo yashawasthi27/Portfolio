@@ -17,7 +17,6 @@ Welcome to my personal portfolio repository! This is a refined, single-page web 
 - **CSS3** (Custom Properties, Flexbox, SVG Parallax Animations)
 - **Vanilla JavaScript** (Canvas API for mathematical bird flight patterns, Clipboard API)
 
-
 ## 📫 Connect with me
 
 - **LinkedIn**: [Yash Awasthi](https://www.linkedin.com/in/yashawasthi27/)

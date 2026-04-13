@@ -17,11 +17,6 @@ Welcome to my personal portfolio repository! This is a refined, single-page web 
 - **CSS3** (Custom Properties, Flexbox, SVG Parallax Animations)
 - **Vanilla JavaScript** (Canvas API for mathematical bird flight patterns, Clipboard API)
 
-## 🚀 How to Run locally
-
-1. Simply clone or download the repository to your local machine.
-2. Open the `index.html` file using any modern web browser (Google Chrome, Firefox, Safari, Edge).
-3. No build tools, extra installations, or development servers are required!
 
 ## 📫 Connect with me
 

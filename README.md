@@ -2,7 +2,7 @@
 
 Welcome to my personal portfolio repository! This is a refined, single-page web portfolio showcasing my background as an aspiring Data Analyst and AI enthusiast and Student @ SAGE University Bhopal.
 
-![Portfolio Preview](./image/portfolio.png)
+![Portfolio Preview](./images/portfolio.png)
 ## ✨ Features
 
 - **Aesthetic Peach & Mint Theme**: A vibrant and professional color palette designed for a modern, clean look.

@@ -486,6 +486,16 @@
             requestAnimationFrame(drawBirds);
         }
         drawBirds();
+
+        // 4. Re-trigger animations on back navigation
+        window.addEventListener('pageshow', function (event) {
+            const animatedElements = document.querySelectorAll('.reveal-item, .profile-pic-container');
+            animatedElements.forEach(el => {
+                el.style.animation = 'none';
+                void el.offsetWidth; // Force reflow
+                el.style.animation = ''; // Reverts to CSS animations
+            });
+        });
     </script>
 
 </body>

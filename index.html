@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Portfolio of Yash Awasthi - Aspiring Data Analyst, AI Enthusiast, and Student at SAGE University Bhopal. Expertise in Python, SQL, Excel, and Power BI.">
+    <meta name="description"
+        content="Portfolio of Yash Awasthi - Aspiring Data Analyst, AI Enthusiast, and Student at SAGE University Bhopal. Expertise in Python, SQL, Excel, and Power BI.">
     <title>Yash Awasthi | Portfolio</title>
     <link id="dynamic-favicon" rel="icon" type="image/png" href="images/title_logo.png">
     <style>
@@ -307,6 +308,7 @@
                 opacity: 0;
                 transform: translateY(30px) scale(0.95);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0) scale(1);
@@ -314,8 +316,15 @@
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
         }
 
         .reveal-item {
@@ -323,18 +332,32 @@
             animation: reveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        .delay-1 { animation-delay: 0.1s; }
-        .delay-2 { animation-delay: 0.3s; }
-        .delay-3 { animation-delay: 0.5s; }
-        .delay-4 { animation-delay: 0.7s; }
-        .delay-5 { animation-delay: 0.9s; }
+        .delay-1 {
+            animation-delay: 0.1s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.3s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.5s;
+        }
+
+        .delay-4 {
+            animation-delay: 0.7s;
+        }
+
+        .delay-5 {
+            animation-delay: 0.9s;
+        }
 
         .profile-pic-container {
             display: inline-block;
             margin-bottom: 1.5rem;
             opacity: 0;
             animation: reveal 1s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards,
-                       float 5s ease-in-out 1.2s infinite;
+                float 5s ease-in-out 1.2s infinite;
         }
 
         .profile-pic {
@@ -383,7 +406,8 @@
             <img src="images/orignal.png" alt="Yash Awasthi" class="profile-pic">
         </div>
         <h1 class="reveal-item delay-2">Yash Awasthi</h1>
-        <p class="tagline reveal-item delay-3">Aspiring Data Analyst | AI Enthusiast | Learner | Skilled in Python, SQL, Excel, and Power BI
+        <p class="tagline reveal-item delay-3">Aspiring Data Analyst | AI Enthusiast | Learner | Skilled in Python, SQL,
+            Excel, and Power BI
         </p>
         <div class="reveal-item delay-4"><span class="badge">Student @ SAGE University Bhopal</span></div>
 

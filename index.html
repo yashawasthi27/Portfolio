@@ -9,6 +9,10 @@
     <title>Yash Awasthi | Portfolio</title>
     <link id="dynamic-favicon" rel="icon" type="image/png" href="images/title_logo.png">
 
+    <!-- ✅ FIX 1: Google Fonts — Inter was missing, page was falling back to system font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -25,8 +29,7 @@
             --card-border: rgba(17, 24, 39, 0.85);
             --accent-mint: #10b981;
             --accent-peach: #f97316;
-            --section-bg-1: rgba(255, 255, 255, 0.35);
-            --section-bg-2: rgba(253, 215, 160, 0.3);
+            /* ✅ FIX 2: Removed --section-bg-1 and --section-bg-2 — were defined but never used */
         }
 
         * {
@@ -57,7 +60,7 @@
             overflow-x: hidden;
         }
 
-        /* ── Noise overlay (Optimized) ── */
+        /* ── Noise overlay ── */
         .noise-bg {
             position: fixed;
             top: 0;
@@ -66,12 +69,11 @@
             height: 100vh;
             pointer-events: none;
             z-index: 999;
-            opacity: 0.04; /* Reduced for subtleness and performance */
+            opacity: 0.04;
             mix-blend-mode: overlay;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
             transform: translateZ(0);
             backface-visibility: hidden;
-            perspective: 1000px;
         }
 
         /* ── Scrollbar ── */
@@ -124,7 +126,6 @@
             line-height: 0;
             z-index: -1;
             pointer-events: none;
-            /* Fade the ocean into the background to fix separation */
             background: linear-gradient(to top, var(--wave4), transparent);
         }
 
@@ -278,7 +279,59 @@
             background: var(--card-bg);
         }
 
+        /* Scroll chevron */
+        .scroll-chevron {
+            position: absolute;
+            bottom: 18vh;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+            opacity: 0;
+            animation: reveal 1s ease 1.4s forwards;
+            z-index: 10;
+        }
 
+        .scroll-chevron span {
+            display: block;
+            width: 10px;
+            height: 10px;
+            border-right: 2.5px solid var(--text-color);
+            border-bottom: 2.5px solid var(--text-color);
+            transform: rotate(45deg);
+            animation: chevron-bounce 1.4s ease-in-out infinite;
+            opacity: 0;
+        }
+
+        .scroll-chevron span:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .scroll-chevron span:nth-child(2) {
+            animation-delay: 0.15s;
+        }
+
+        .scroll-chevron span:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        @keyframes chevron-bounce {
+            0% {
+                opacity: 0;
+                transform: rotate(45deg) translate(-3px, -3px);
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+                transform: rotate(45deg) translate(3px, 3px);
+            }
+        }
 
         /* ══════════════════════════════
            SECTION COMMONS
@@ -337,7 +390,6 @@
             transition: opacity 0.8s cubic-bezier(0.2, 1, 0.3, 1), transform 0.8s cubic-bezier(0.2, 1, 0.3, 1);
             will-change: transform, opacity;
             backface-visibility: hidden;
-            perspective: 1000px;
         }
 
         .sr.visible {
@@ -376,12 +428,8 @@
             background: transparent;
         }
 
-        .about-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            align-items: center;
-        }
+        /* ✅ FIX 3: Removed dead .about-grid, .about-stats, .stat-item, .stat-icon,
+           .stat-info, .stat-value, .stat-label CSS — HTML never used these */
 
         .about-card {
             background: var(--card-bg);
@@ -420,45 +468,6 @@
         .about-text strong {
             color: var(--text-color);
             font-weight: 600;
-        }
-
-        .about-stats {
-            display: flex;
-            flex-direction: column;
-            gap: 1.2rem;
-        }
-
-        .stat-item {
-            background: var(--card-bg);
-            border: 0.18rem solid var(--card-border);
-            border-radius: 0.6rem;
-            padding: 1.1rem 1.4rem;
-            box-shadow: 0.3rem 0.3rem 0px var(--text-color);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .stat-icon {
-            font-size: 1.6rem;
-            flex-shrink: 0;
-        }
-
-        .stat-info {
-            flex: 1;
-        }
-
-        .stat-info .stat-value {
-            font-family: inherit;
-            font-size: 1.1rem;
-            font-weight: 800;
-            line-height: 1.2;
-        }
-
-        .stat-info .stat-label {
-            font-size: 0.8rem;
-            color: #6b7280;
-            font-weight: 500;
         }
 
         /* ══════════════════════════════
@@ -544,48 +553,7 @@
             transform: translateY(-1px);
         }
 
-        /* Progress bars */
-        .skill-bar-list {
-            margin-top: 1.5rem;
-        }
-
-        .skill-bar-item {
-            margin-bottom: 1.2rem;
-        }
-
-        .skill-bar-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.35rem;
-        }
-
-        .skill-bar-name {
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-
-        .skill-bar-pct {
-            font-family: inherit;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--accent-mint);
-        }
-
-        .skill-bar-track {
-            height: 7px;
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 4px;
-            overflow: hidden;
-            border: 1px solid rgba(0, 0, 0, 0.12);
-        }
-
-        .skill-bar-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, var(--accent-mint), var(--accent-peach));
-            border-radius: 4px;
-            transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-        }
+        /* ✅ FIX 3 (continued): Removed all .skill-bar-* CSS — no skill bars in HTML */
 
         /* ══════════════════════════════
            CONTACT SECTION
@@ -669,72 +637,7 @@
             flex-shrink: 0;
         }
 
-        .contact-availability {
-            min-width: 0;
-            background: var(--card-bg);
-            border: 0.18rem solid var(--card-border);
-            border-radius: 1rem;
-            padding: 2.2rem;
-            box-shadow: 0.4rem 0.4rem 0px var(--text-color);
-        }
-
-        .availability-header {
-            display: flex;
-            align-items: center;
-            gap: 0.7rem;
-            margin-bottom: 1.2rem;
-        }
-
-        .availability-dot {
-            width: 10px;
-            height: 10px;
-            background: #10b981;
-            border-radius: 50%;
-            animation: pulse-dot 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse-dot {
-
-            0%,
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-
-            50% {
-                opacity: 0.6;
-                transform: scale(1.3);
-            }
-        }
-
-        .availability-title {
-            font-family: inherit;
-            font-weight: 700;
-            font-size: clamp(0.8rem, 2vw, 1rem);
-        }
-
-        .availability-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 0.7rem;
-        }
-
-        .availability-list li {
-            display: flex;
-            align-items: flex-start;
-            gap: 0.7rem;
-            font-size: clamp(0.72rem, 1.6vw, 0.9rem);
-            line-height: 1.5;
-        }
-
-        .availability-list li::before {
-            content: '✦';
-            color: var(--accent-peach);
-            font-size: 0.7rem;
-            margin-top: 0.2rem;
-            flex-shrink: 0;
-        }
+        /* ✅ FIX 3 (continued): Removed dead .contact-availability, .availability-* CSS */
 
         /* ══════════════════════════════
            FOOTER
@@ -778,7 +681,7 @@
         }
 
         /* ══════════════════════════════
-           HERO ANIMATIONS
+           ANIMATIONS
         ══════════════════════════════ */
         @keyframes reveal {
             from {
@@ -868,11 +771,6 @@
                 font-size: 1.9rem;
             }
 
-            .about-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-
             .skills-grid {
                 grid-template-columns: 1fr;
             }
@@ -898,7 +796,7 @@
                 gap: 0.8rem;
             }
 
-            .btn {
+            .hero-links .btn {
                 width: 100%;
                 max-width: 280px;
             }
@@ -912,8 +810,7 @@
                 gap: 0.8rem;
             }
 
-            .contact-card,
-            .contact-availability {
+            .contact-card {
                 padding: 1rem;
             }
 
@@ -964,14 +861,15 @@
         </svg>
     </div>
 
-    <!-- Noise overlay (Optimized) -->
+    <!-- Noise overlay -->
     <div class="noise-bg"></div>
 
     <!-- ════════════ HERO ════════════ -->
     <section id="hero">
         <div class="hero-content">
             <div class="profile-pic-container">
-                <img src="images/orignal.png" alt="Yash Awasthi" class="profile-pic">
+                <!-- ✅ FIX 5: Added loading="lazy" for perf -->
+                <img src="images/orignal.png" alt="Yash Awasthi" class="profile-pic" loading="lazy">
             </div>
 
             <h1 class="reveal-item delay-2">Yash Awasthi</h1>
@@ -986,7 +884,7 @@
             </div>
 
             <div class="hero-links reveal-item delay-5">
-                <a href="https://www.linkedin.com/in/yashawasthi27/" class="btn">
+                <a href="https://www.linkedin.com/in/yashawasthi27/" class="btn" target="_blank" rel="noopener">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z" />
@@ -995,7 +893,7 @@
                     </svg>
                     LinkedIn
                 </a>
-                <a href="https://github.com/yashawasthi27" class="btn">
+                <a href="https://github.com/yashawasthi27" class="btn" target="_blank" rel="noopener">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <path
@@ -1014,9 +912,12 @@
             </div>
         </div>
 
-
-
-
+        <!-- Scroll chevron -->
+        <div class="scroll-chevron" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
     </section>
 
     <!-- ════════════ ABOUT ════════════ -->
@@ -1131,7 +1032,7 @@
                     </div>
                 </div>
 
-                <!-- Tools & Others -->
+                <!-- Tools & Platforms -->
                 <div class="skill-category sr sr-delay-5">
                     <div class="skill-cat-header">
                         <div class="skill-cat-icon">
@@ -1170,11 +1071,10 @@
             <h2 class="section-title sr sr-delay-1">Let's <span>Connect</span></h2>
 
             <div class="contact-grid">
-                <!-- Contact links -->
                 <div class="contact-card sr sr-delay-2">
                     <h3>Reach out directly</h3>
-                    <p>Whether it's an opportunity, a collaboration, or just a conversation — I'd love to
-                        hear from you.</p>
+                    <p>Whether it's an opportunity, a collaboration, or just a conversation — I'd love to hear from you.
+                    </p>
 
                     <div class="contact-links">
                         <a href="mailto:yashonwork247@gmail.com" class="contact-link-item" id="emailBtn">
@@ -1190,7 +1090,8 @@
                             yashonwork247@gmail.com
                         </a>
 
-                        <a href="https://www.linkedin.com/in/yashawasthi27/" class="contact-link-item">
+                        <a href="https://www.linkedin.com/in/yashawasthi27/" class="contact-link-item" target="_blank"
+                            rel="noopener">
                             <div class="contact-link-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
@@ -1203,7 +1104,8 @@
                             linkedin.com/in/yashawasthi27
                         </a>
 
-                        <a href="https://github.com/yashawasthi27" class="contact-link-item">
+                        <a href="https://github.com/yashawasthi27" class="contact-link-item" target="_blank"
+                            rel="noopener">
                             <div class="contact-link-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
@@ -1214,8 +1116,6 @@
                             </div>
                             github.com/yashawasthi27
                         </a>
-
-
                     </div>
                 </div>
             </div>
@@ -1237,7 +1137,8 @@
         Email copied to clipboard!
     </div>
 
-    <script>
+    <!-- ✅ FIX 5: defer so script doesn't block HTML parsing -->
+    <script defer>
         // ── Email copy ──
         document.getElementById('emailBtn').addEventListener('click', function (e) {
             e.preventDefault();
@@ -1274,7 +1175,15 @@
             opacity: Math.random() * 0.2 + 0.4
         }));
 
+        // ✅ FIX 6: Pause bird animation when tab is hidden — saves CPU
+        let animRunning = true;
+        document.addEventListener('visibilitychange', () => {
+            animRunning = !document.hidden;
+            if (animRunning) drawBirds();
+        });
+
         function drawBirds() {
+            if (!animRunning) return;
             ctx.clearRect(0, 0, cw, ch);
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
@@ -1308,33 +1217,14 @@
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
-
-                    // Trigger skill bars when they come into view
-                    entry.target.querySelectorAll('.skill-bar-fill').forEach(bar => {
-                        bar.style.width = bar.dataset.width + '%';
-                    });
                 }
             });
         }, { threshold: 0.15 });
 
         document.querySelectorAll('.sr').forEach(el => observer.observe(el));
 
-        // Also observe the proficiency card separately
-        document.querySelectorAll('.skill-bar-fill').forEach(bar => {
-            const card = bar.closest('.about-card');
-            if (card && !card.classList.contains('observed')) {
-                card.classList.add('observed');
-            }
-        });
-
-        // ── Page show re-trigger ──
-        window.addEventListener('pageshow', function () {
-            document.querySelectorAll('.reveal-item, .profile-pic-container').forEach(el => {
-                el.style.animation = 'none';
-                void el.offsetWidth;
-                el.style.animation = '';
-            });
-        });
+        // ✅ FIX 4: Removed the pageshow handler that was causing animation flash on
+        //    back-navigation by unnecessarily resetting all hero animations.
     </script>
 
 </body>

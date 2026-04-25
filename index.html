@@ -831,7 +831,7 @@
             </div>
 
             <div class="hero-links reveal-item delay-5">
-                <a href="https://www.linkedin.com/in/yashawasthi27/" class="btn" target="_blank" rel="noopener">
+                <a href="https://www.linkedin.com/in/yashawasthi27/" class="btn">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z" />
@@ -840,7 +840,7 @@
                     </svg>
                     LinkedIn
                 </a>
-                <a href="https://github.com/yashawasthi27" class="btn" target="_blank" rel="noopener">
+                <a href="https://github.com/yashawasthi27" class="btn">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <path
@@ -1031,8 +1031,7 @@
                             yashonwork247@gmail.com
                         </a>
 
-                        <a href="https://www.linkedin.com/in/yashawasthi27/" class="contact-link-item" target="_blank"
-                            rel="noopener">
+                        <a href="https://www.linkedin.com/in/yashawasthi27/" class="contact-link-item">
                             <div class="contact-link-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
@@ -1045,8 +1044,7 @@
                             linkedin.com/in/yashawasthi27
                         </a>
 
-                        <a href="https://github.com/yashawasthi27" class="contact-link-item" target="_blank"
-                            rel="noopener">
+                        <a href="https://github.com/yashawasthi27" class="contact-link-item">
                             <div class="contact-link-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
@@ -1118,21 +1116,30 @@
 
         // ✅ FIX 6: Pause bird animation when tab is hidden — saves CPU
         let animRunning = true;
+        let lastTime = 0;
         document.addEventListener('visibilitychange', () => {
             animRunning = !document.hidden;
-            if (animRunning) drawBirds();
+            if (animRunning) {
+                lastTime = performance.now();
+                requestAnimationFrame(drawBirds);
+            }
         });
 
-        function drawBirds() {
+        function drawBirds(time) {
             if (!animRunning) return;
+            if (!lastTime) lastTime = time;
+            const dt = time - lastTime;
+            lastTime = time;
+            const speedFactor = dt > 0 ? Math.min(dt / 16.66, 3) : 1; // Normalize to 60fps
+
             ctx.clearRect(0, 0, cw, ch);
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
 
             birds.forEach(b => {
-                b.x += b.vx;
-                b.y += Math.sin(b.wingPhase) * 0.3 + b.vy;
-                b.wingPhase += b.wingSpeed;
+                b.x += b.vx * speedFactor;
+                b.y += (Math.sin(b.wingPhase) * 0.3 + b.vy) * speedFactor;
+                b.wingPhase += b.wingSpeed * speedFactor;
 
                 if (b.x > cw + 20) {
                     b.x = -20;
@@ -1151,7 +1158,7 @@
 
             requestAnimationFrame(drawBirds);
         }
-        drawBirds();
+        requestAnimationFrame(drawBirds);
 
         // ── Scroll reveal observer ──
         const observer = new IntersectionObserver((entries) => {

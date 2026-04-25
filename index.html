@@ -1117,9 +1117,13 @@
 
         // ✅ FIX 6: Pause bird animation when tab is hidden — saves CPU
         let animRunning = true;
+        let birdReqId;
         document.addEventListener('visibilitychange', () => {
             animRunning = !document.hidden;
-            if (animRunning) drawBirds();
+            if (animRunning) {
+                if (birdReqId) cancelAnimationFrame(birdReqId);
+                birdReqId = requestAnimationFrame(drawBirds);
+            }
         });
 
         function drawBirds() {
@@ -1148,9 +1152,9 @@
                 ctx.stroke();
             });
 
-            requestAnimationFrame(drawBirds);
+            birdReqId = requestAnimationFrame(drawBirds);
         }
-        drawBirds();
+        birdReqId = requestAnimationFrame(drawBirds);
 
         // ── Scroll reveal observer ──
         const observer = new IntersectionObserver((entries) => {

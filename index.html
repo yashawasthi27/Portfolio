@@ -57,7 +57,7 @@
             overflow-x: hidden;
         }
 
-        /* ── Noise overlay ── */
+        /* ── Noise overlay (Optimized) ── */
         .noise-bg {
             position: fixed;
             top: 0;
@@ -66,10 +66,12 @@
             height: 100vh;
             pointer-events: none;
             z-index: 999;
-            opacity: 0.07;
+            opacity: 0.04; /* Reduced for subtleness and performance */
             mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
             transform: translateZ(0);
             backface-visibility: hidden;
+            perspective: 1000px;
         }
 
         /* ── Scrollbar ── */
@@ -198,7 +200,8 @@
             display: block;
             animation: float 5s ease-in-out 1.2s infinite;
             will-change: transform;
-            transform: translateZ(0);
+            transform: translate3d(0, 0, 0);
+            backface-visibility: hidden;
         }
 
         h1 {
@@ -331,9 +334,10 @@
         .sr {
             opacity: 0;
             transform: translate3d(0, 32px, 0);
-            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: opacity 0.8s cubic-bezier(0.2, 1, 0.3, 1), transform 0.8s cubic-bezier(0.2, 1, 0.3, 1);
             will-change: transform, opacity;
             backface-visibility: hidden;
+            perspective: 1000px;
         }
 
         .sr.visible {
@@ -960,13 +964,8 @@
         </svg>
     </div>
 
-    <!-- Noise overlay -->
-    <svg class="noise-bg" viewBox="0 0 100vw 100vh" xmlns="http://www.w3.org/2000/svg">
-        <filter id="noiseFilter">
-            <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
-        </filter>
-        <rect width="100%" height="100%" filter="url(#noiseFilter)" />
-    </svg>
+    <!-- Noise overlay (Optimized) -->
+    <div class="noise-bg"></div>
 
     <!-- ════════════ HERO ════════════ -->
     <section id="hero">
@@ -1261,7 +1260,10 @@
         window.addEventListener('resize', resize);
         resize();
 
-        const birds = Array.from({ length: 14 }, () => ({
+        const isMobile = window.innerWidth < 768;
+        const birdsCount = isMobile ? 6 : 14;
+
+        const birds = Array.from({ length: birdsCount }, () => ({
             x: Math.random() * cw,
             y: Math.random() * (ch * 0.5),
             vx: Math.random() * 1.0 + 0.5,

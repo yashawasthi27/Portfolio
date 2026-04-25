@@ -1,24 +1,997 @@
-# Yash Awasthi | Personal Portfolio
+<!DOCTYPE html>
+<html lang="en">
 
-Welcome to my personal portfolio repository! This is a refined, single-page web portfolio showcasing my background as an aspiring Data Analyst and AI enthusiast and Student @ SAGE University Bhopal.
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Portfolio of Yash Awasthi - Data Analyst in the making. Building real-world projects with Python, SQL, Power BI & Excel at SAGE University Bhopal.">
+    <title>Yash Awasthi | Portfolio</title>
+    <link id="dynamic-favicon" rel="icon" type="image/png" href="images/title_logo.png">
+    
 
-![Portfolio Preview](./images/portfolio.png)
-## ✨ Features
+    <style>
+        :root {
+            --bg-top: #6EE7B7;
+            --bg-mid: #FED7AA;
+            --bg-bottom: #99F6E4;
+            --wave1: rgba(153, 246, 228, 0.7);
+            --wave2: rgba(153, 246, 228, 0.5);
+            --wave3: rgba(153, 246, 228, 0.3);
+            --wave4: rgba(79, 209, 197, 1);
+            --text-color: #111827;
+            --btn-color: #fbc7a1;
+            --card-bg: rgba(255, 255, 255, 0.65);
+            --card-border: rgba(17, 24, 39, 0.85);
+            --accent-mint: #10b981;
+            --accent-peach: #f97316;
+            --section-bg-1: rgba(255, 255, 255, 0.35);
+            --section-bg-2: rgba(253, 215, 160, 0.3);
+        }
 
-- **Aesthetic Peach & Mint Theme**: A vibrant and professional color palette designed for a modern, clean look.
-- **Flocking Birds Canvas**: A lightweight, custom-built HTML5 `<canvas>` animation of flocking birds gracefully overlapping the background.
-- **Parallax Ocean Waves**: Animated, overlapping SVG waves located at the bottom of the screen to create a calm, atmospheric parallax drift effect.
-- **Noise Texture Overlay**: The entire webpage features a sophisticated soft-grain texture achieved entirely through SVG noise filters. 
-- **Clipboard Integration**: A clean, single-click copy-to-clipboard functionality to quickly grab my email address.
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-## 🛠️ Tech Stack
+        html { scroll-behavior: smooth; }
 
-- **HTML5**
-- **CSS3** (Custom Properties, Flexbox, SVG Parallax Animations)
-- **Vanilla JavaScript** (Canvas API for mathematical bird flight patterns, Clipboard API)
+        /* ── Fixed background layer ── */
+        .bg-fixed {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: linear-gradient(170deg, var(--bg-top) 0%, var(--bg-mid) 55%, var(--bg-bottom) 100%);
+            z-index: 0;
+        }
 
-## 📫 Connect with me
+        body {
+            font-family: 'Inter', sans-serif;
+            background: transparent;
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
 
-- **LinkedIn**: [Yash Awasthi](https://www.linkedin.com/in/yashawasthi27/)
-- **GitHub**: [@yashawasthi27](https://github.com/yashawasthi27)
-- **Email**: yashonwork247@gmail.com
+        /* ── Noise overlay ── */
+        .noise-bg {
+            position: fixed; top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            pointer-events: none; z-index: 999;
+            opacity: 0.07; mix-blend-mode: overlay;
+        }
+
+        /* ── Scrollbar ── */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--accent-mint); border-radius: 3px; }
+
+        /* ══════════════════════════════
+           HERO SECTION
+        ══════════════════════════════ */
+        #hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            padding: 2rem 1.5rem 10rem;
+            z-index: 1;
+        }
+
+        #skyCanvas {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none; z-index: 1;
+        }
+
+        .waves-container {
+            position: absolute; bottom: 0; left: 0;
+            width: 100%; overflow: hidden;
+            line-height: 0; z-index: 2;
+        }
+
+        .waves {
+            position: relative; width: 100%;
+            height: 15vh; min-height: 100px; max-height: 150px;
+        }
+
+        .parallax > use { animation: move-forever 25s cubic-bezier(.55,.5,.45,.5) infinite; }
+        .parallax > use:nth-child(1) { animation-delay: -2s; animation-duration: 7s; }
+        .parallax > use:nth-child(2) { animation-delay: -3s; animation-duration: 10s; }
+        .parallax > use:nth-child(3) { animation-delay: -4s; animation-duration: 13s; }
+        .parallax > use:nth-child(4) { animation-delay: -5s; animation-duration: 20s; }
+
+        @keyframes move-forever {
+            0%   { transform: translate3d(-90px, 0, 0); }
+            100% { transform: translate3d(85px, 0, 0); }
+        }
+
+        .hero-content {
+            position: relative; z-index: 10;
+            text-align: center; width: 100%; max-width: 820px;
+        }
+
+        .profile-pic-container {
+            display: inline-block; margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: reveal 1s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards,
+                        float 5s ease-in-out 1.2s infinite;
+        }
+
+        .profile-pic {
+            width: 12rem; height: 12rem;
+            border-radius: 50%;
+            border: 0.25rem solid var(--text-color);
+            background: var(--card-bg);
+            box-shadow: 0.6rem 0.6rem 0px rgba(0,0,0,0.12);
+            object-fit: cover; display: block;
+        }
+
+        h1 {
+            font-family: inherit;
+            font-size: 3.6rem; font-weight: 800;
+            letter-spacing: -0.08rem;
+            line-height: 1.15; margin-bottom: 0.6rem;
+        }
+
+        .tagline {
+            font-size: 1.15rem; font-weight: 400;
+            margin-bottom: 1.5rem; line-height: 1.6;
+            max-width: 560px; margin-left: auto; margin-right: auto;
+            color: #1f2937;
+        }
+
+        .badge {
+            background: var(--card-bg);
+            padding: 0.4rem 1rem;
+            border: 0.15rem solid var(--text-color);
+            border-radius: 0.3rem;
+            font-family: inherit;
+            font-weight: 700; font-size: 0.9rem;
+            box-shadow: 0.25rem 0.25rem 0px var(--text-color);
+            display: inline-block;
+        }
+
+        .hero-links {
+            margin-top: 2.5rem;
+            display: flex; gap: 1rem;
+            justify-content: center; flex-wrap: wrap;
+        }
+
+        .btn {
+            cursor: pointer; text-decoration: none;
+            color: var(--text-color);
+            background: var(--btn-color);
+            padding: 0.75rem 1.7rem;
+            font-family: inherit;
+            font-weight: 700; font-size: 0.95rem;
+            border: 0.2rem solid var(--text-color);
+            border-radius: 0.5rem;
+            box-shadow: 0.35rem 0.35rem 0px var(--text-color);
+            transition: 0.18s ease-in-out;
+            display: flex; align-items: center;
+            gap: 0.5rem; justify-content: center;
+        }
+
+        .btn:hover {
+            transform: translate(-0.2rem, -0.2rem);
+            box-shadow: 0.55rem 0.55rem 0px var(--text-color);
+            background: var(--card-bg);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 0.2rem solid var(--text-color);
+        }
+
+        .btn-outline:hover { background: var(--card-bg); }
+
+        .scroll-hint {
+            position: absolute; bottom: 18vh; left: 50%;
+            transform: translateX(-50%);
+            z-index: 10; display: flex; flex-direction: column;
+            align-items: center; gap: 0.4rem;
+            opacity: 0; animation: reveal 1s ease 2s forwards;
+        }
+
+        .scroll-hint span {
+            font-size: 0.75rem; font-weight: 600;
+            letter-spacing: 0.12rem; text-transform: uppercase;
+            color: #374151;
+        }
+
+        .scroll-arrow {
+            animation: bounce 1.5s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(5px); }
+        }
+
+        /* ══════════════════════════════
+           SECTION COMMONS
+        ══════════════════════════════ */
+        .section {
+            position: relative;
+            padding: 6rem 2rem;
+            z-index: 1;
+        }
+
+        .section-inner {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-family: inherit;
+            font-size: 0.75rem; font-weight: 700;
+            letter-spacing: 0.2rem; text-transform: uppercase;
+            color: var(--accent-mint);
+            margin-bottom: 0.6rem;
+            display: block;
+        }
+
+        .section-title {
+            font-family: inherit;
+            font-size: 2.4rem; font-weight: 800;
+            letter-spacing: -0.05rem; line-height: 1.2;
+            margin-bottom: 2.5rem;
+        }
+
+        .section-title span {
+            position: relative; display: inline-block;
+        }
+
+        .section-title span::after {
+            content: '';
+            position: absolute; bottom: -4px; left: 0;
+            width: 100%; height: 4px;
+            background: var(--accent-peach);
+            border-radius: 2px;
+        }
+
+        /* Scroll reveal */
+        .sr { opacity: 0; transform: translateY(32px); transition: opacity 0.7s ease, transform 0.7s ease; }
+        .sr.visible { opacity: 1; transform: translateY(0); }
+        .sr-delay-1 { transition-delay: 0.1s; }
+        .sr-delay-2 { transition-delay: 0.2s; }
+        .sr-delay-3 { transition-delay: 0.3s; }
+        .sr-delay-4 { transition-delay: 0.4s; }
+        .sr-delay-5 { transition-delay: 0.5s; }
+        .sr-delay-6 { transition-delay: 0.6s; }
+
+        /* ══════════════════════════════
+           ABOUT SECTION
+        ══════════════════════════════ */
+        #about {
+            background: transparent;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .about-card {
+            background: var(--card-bg);
+            border: 0.18rem solid var(--card-border);
+            border-radius: 1rem;
+            padding: 2.2rem;
+            box-shadow: 0.4rem 0.4rem 0px var(--text-color);
+            position: relative;
+        }
+
+        .about-card .corner-badge {
+            position: absolute; top: -0.8rem; right: 1.2rem;
+            background: var(--btn-color);
+            border: 0.15rem solid var(--text-color);
+            border-radius: 0.3rem;
+            padding: 0.2rem 0.7rem;
+            font-family: inherit;
+            font-size: 0.75rem; font-weight: 700;
+            box-shadow: 0.2rem 0.2rem 0px var(--text-color);
+        }
+
+        .about-text p {
+            font-size: 1rem; line-height: 1.8;
+            margin-bottom: 1rem; color: #1f2937;
+        }
+
+        .about-text p:last-child { margin-bottom: 0; }
+
+        .about-text strong {
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .about-stats {
+            display: flex; flex-direction: column; gap: 1.2rem;
+        }
+
+        .stat-item {
+            background: var(--card-bg);
+            border: 0.18rem solid var(--card-border);
+            border-radius: 0.6rem;
+            padding: 1.1rem 1.4rem;
+            box-shadow: 0.3rem 0.3rem 0px var(--text-color);
+            display: flex; align-items: center; gap: 1rem;
+        }
+
+        .stat-icon {
+            font-size: 1.6rem;
+            flex-shrink: 0;
+        }
+
+        .stat-info { flex: 1; }
+
+        .stat-info .stat-value {
+            font-family: inherit;
+            font-size: 1.1rem; font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .stat-info .stat-label {
+            font-size: 0.8rem; color: #6b7280; font-weight: 500;
+        }
+
+        /* ══════════════════════════════
+           SKILLS SECTION
+        ══════════════════════════════ */
+        #skills {
+            background: transparent;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.4rem;
+        }
+
+        .skill-category {
+            background: var(--card-bg);
+            border: 0.18rem solid var(--card-border);
+            border-radius: 0.8rem;
+            padding: 1.6rem;
+            box-shadow: 0.35rem 0.35rem 0px var(--text-color);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .skill-category:hover {
+            transform: translate(-0.15rem, -0.15rem);
+            box-shadow: 0.5rem 0.5rem 0px var(--text-color);
+        }
+
+        .skill-cat-header {
+            display: flex; align-items: center; gap: 0.7rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .skill-cat-icon {
+            font-size: 1.4rem;
+            background: var(--btn-color);
+            border: 0.15rem solid var(--text-color);
+            border-radius: 0.4rem;
+            width: 2.4rem; height: 2.4rem;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0.15rem 0.15rem 0px var(--text-color);
+            flex-shrink: 0;
+        }
+
+        .skill-cat-name {
+            font-family: inherit;
+            font-size: 0.95rem; font-weight: 700;
+        }
+
+        .skill-tags {
+            display: flex; flex-wrap: wrap; gap: 0.5rem;
+        }
+
+        .skill-tag {
+            background: rgba(255,255,255,0.7);
+            border: 0.12rem solid rgba(17,24,39,0.5);
+            border-radius: 0.3rem;
+            padding: 0.3rem 0.7rem;
+            font-size: 0.8rem; font-weight: 600;
+            transition: all 0.15s ease;
+            cursor: default;
+        }
+
+        .skill-tag:hover {
+            background: var(--btn-color);
+            border-color: var(--text-color);
+            transform: translateY(-1px);
+        }
+
+        /* Progress bars */
+        .skill-bar-list {
+            margin-top: 1.5rem;
+        }
+
+        .skill-bar-item {
+            margin-bottom: 1.2rem;
+        }
+
+        .skill-bar-header {
+            display: flex; justify-content: space-between;
+            margin-bottom: 0.35rem;
+        }
+
+        .skill-bar-name {
+            font-size: 0.85rem; font-weight: 600;
+        }
+
+        .skill-bar-pct {
+            font-family: inherit;
+            font-size: 0.8rem; font-weight: 700;
+            color: var(--accent-mint);
+        }
+
+        .skill-bar-track {
+            height: 7px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.12);
+        }
+
+        .skill-bar-fill {
+            height: 100%; width: 0%;
+            background: linear-gradient(90deg, var(--accent-mint), var(--accent-peach));
+            border-radius: 4px;
+            transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* ══════════════════════════════
+           CONTACT SECTION
+        ══════════════════════════════ */
+        #contact {
+            background: transparent;
+            padding-bottom: 8rem;
+            overflow: hidden;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            align-items: start;
+            min-width: 0;
+        }
+
+        .contact-card {
+            background: var(--card-bg);
+            border: 0.18rem solid var(--card-border);
+            border-radius: 1rem;
+            padding: 2.2rem;
+            box-shadow: 0.4rem 0.4rem 0px var(--text-color);
+            min-width: 0;
+        }
+
+        .contact-card h3 {
+            font-family: inherit;
+            font-size: clamp(0.9rem, 2.5vw, 1.2rem); font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-card p {
+            font-size: clamp(0.75rem, 1.8vw, 0.9rem); color: #4b5563; line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-links {
+            display: flex; flex-direction: column; gap: 0.8rem;
+        }
+
+        .contact-link-item {
+            display: flex; align-items: center; gap: 0.9rem;
+            padding: 0.85rem 1.1rem;
+            background: rgba(255,255,255,0.6);
+            border: 0.15rem solid var(--card-border);
+            border-radius: 0.6rem;
+            text-decoration: none; color: var(--text-color);
+            font-weight: 600; font-size: clamp(0.7rem, 1.6vw, 0.9rem);
+            box-shadow: 0.2rem 0.2rem 0px var(--text-color);
+            transition: 0.18s ease;
+            word-break: break-all;
+            min-width: 0;
+        }
+
+        .contact-link-item:hover {
+            transform: translate(-0.15rem, -0.15rem);
+            box-shadow: 0.35rem 0.35rem 0px var(--text-color);
+            background: var(--btn-color);
+        }
+
+        .contact-link-icon {
+            width: 2rem; height: 2rem;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--btn-color);
+            border: 0.12rem solid var(--text-color);
+            border-radius: 0.35rem;
+            flex-shrink: 0;
+        }
+
+        .contact-availability {
+            min-width: 0;
+            background: var(--card-bg);
+            border: 0.18rem solid var(--card-border);
+            border-radius: 1rem;
+            padding: 2.2rem;
+            box-shadow: 0.4rem 0.4rem 0px var(--text-color);
+        }
+
+        .availability-header {
+            display: flex; align-items: center; gap: 0.7rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .availability-dot {
+            width: 10px; height: 10px;
+            background: #10b981; border-radius: 50%;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.3); }
+        }
+
+        .availability-title {
+            font-family: inherit;
+            font-weight: 700; font-size: clamp(0.8rem, 2vw, 1rem);
+        }
+
+        .availability-list {
+            list-style: none; display: flex;
+            flex-direction: column; gap: 0.7rem;
+        }
+
+        .availability-list li {
+            display: flex; align-items: flex-start; gap: 0.7rem;
+            font-size: clamp(0.72rem, 1.6vw, 0.9rem); line-height: 1.5;
+        }
+
+        .availability-list li::before {
+            content: '✦';
+            color: var(--accent-peach);
+            font-size: 0.7rem; margin-top: 0.2rem;
+            flex-shrink: 0;
+        }
+
+        /* ══════════════════════════════
+           FOOTER
+        ══════════════════════════════ */
+        footer {
+            text-align: center; padding: 2rem;
+            border-top: 1px solid rgba(17,24,39,0.12);
+            font-size: 0.8rem; color: #6b7280;
+        }
+
+        footer strong { color: var(--text-color); font-weight: 700; }
+
+        /* ══════════════════════════════
+           TOAST
+        ══════════════════════════════ */
+        #toast {
+            visibility: hidden;
+            min-width: 14rem;
+            background-color: var(--text-color);
+            color: #fff;
+            text-align: center;
+            border-radius: 0.4rem;
+            padding: 0.8rem 1.2rem;
+            position: fixed;
+            bottom: 2rem; left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            font-size: 0.9rem; font-weight: 600;
+        }
+
+        #toast.show {
+            visibility: visible;
+            animation: fade 3s;
+        }
+
+        /* ══════════════════════════════
+           HERO ANIMATIONS
+        ══════════════════════════════ */
+        @keyframes reveal {
+            from { opacity: 0; transform: translateY(28px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50%       { transform: translateY(-10px); }
+        }
+
+        @keyframes fade {
+            0%, 100% { bottom: 0; opacity: 0; }
+            15%, 85% { bottom: 2rem; opacity: 1; }
+        }
+
+        .reveal-item { opacity: 0; animation: reveal 1s cubic-bezier(0.16,1,0.3,1) forwards; }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.3s; }
+        .delay-3 { animation-delay: 0.5s; }
+        .delay-4 { animation-delay: 0.7s; }
+        .delay-5 { animation-delay: 0.9s; }
+        .delay-6 { animation-delay: 1.1s; }
+
+        /* ══════════════════════════════
+           RESPONSIVE
+        ══════════════════════════════ */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.4rem; }
+            .tagline { font-size: 1rem; }
+            .section { padding: 4rem 1.2rem; }
+            .section-title { font-size: 1.9rem; }
+
+            .about-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+            .skills-grid { grid-template-columns: 1fr; }
+
+            .profile-pic { width: 9rem; height: 9rem; }
+            .waves { height: 10vh; min-height: 60px; }
+
+            .btn { font-size: 0.9rem; padding: 0.65rem 1.3rem; }
+            .hero-links { flex-direction: column; align-items: center; gap: 0.8rem; }
+            .btn { width: 100%; max-width: 280px; }
+
+            #contact { padding-left: 0.6rem; padding-right: 0.6rem; }
+            .contact-grid { gap: 0.8rem; }
+            .contact-card, .contact-availability { padding: 1rem; }
+            .contact-link-item { padding: 0.6rem 0.7rem; gap: 0.5rem; }
+            .contact-link-icon { width: 1.6rem; height: 1.6rem; flex-shrink: 0; }
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 2rem; }
+            .profile-pic { width: 7.5rem; height: 7.5rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Fixed background — never scrolls -->
+    <div class="bg-fixed"></div>
+
+    <!-- Noise overlay -->
+    <svg class="noise-bg" viewBox="0 0 100vw 100vh" xmlns="http://www.w3.org/2000/svg">
+        <filter id="noiseFilter">
+            <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+        </filter>
+        <rect width="100%" height="100%" filter="url(#noiseFilter)"/>
+    </svg>
+
+    <!-- ════════════ HERO ════════════ -->
+    <section id="hero">
+        <canvas id="skyCanvas"></canvas>
+
+        <div class="hero-content">
+            <div class="profile-pic-container">
+                <img src="images/orignal.png" alt="Yash Awasthi" class="profile-pic">
+            </div>
+
+            <h1 class="reveal-item delay-2">Yash Awasthi</h1>
+
+            <p class="tagline reveal-item delay-3">
+                Data Analyst in the making — building real-world projects with<br>
+                Python, SQL, Power BI &amp; Excel
+            </p>
+
+            <div class="reveal-item delay-4">
+                <span class="badge">Student @ SAGE University Bhopal · BCA (AI/DS) · 2nd Year</span>
+            </div>
+
+            <div class="hero-links reveal-item delay-5">
+                <a href="https://www.linkedin.com/in/yashawasthi27/" class="btn" target="_blank" rel="noopener">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>
+                    </svg>
+                    LinkedIn
+                </a>
+                <a href="https://github.com/yashawasthi27" class="btn" target="_blank" rel="noopener">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                    </svg>
+                    GitHub
+                </a>
+                <a href="#contact" class="btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+                    </svg>
+                    Contact Me
+                </a>
+            </div>
+        </div>
+
+        <!-- Scroll hint -->
+        <div class="scroll-hint">
+            <span>Scroll</span>
+            <div class="scroll-arrow">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <polyline points="6 9 12 15 18 9" stroke="#374151" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Waves -->
+        <div class="waves-container">
+            <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+                <defs>
+                    <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"/>
+                </defs>
+                <g class="parallax">
+                    <use xlink:href="#gentle-wave" x="48" y="0" fill="var(--wave1)"/>
+                    <use xlink:href="#gentle-wave" x="48" y="3" fill="var(--wave2)"/>
+                    <use xlink:href="#gentle-wave" x="48" y="5" fill="var(--wave3)"/>
+                    <use xlink:href="#gentle-wave" x="48" y="7" fill="var(--wave4)"/>
+                </g>
+            </svg>
+        </div>
+    </section>
+
+    <!-- ════════════ ABOUT ════════════ -->
+    <section id="about" class="section">
+        <div class="section-inner">
+            <span class="section-label sr">About me</span>
+            <h2 class="section-title sr sr-delay-1">Who I <span>Am</span></h2>
+
+            <div class="about-card sr sr-delay-2">
+                <span class="corner-badge">👋 Hello there</span>
+                <div class="about-text">
+                    <p>
+                        I'm <strong>Yash Awasthi</strong>, a 2nd-year BCA (AI &amp; Data Science) student at
+                        <strong>SAGE University, Bhopal</strong> — passionate about turning raw data into
+                        meaningful insights.
+                    </p>
+                    <p>
+                        I enjoy working across the full analytics stack: writing clean SQL queries, wrangling
+                        data with Python and Pandas, and crafting visual dashboards in Power BI and Excel
+                        that actually tell a story.
+                    </p>
+                    <p>
+                        My goal is to land an <strong>entry-level Data Analyst role</strong> where I can
+                        contribute to data-driven decisions while continuing to grow my technical toolkit —
+                        one real-world project at a time.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ════════════ SKILLS ════════════ -->
+    <section id="skills" class="section">
+        <div class="section-inner">
+            <span class="section-label sr">What I work with</span>
+            <h2 class="section-title sr sr-delay-1">Tech <span>Skills</span></h2>
+
+            <div class="skills-grid">
+                <!-- Languages & Libraries -->
+                <div class="skill-category sr sr-delay-2">
+                    <div class="skill-cat-header">
+                        <div class="skill-cat-icon">🐍</div>
+                        <div class="skill-cat-name">Languages &amp; Libraries</div>
+                    </div>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">SQL</span>
+                        <span class="skill-tag">Pandas</span>
+                        <span class="skill-tag">NumPy</span>
+                        <span class="skill-tag">Matplotlib</span>
+                    </div>
+                </div>
+
+                <!-- BI & Visualization -->
+                <div class="skill-category sr sr-delay-3">
+                    <div class="skill-cat-header">
+                        <div class="skill-cat-icon">📊</div>
+                        <div class="skill-cat-name">BI &amp; Visualization</div>
+                    </div>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Power BI</span>
+                        <span class="skill-tag">DAX</span>
+                        <span class="skill-tag">Tableau</span>
+                        <span class="skill-tag">Excel</span>
+                        <span class="skill-tag">Pivot Tables</span>
+                    </div>
+                </div>
+
+                <!-- Databases -->
+                <div class="skill-category sr sr-delay-4">
+                    <div class="skill-cat-header">
+                        <div class="skill-cat-icon">🗄️</div>
+                        <div class="skill-cat-name">Databases</div>
+                    </div>
+                    <div class="skill-tags">
+                        <span class="skill-tag">PostgreSQL</span>
+                        <span class="skill-tag">MySQL</span>
+                        <span class="skill-tag">Window Functions</span>
+                        <span class="skill-tag">CTEs</span>
+                        <span class="skill-tag">Joins</span>
+                    </div>
+                </div>
+
+                <!-- Tools & Others -->
+                <div class="skill-category sr sr-delay-5">
+                    <div class="skill-cat-header">
+                        <div class="skill-cat-icon">⚙️</div>
+                        <div class="skill-cat-name">Tools &amp; Platforms</div>
+                    </div>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Git &amp; GitHub</span>
+                        <span class="skill-tag">VS Code</span>
+                        <span class="skill-tag">Jupyter</span>
+                        <span class="skill-tag">Google Colab</span>
+                        <span class="skill-tag">Canva</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ════════════ CONTACT ════════════ -->
+    <section id="contact" class="section">
+        <div class="section-inner">
+            <span class="section-label sr">Get in touch</span>
+            <h2 class="section-title sr sr-delay-1">Let's <span>Connect</span></h2>
+
+            <div class="contact-grid">
+                <!-- Contact links -->
+                <div class="contact-card sr sr-delay-2">
+                    <h3>Reach out directly</h3>
+                    <p>Whether it's an opportunity, a collaboration, or just a conversation about data — I'd love to hear from you.</p>
+
+                    <div class="contact-links">
+                        <a href="mailto:yashonwork247@gmail.com" class="contact-link-item" id="emailBtn">
+                            <div class="contact-link-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+                                </svg>
+                            </div>
+                            yashonwork247@gmail.com
+                        </a>
+
+                        <a href="https://www.linkedin.com/in/yashawasthi27/" target="_blank" rel="noopener" class="contact-link-item">
+                            <div class="contact-link-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>
+                                </svg>
+                            </div>
+                            linkedin.com/in/yashawasthi27
+                        </a>
+
+                        <a href="https://github.com/yashawasthi27" target="_blank" rel="noopener" class="contact-link-item">
+                            <div class="contact-link-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                                </svg>
+                            </div>
+                            github.com/yashawasthi27
+                        </a>
+
+                        <a href="https://yashawasthi27.github.io/Portfolio/" target="_blank" rel="noopener" class="contact-link-item">
+                            <div class="contact-link-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                                </svg>
+                            </div>
+                            yashawasthi27.github.io/Portfolio
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>Built with care by <strong>Yash Awasthi</strong> &nbsp;·&nbsp; © 2025 &nbsp;·&nbsp; Bhopal, India</p>
+    </footer>
+
+    <!-- Toast -->
+    <div id="toast">📋 Email copied to clipboard!</div>
+
+    <script>
+        // ── Email copy ──
+        document.getElementById('emailBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            navigator.clipboard.writeText('yashonwork247@gmail.com').then(() => {
+                const toast = document.getElementById('toast');
+                toast.className = 'show';
+                setTimeout(() => { toast.className = ''; }, 3000);
+            });
+        });
+
+        // ── Canvas birds ──
+        const canvas = document.getElementById('skyCanvas');
+        const ctx    = canvas.getContext('2d');
+        let cw, ch;
+
+        function resize() {
+            cw = canvas.width  = window.innerWidth;
+            ch = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        const birds = Array.from({ length: 14 }, () => ({
+            x: Math.random() * cw,
+            y: Math.random() * (ch * 0.5),
+            vx: Math.random() * 1.0 + 0.5,
+            vy: (Math.random() - 0.5) * 0.2,
+            wingPhase: Math.random() * Math.PI * 2,
+            wingSpeed: Math.random() * 0.1 + 0.05,
+            size: Math.random() * 0.6 + 0.4,
+            opacity: Math.random() * 0.2 + 0.4
+        }));
+
+        function drawBirds() {
+            ctx.clearRect(0, 0, cw, ch);
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            birds.forEach(b => {
+                b.x += b.vx;
+                b.y += Math.sin(b.wingPhase) * 0.3 + b.vy;
+                b.wingPhase += b.wingSpeed;
+
+                if (b.x > cw + 20) {
+                    b.x = -20;
+                    b.y = Math.random() * (ch * 0.5);
+                }
+
+                const wingY = Math.sin(b.wingPhase) * 4 * b.size;
+                ctx.beginPath();
+                ctx.moveTo(b.x - 8 * b.size, b.y - 2 * b.size);
+                ctx.quadraticCurveTo(b.x - 4 * b.size, b.y - wingY, b.x, b.y);
+                ctx.quadraticCurveTo(b.x + 4 * b.size, b.y - wingY, b.x + 8 * b.size, b.y - 2 * b.size);
+                ctx.strokeStyle = `rgba(0,0,0,${b.opacity})`;
+                ctx.lineWidth = 1.2 * b.size + 0.2;
+                ctx.stroke();
+            });
+
+            requestAnimationFrame(drawBirds);
+        }
+        drawBirds();
+
+        // ── Scroll reveal observer ──
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+
+                    // Trigger skill bars when they come into view
+                    entry.target.querySelectorAll('.skill-bar-fill').forEach(bar => {
+                        bar.style.width = bar.dataset.width + '%';
+                    });
+                }
+            });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('.sr').forEach(el => observer.observe(el));
+
+        // Also observe the proficiency card separately
+        document.querySelectorAll('.skill-bar-fill').forEach(bar => {
+            const card = bar.closest('.about-card');
+            if (card && !card.classList.contains('observed')) {
+                card.classList.add('observed');
+            }
+        });
+
+        // ── Page show re-trigger ──
+        window.addEventListener('pageshow', function() {
+            document.querySelectorAll('.reveal-item, .profile-pic-container').forEach(el => {
+                el.style.animation = 'none';
+                void el.offsetWidth;
+                el.style.animation = '';
+            });
+        });
+    </script>
+
+</body>
+</html>

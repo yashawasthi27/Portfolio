@@ -12,7 +12,9 @@
     <!-- ✅ FIX 1: Google Fonts — Inter was missing, page was falling back to system font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
 
     <style>
         :root {
@@ -54,7 +56,7 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Epilogue', sans-serif;
             background: transparent;
             color: var(--text-color);
             overflow-x: hidden;
@@ -208,7 +210,7 @@
         h1 {
             font-family: inherit;
             font-size: 3.6rem;
-            font-weight: 800;
+            font-weight: 900;
             letter-spacing: -0.08rem;
             line-height: 1.15;
             margin-bottom: 0.6rem;
@@ -279,59 +281,6 @@
             background: var(--card-bg);
         }
 
-        /* Scroll chevron */
-        .scroll-chevron {
-            position: absolute;
-            bottom: 18vh;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.3rem;
-            opacity: 0;
-            animation: reveal 1s ease 1.4s forwards;
-            z-index: 10;
-        }
-
-        .scroll-chevron span {
-            display: block;
-            width: 10px;
-            height: 10px;
-            border-right: 2.5px solid var(--text-color);
-            border-bottom: 2.5px solid var(--text-color);
-            transform: rotate(45deg);
-            animation: chevron-bounce 1.4s ease-in-out infinite;
-            opacity: 0;
-        }
-
-        .scroll-chevron span:nth-child(1) {
-            animation-delay: 0s;
-        }
-
-        .scroll-chevron span:nth-child(2) {
-            animation-delay: 0.15s;
-        }
-
-        .scroll-chevron span:nth-child(3) {
-            animation-delay: 0.3s;
-        }
-
-        @keyframes chevron-bounce {
-            0% {
-                opacity: 0;
-                transform: rotate(45deg) translate(-3px, -3px);
-            }
-
-            50% {
-                opacity: 1;
-            }
-
-            100% {
-                opacity: 0;
-                transform: rotate(45deg) translate(3px, 3px);
-            }
-        }
 
         /* ══════════════════════════════
            SECTION COMMONS
@@ -912,12 +861,6 @@
             </div>
         </div>
 
-        <!-- Scroll chevron -->
-        <div class="scroll-chevron" aria-hidden="true">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
     </section>
 
     <!-- ════════════ ABOUT ════════════ -->

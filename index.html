@@ -98,10 +98,9 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
             overflow: hidden;
-            padding: 4rem 1.5rem 15vh;
+            padding: 4rem 1.5rem 2rem;
             z-index: 1;
         }
 
@@ -179,6 +178,7 @@
             text-align: center;
             width: 100%;
             max-width: 820px;
+            margin: auto 0;
         }
 
         .profile-pic-container {
@@ -281,10 +281,8 @@
 
         /* ── Scroll Guider ── */
         .scroll-guider-container {
-            position: absolute;
-            bottom: 2rem;
-            left: 0;
-            width: 100%;
+            position: relative;
+            margin-top: 2rem;
             display: flex;
             justify-content: center;
             z-index: 10;
@@ -832,11 +830,7 @@
                 flex-shrink: 0;
             }
 
-            .scroll-guider-container {
-                position: relative;
-                bottom: auto;
-                margin-top: 2rem;
-            }
+            /* scroll-guider-container mobile override removed as it's now handled by default flex layout */
         }
 
         @media (max-width: 480px) {

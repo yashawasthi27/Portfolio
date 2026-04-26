@@ -71,7 +71,6 @@
             pointer-events: none;
             z-index: 999;
             opacity: 0.04;
-            mix-blend-mode: overlay;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
             transform: translateZ(0);
             backface-visibility: hidden;
@@ -248,7 +247,7 @@
             border: 0.2rem solid var(--text-color);
             border-radius: 0.5rem;
             box-shadow: 0.35rem 0.35rem 0px var(--text-color);
-            transition: 0.18s ease-in-out;
+            transition: transform 0.2s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.2, 1, 0.3, 1), background-color 0.2s cubic-bezier(0.2, 1, 0.3, 1);
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -386,7 +385,6 @@
             opacity: 0;
             transform: translate3d(0, 32px, 0);
             transition: opacity 0.8s cubic-bezier(0.2, 1, 0.3, 1), transform 0.8s cubic-bezier(0.2, 1, 0.3, 1);
-            will-change: transform, opacity;
             backface-visibility: hidden;
         }
 
@@ -541,7 +539,7 @@
             padding: 0.3rem 0.7rem;
             font-size: 0.8rem;
             font-weight: 600;
-            transition: all 0.15s ease;
+            transition: transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
             cursor: default;
         }
 
@@ -612,7 +610,7 @@
             font-weight: 600;
             font-size: clamp(0.7rem, 1.6vw, 0.9rem);
             box-shadow: 0.2rem 0.2rem 0px var(--text-color);
-            transition: 0.18s ease;
+            transition: transform 0.2s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.2, 1, 0.3, 1), background-color 0.2s cubic-bezier(0.2, 1, 0.3, 1);
             word-break: break-all;
             min-width: 0;
         }
@@ -871,8 +869,8 @@
     <section id="hero">
         <div class="hero-content">
             <div class="profile-pic-container">
-                <!-- ✅ FIX 5: Added loading="lazy" for perf -->
-                <img src="images/orignal.png" alt="Yash Awasthi" class="profile-pic" loading="lazy">
+                <!-- ✅ FIX 5: Removed lazy loading for above-the-fold image for better LCP -->
+                <img src="images/orignal.png" alt="Yash Awasthi" class="profile-pic" fetchpriority="high">
             </div>
 
             <h1 class="reveal-item delay-2">Yash Awasthi</h1>
@@ -1153,10 +1151,11 @@
         });
 
         // ── Scroll reveal observer ──
-        const observer = new IntersectionObserver((entries) => {
+        const observer = new IntersectionObserver((entries, observerInstance) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
+                    observerInstance.unobserve(entry.target);
                 }
             });
         }, { threshold: 0.15 });

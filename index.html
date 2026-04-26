@@ -302,17 +302,23 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0.2rem 0.2rem 0px var(--text-color);
-            transition: 0.2s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            will-change: transform, box-shadow;
+            transform: translateZ(0);
+            backface-visibility: hidden;
         }
 
         .scroll-guider:hover {
-            transform: translate(-0.1rem, -0.1rem);
+            transform: translate3d(-0.1rem, -0.1rem, 0);
             box-shadow: 0.3rem 0.3rem 0px var(--text-color);
             background: var(--btn-color);
         }
 
         .scroll-guider svg {
             animation: bounce 2s infinite;
+            will-change: transform;
+            transform: translateZ(0);
+            backface-visibility: hidden;
         }
 
         @keyframes bounce {
@@ -322,15 +328,15 @@
             50%,
             80%,
             100% {
-                transform: translateY(0);
+                transform: translate3d(0, 0, 0);
             }
 
             40% {
-                transform: translateY(-5px);
+                transform: translate3d(0, -6px, 0);
             }
 
             60% {
-                transform: translateY(-3px);
+                transform: translate3d(0, -3px, 0);
             }
         }
 

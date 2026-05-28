@@ -39,7 +39,7 @@
         }
 
         html {
-            scroll-behavior: auto;
+            scroll-behavior: smooth;
         }
 
         .bg-fixed {
@@ -1093,7 +1093,7 @@
             link.addEventListener('click', function (e) {
                 e.preventDefault();
                 const target = document.getElementById(this.dataset.section);
-                if (target) target.scrollIntoView({ behavior: 'auto' });
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
             });
         });
 

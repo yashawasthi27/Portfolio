@@ -9,7 +9,6 @@
     <title>Yash Awasthi | Portfolio</title>
     <link id="dynamic-favicon" rel="icon" type="image/png" href="images/title_logo.png">
 
-    <!-- ✅ FIX 1: Google Fonts — Inter was missing, page was falling back to system font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
@@ -30,7 +29,6 @@
             --card-border: rgba(17, 24, 39, 0.85);
             --accent-mint: #10b981;
             --accent-peach: #f97316;
-            /* ✅ FIX 2: Removed --section-bg-1 and --section-bg-2 — were defined but never used */
         }
 
         * {
@@ -43,7 +41,6 @@
             scroll-behavior: smooth;
         }
 
-        /* ── Fixed background layer ── */
         .bg-fixed {
             position: fixed;
             top: 0;
@@ -61,7 +58,6 @@
             overflow-x: hidden;
         }
 
-        /* ── Noise overlay ── */
         .noise-bg {
             position: fixed;
             top: 0;
@@ -76,21 +72,60 @@
             backface-visibility: hidden;
         }
 
-        /* ── Scrollbar ── */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--accent-mint);
-            border-radius: 3px;
-        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--accent-mint); border-radius: 3px; }
 
         /* ══════════════════════════════
+           NAVBAR
+        ══════════════════════════════ */
+        .nav-pill {
+            position: fixed;
+            bottom: 3.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            flex-wrap: nowrap;
+            gap: 2px;
+            background: rgba(110, 231, 183, 0.6);
+            border: 0.15rem solid var(--card-border);
+            border-radius: 999px;
+            padding: 5px 8px;
+            box-shadow: 3px 3px 0px var(--text-color);
+            z-index: 200;
+            white-space: nowrap;
+            height: 42px;
+            overflow: hidden;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 999px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .nav-link:hover {
+            background: rgba(251, 199, 161, 0.75);
+        }
+
+        .nav-link.active {
+            background: var(--text-color);
+            color: #ffffff;
+        }
+
+        @media (max-width: 480px) {
+            .nav-pill { top: 0.8rem; gap: 1px; }
+            .nav-link { font-size: 0.72rem; padding: 5px 8px; }
+        }        /* ══════════════════════════════
            HERO SECTION
         ══════════════════════════════ */
         #hero {
@@ -100,7 +135,7 @@
             flex-direction: column;
             align-items: center;
             overflow: hidden;
-            padding: 4rem 1.5rem 2rem;
+            padding: 4rem 1.5rem 8rem;
             z-index: 1;
         }
 
@@ -142,34 +177,14 @@
             transform: translateZ(0);
         }
 
-        .parallax>use:nth-child(1) {
-            animation-delay: -2s;
-            animation-duration: 7s;
-        }
-
-        .parallax>use:nth-child(2) {
-            animation-delay: -3s;
-            animation-duration: 10s;
-        }
-
-        .parallax>use:nth-child(3) {
-            animation-delay: -4s;
-            animation-duration: 13s;
-        }
-
-        .parallax>use:nth-child(4) {
-            animation-delay: -5s;
-            animation-duration: 20s;
-        }
+        .parallax>use:nth-child(1) { animation-delay: -2s; animation-duration: 7s; }
+        .parallax>use:nth-child(2) { animation-delay: -3s; animation-duration: 10s; }
+        .parallax>use:nth-child(3) { animation-delay: -4s; animation-duration: 13s; }
+        .parallax>use:nth-child(4) { animation-delay: -5s; animation-duration: 20s; }
 
         @keyframes move-forever {
-            0% {
-                transform: translate3d(-90px, 0, 0);
-            }
-
-            100% {
-                transform: translate3d(85px, 0, 0);
-            }
+            0%   { transform: translate3d(-90px, 0, 0); }
+            100% { transform: translate3d(85px, 0, 0); }
         }
 
         .hero-content {
@@ -275,68 +290,7 @@
             border: 0.2rem solid var(--text-color);
         }
 
-        .btn-outline:hover {
-            background: var(--card-bg);
-        }
-
-        /* ── Scroll Guider ── */
-        .scroll-guider-container {
-            position: relative;
-            margin-top: 2rem;
-            display: flex;
-            justify-content: center;
-            z-index: 10;
-        }
-
-        .scroll-guider {
-            color: var(--text-color);
-            background: var(--card-bg);
-            border: 0.15rem solid var(--text-color);
-            border-radius: 50%;
-            width: 3rem;
-            height: 3rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0.2rem 0.2rem 0px var(--text-color);
-            transition: transform 0.2s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.2, 1, 0.3, 1), background-color 0.2s cubic-bezier(0.2, 1, 0.3, 1);
-            will-change: transform, box-shadow;
-            transform: translateZ(0);
-            backface-visibility: hidden;
-            text-decoration: none;
-        }
-
-        .scroll-guider:hover {
-            transform: translate3d(-0.1rem, -0.1rem, 0);
-            box-shadow: 0.3rem 0.3rem 0px var(--text-color);
-            background: var(--btn-color);
-        }
-
-        .scroll-guider svg {
-            animation: bounce 2s infinite;
-            will-change: transform;
-            transform: translateZ(0);
-            backface-visibility: hidden;
-        }
-
-        @keyframes bounce {
-
-            0%,
-            20%,
-            50%,
-            80%,
-            100% {
-                transform: translate3d(0, 0, 0);
-            }
-
-            40% {
-                transform: translate3d(0, -6px, 0);
-            }
-
-            60% {
-                transform: translate3d(0, -3px, 0);
-            }
-        }
+        .btn-outline:hover { background: var(--card-bg); }
 
 
         /* ══════════════════════════════
@@ -389,7 +343,6 @@
             border-radius: 2px;
         }
 
-        /* Scroll reveal */
         .sr {
             opacity: 0;
             transform: translate3d(0, 32px, 0);
@@ -402,39 +355,17 @@
             transform: translate3d(0, 0, 0);
         }
 
-        .sr-delay-1 {
-            transition-delay: 0.1s;
-        }
-
-        .sr-delay-2 {
-            transition-delay: 0.2s;
-        }
-
-        .sr-delay-3 {
-            transition-delay: 0.3s;
-        }
-
-        .sr-delay-4 {
-            transition-delay: 0.4s;
-        }
-
-        .sr-delay-5 {
-            transition-delay: 0.5s;
-        }
-
-        .sr-delay-6 {
-            transition-delay: 0.6s;
-        }
+        .sr-delay-1 { transition-delay: 0.1s; }
+        .sr-delay-2 { transition-delay: 0.2s; }
+        .sr-delay-3 { transition-delay: 0.3s; }
+        .sr-delay-4 { transition-delay: 0.4s; }
+        .sr-delay-5 { transition-delay: 0.5s; }
+        .sr-delay-6 { transition-delay: 0.6s; }
 
         /* ══════════════════════════════
            ABOUT SECTION
         ══════════════════════════════ */
-        #about {
-            background: transparent;
-        }
-
-        /* ✅ FIX 3: Removed dead .about-grid, .about-stats, .stat-item, .stat-icon,
-           .stat-info, .stat-value, .stat-label CSS — HTML never used these */
+        #about { background: transparent; }
 
         .about-card {
             background: var(--card-bg);
@@ -466,9 +397,7 @@
             color: #1f2937;
         }
 
-        .about-text p:last-child {
-            margin-bottom: 0;
-        }
+        .about-text p:last-child { margin-bottom: 0; }
 
         .about-text strong {
             color: var(--text-color);
@@ -478,9 +407,7 @@
         /* ══════════════════════════════
            SKILLS SECTION
         ══════════════════════════════ */
-        #skills {
-            background: transparent;
-        }
+        #skills { background: transparent; }
 
         .skills-grid {
             display: grid;
@@ -557,8 +484,6 @@
             border-color: var(--text-color);
             transform: translateY(-1px);
         }
-
-        /* ✅ FIX 3 (continued): Removed all .skill-bar-* CSS — no skill bars in HTML */
 
         /* ══════════════════════════════
            CONTACT SECTION
@@ -642,8 +567,6 @@
             flex-shrink: 0;
         }
 
-        /* ✅ FIX 3 (continued): Removed dead .contact-availability, .availability-* CSS */
-
         /* ══════════════════════════════
            FOOTER
         ══════════════════════════════ */
@@ -689,42 +612,18 @@
            ANIMATIONS
         ══════════════════════════════ */
         @keyframes reveal {
-            from {
-                opacity: 0;
-                transform: translate3d(0, 28px, 0) scale(0.97);
-            }
-
-            to {
-                opacity: 1;
-                transform: translate3d(0, 0, 0) scale(1);
-            }
+            from { opacity: 0; transform: translate3d(0, 28px, 0) scale(0.97); }
+            to   { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
         }
 
         @keyframes float {
-
-            0%,
-            100% {
-                transform: translate3d(0, 0, 0);
-            }
-
-            50% {
-                transform: translate3d(0, -10px, 0);
-            }
+            0%, 100% { transform: translate3d(0, 0, 0); }
+            50%       { transform: translate3d(0, -10px, 0); }
         }
 
         @keyframes fade {
-
-            0%,
-            100% {
-                bottom: 0;
-                opacity: 0;
-            }
-
-            15%,
-            85% {
-                bottom: 2rem;
-                opacity: 1;
-            }
+            0%, 100%  { bottom: 0; opacity: 0; }
+            15%, 85%  { bottom: 2rem; opacity: 1; }
         }
 
         .reveal-item {
@@ -732,123 +631,51 @@
             animation: reveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        .delay-1 {
-            animation-delay: 0.1s;
-        }
-
-        .delay-2 {
-            animation-delay: 0.3s;
-        }
-
-        .delay-3 {
-            animation-delay: 0.5s;
-        }
-
-        .delay-4 {
-            animation-delay: 0.7s;
-        }
-
-        .delay-5 {
-            animation-delay: 0.9s;
-        }
-
-        .delay-6 {
-            animation-delay: 1.1s;
-        }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.3s; }
+        .delay-3 { animation-delay: 0.5s; }
+        .delay-4 { animation-delay: 0.7s; }
+        .delay-5 { animation-delay: 0.9s; }
+        .delay-6 { animation-delay: 1.1s; }
 
         /* ══════════════════════════════
            RESPONSIVE
         ══════════════════════════════ */
         @media (max-width: 768px) {
-            h1 {
-                font-size: 2.4rem;
-            }
+            h1 { font-size: 2.4rem; }
+            .tagline { font-size: 1rem; }
+            .section { padding: 4rem 1.2rem 5rem; }
+            .section-title { font-size: 1.9rem; }
+            .skills-grid { grid-template-columns: 1fr; }
+            .profile-pic { width: 9rem; height: 9rem; }
+            .waves { height: 10vh; min-height: 60px; }
+            .btn { font-size: 0.9rem; padding: 0.65rem 1.3rem; }
+            .hero-links { flex-direction: column; align-items: center; gap: 0.8rem; }
+            .hero-links .btn { width: 100%; max-width: 280px; }
+            #hero { padding-bottom: 5rem; }
+            #contact { padding-left: 0.6rem; padding-right: 0.6rem; padding-bottom: 6rem; }
+            .contact-grid { gap: 0.8rem; }
+            .contact-card { padding: 1rem; }
+            .contact-link-item { padding: 0.6rem 0.7rem; gap: 0.5rem; }
+            .contact-link-icon { width: 1.6rem; height: 1.6rem; flex-shrink: 0; }
 
-            .tagline {
-                font-size: 1rem;
-            }
-
-            .section {
-                padding: 4rem 1.2rem;
-            }
-
-            .section-title {
-                font-size: 1.9rem;
-            }
-
-            .skills-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .profile-pic {
-                width: 9rem;
-                height: 9rem;
-            }
-
-            .waves {
-                height: 10vh;
-                min-height: 60px;
-            }
-
-            .btn {
-                font-size: 0.9rem;
-                padding: 0.65rem 1.3rem;
-            }
-
-            .hero-links {
-                flex-direction: column;
-                align-items: center;
-                gap: 0.8rem;
-            }
-
-            .hero-links .btn {
-                width: 100%;
-                max-width: 280px;
-            }
-
-            #contact {
-                padding-left: 0.6rem;
-                padding-right: 0.6rem;
-            }
-
-            .contact-grid {
-                gap: 0.8rem;
-            }
-
-            .contact-card {
-                padding: 1rem;
-            }
-
-            .contact-link-item {
-                padding: 0.6rem 0.7rem;
-                gap: 0.5rem;
-            }
-
-            .contact-link-icon {
-                width: 1.6rem;
-                height: 1.6rem;
-                flex-shrink: 0;
-            }
-
-            /* scroll-guider-container mobile override removed as it's now handled by default flex layout */
+            .nav-pill { bottom: 1.5rem; padding: 4px 6px; gap: 1px; height: 38px; }
+            .nav-link { font-size: 0.73rem; padding: 5px 8px; }
         }
 
         @media (max-width: 480px) {
-            h1 {
-                font-size: 2rem;
-            }
+            h1 { font-size: 2rem; }
+            .profile-pic { width: 7.5rem; height: 7.5rem; }
 
-            .profile-pic {
-                width: 7.5rem;
-                height: 7.5rem;
-            }
+            .nav-pill { bottom: 1rem; padding: 3px 5px; gap: 0px; height: 36px; }
+            .nav-link { font-size: 0.65rem; padding: 4px 7px; }
         }
     </style>
 </head>
 
 <body oncontextmenu="return false;">
 
-    <!-- Fixed background — never scrolls -->
+    <!-- Fixed background -->
     <div class="bg-fixed"></div>
     <canvas id="skyCanvas"></canvas>
 
@@ -871,11 +698,18 @@
     <!-- Noise overlay -->
     <div class="noise-bg"></div>
 
+    <!-- ════════════ NAVBAR ════════════ -->
+    <nav class="nav-pill" id="mainNav">
+        <a href="#hero"    class="nav-link active" data-section="hero">Home</a>
+        <a href="#about"   class="nav-link" data-section="about">About</a>
+        <a href="#skills"  class="nav-link" data-section="skills">Skills</a>
+        <a href="#contact" class="nav-link" data-section="contact">Contact</a>
+    </nav>
+
     <!-- ════════════ HERO ════════════ -->
     <section id="hero">
         <div class="hero-content">
             <div class="profile-pic-container">
-                <!-- ✅ FIX 5: Removed lazy loading for above-the-fold image for better LCP -->
                 <img src="images/orignal.png" alt="Yash Awasthi" class="profile-pic" fetchpriority="high">
             </div>
 
@@ -903,8 +737,7 @@
                 <a href="https://github.com/yashawasthi27" class="btn">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <path
-                            d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
                     </svg>
                     GitHub
                 </a>
@@ -919,14 +752,7 @@
             </div>
         </div>
 
-        <div class="scroll-guider-container reveal-item delay-6">
-            <a href="#about" class="scroll-guider" aria-label="Scroll down">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-            </a>
-        </div>
+
     </section>
 
     <!-- ════════════ ABOUT ════════════ -->
@@ -943,8 +769,7 @@
                         <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v5" />
                         <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v10" />
                         <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8" />
-                        <path
-                            d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15" />
+                        <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15" />
                     </svg>
                     Hello there
                 </span>
@@ -976,7 +801,6 @@
             <h2 class="section-title sr sr-delay-1">Tech <span>Skills</span></h2>
 
             <div class="skills-grid">
-                <!-- Languages & Libraries -->
                 <div class="skill-category sr sr-delay-2">
                     <div class="skill-cat-header">
                         <div class="skill-cat-icon">
@@ -997,7 +821,6 @@
                     </div>
                 </div>
 
-                <!-- BI & Visualization -->
                 <div class="skill-category sr sr-delay-3">
                     <div class="skill-cat-header">
                         <div class="skill-cat-icon">
@@ -1019,7 +842,6 @@
                     </div>
                 </div>
 
-                <!-- Databases -->
                 <div class="skill-category sr sr-delay-4">
                     <div class="skill-cat-header">
                         <div class="skill-cat-icon">
@@ -1041,7 +863,6 @@
                     </div>
                 </div>
 
-                <!-- Tools & Platforms -->
                 <div class="skill-category sr sr-delay-5">
                     <div class="skill-cat-header">
                         <div class="skill-cat-icon">
@@ -1049,14 +870,10 @@
                                 stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="4" y="4" width="16" height="16" rx="2" />
                                 <rect x="9" y="9" width="6" height="6" />
-                                <path d="M15 2v2" />
-                                <path d="M15 20v2" />
-                                <path d="M2 15h2" />
-                                <path d="M2 9h2" />
-                                <path d="M20 15h2" />
-                                <path d="M20 9h2" />
-                                <path d="M9 2v2" />
-                                <path d="M9 20v2" />
+                                <path d="M15 2v2" /><path d="M15 20v2" />
+                                <path d="M2 15h2" /><path d="M2 9h2" />
+                                <path d="M20 15h2" /><path d="M20 9h2" />
+                                <path d="M9 2v2" /><path d="M9 20v2" />
                             </svg>
                         </div>
                         <div class="skill-cat-name">Tools &amp; Platforms</div>
@@ -1081,8 +898,7 @@
             <div class="contact-grid">
                 <div class="contact-card sr sr-delay-2">
                     <h3>Reach out directly</h3>
-                    <p>Whether it's an opportunity, a collaboration, or just a conversation — I'd love to hear from you.
-                    </p>
+                    <p>Whether it's an opportunity, a collaboration, or just a conversation — I'd love to hear from you.</p>
 
                     <div class="contact-links">
                         <a href="mailto:yashonwork247@gmail.com" class="contact-link-item" id="emailBtn">
@@ -1090,8 +906,7 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
                                     stroke-linejoin="round">
-                                    <path
-                                        d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
                                     <polyline points="22,6 12,13 2,6" />
                                 </svg>
                             </div>
@@ -1116,8 +931,7 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
                                     stroke-linejoin="round">
-                                    <path
-                                        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+                                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
                                 </svg>
                             </div>
                             github.com/yashawasthi27
@@ -1143,7 +957,6 @@
         Email copied to clipboard!
     </div>
 
-    <!-- ✅ FIX 5: defer so script doesn't block HTML parsing -->
     <script defer>
         // ── Email copy ──
         document.getElementById('emailBtn').addEventListener('click', function (e) {
@@ -1220,7 +1033,6 @@
             birdReqId = requestAnimationFrame(drawBirds);
         }
 
-        // Start bird animation immediately
         birdReqId = requestAnimationFrame(drawBirds);
 
         // ── Scroll reveal observer ──
@@ -1235,8 +1047,30 @@
 
         document.querySelectorAll('.sr').forEach(el => observer.observe(el));
 
-        // ✅ FIX 4: Removed the pageshow handler that was causing animation flash on
-        //    back-navigation by unnecessarily resetting all hero animations.
+        // ── Nav smooth scroll + active state ──
+        const navLinks = document.querySelectorAll('.nav-link[data-section]');
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.getElementById(this.dataset.section);
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        const sections = ['hero', 'about', 'skills', 'contact'].map(id => document.getElementById(id));
+
+        const navObserver = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    const active = document.querySelector(`.nav-link[data-section="${entry.target.id}"]`);
+                    if (active) active.classList.add('active');
+                }
+            });
+        }, { threshold: 0.4 });
+
+        sections.forEach(s => s && navObserver.observe(s));
     </script>
 
 </body>

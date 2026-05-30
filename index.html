@@ -492,6 +492,121 @@
         }
 
         /* ══════════════════════════════
+           CERTIFICATIONS SECTION
+        ══════════════════════════════ */
+        #certifications { background: transparent; }
+
+        .certifications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.8rem;
+            margin-top: 2rem;
+        }
+
+        .cert-card {
+            background: var(--card-bg);
+            border: 0.18rem solid var(--card-border);
+            border-radius: 1rem;
+            padding: 1.8rem;
+            box-shadow: 0.4rem 0.4rem 0px var(--text-color);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            transition: transform 0.25s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.2, 1, 0.3, 1);
+        }
+
+        .cert-card:hover {
+            transform: translate(-0.2rem, -0.2rem);
+            box-shadow: 0.6rem 0.6rem 0px var(--text-color);
+        }
+
+        .cert-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.2rem;
+        }
+
+        .cert-icon {
+            background: var(--btn-color);
+            border: 0.15rem solid var(--text-color);
+            border-radius: 0.5rem;
+            width: 2.8rem;
+            height: 2.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0.2rem 0.2rem 0px var(--text-color);
+            color: var(--text-color);
+            flex-shrink: 0;
+        }
+
+        .cert-icon svg {
+            width: 1.4rem;
+            height: 1.4rem;
+            stroke-width: 2.2;
+        }
+
+        .cert-verify-link {
+            color: var(--text-color);
+            transition: transform 0.2s ease, color 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.2rem;
+            height: 2.2rem;
+            border-radius: 50%;
+        }
+
+        .cert-verify-link:hover {
+            transform: scale(1.15) rotate(5deg);
+            color: var(--accent-peach);
+        }
+
+        .cert-title {
+            font-family: inherit;
+            font-size: 1.15rem;
+            font-weight: 800;
+            margin-bottom: 0.4rem;
+            line-height: 1.35;
+        }
+
+        .cert-issuer {
+            font-size: 0.88rem;
+            line-height: 1.6;
+            color: #374151;
+            margin-bottom: 0.4rem;
+        }
+
+        .cert-id {
+            font-size: 0.8rem;
+            color: #4b5563;
+            margin-bottom: 1.4rem;
+        }
+
+        .cert-id code {
+            background: rgba(0, 0, 0, 0.05);
+            padding: 0.1rem 0.3rem;
+            border-radius: 0.2rem;
+            font-family: monospace;
+            font-size: 0.85em;
+        }
+
+        .cert-footer {
+            margin-top: auto;
+        }
+
+        .cert-btn {
+            width: 100%;
+            font-size: 0.85rem;
+            padding: 0.6rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+
+        /* ══════════════════════════════
            PROJECTS SECTION
         ══════════════════════════════ */
         #projects { background: transparent; }
@@ -840,7 +955,7 @@
             .tagline { font-size: 1rem; }
             .section { padding: 4rem 1.2rem 5rem; }
             .section-title { font-size: 1.9rem; }
-            .skills-grid { grid-template-columns: 1fr; }
+            .skills-grid, .certifications-grid { grid-template-columns: 1fr; }
             .profile-pic { width: 9rem; height: 9rem; }
             .waves { height: 10vh; min-height: 60px; }
             .btn { font-size: 0.9rem; padding: 0.65rem 1.3rem; }
@@ -957,8 +1072,9 @@
     <nav class="nav-pill" id="mainNav">
         <a href="#hero"    class="nav-link active" data-section="hero">Home</a>
         <a href="#about"   class="nav-link" data-section="about">About</a>
-        <a href="#projects" class="nav-link" data-section="projects">Projects</a>
         <a href="#skills"  class="nav-link" data-section="skills">Skills</a>
+        <a href="#projects" class="nav-link" data-section="projects">Projects</a>
+        <a href="#certifications" class="nav-link" data-section="certifications">Certificates</a>
         <a href="#contact" class="nav-link" data-section="contact">Contact</a>
     </nav>
 
@@ -1276,6 +1392,46 @@
         </div>
     </section>
 
+    <!-- ════════════ CERTIFICATIONS ════════════ -->
+    <section id="certifications" class="section">
+        <div class="section-inner">
+            <span class="section-label sr">Achievements</span>
+            <h2 class="section-title sr sr-delay-1">My <span>Certifications</span></h2>
+
+            <div class="certifications-grid">
+                <!-- Certification 1: SQL (Advanced) -->
+                <div class="cert-card sr sr-delay-2">
+                    <div class="cert-header">
+                        <div class="cert-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="8" r="7" />
+                                <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
+                            </svg>
+                        </div>
+                        <a href="https://www.hackerrank.com/certificates/0D1C8D1C01A4" class="cert-verify-link" target="_blank" rel="noopener noreferrer" aria-label="Verify Certificate">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                        </a>
+                    </div>
+                    <h3 class="cert-title">SQL (Advanced)</h3>
+                    <p class="cert-issuer">Issued by <strong>HackerRank</strong> · May 2026</p>
+                    <p class="cert-id">Credential ID: <code>0D1C8D1C01A4</code></p>
+                    <div class="cert-footer">
+                        <a href="https://www.hackerrank.com/certificates/0D1C8D1C01A4" class="btn cert-btn" target="_blank" rel="noopener noreferrer">
+                            Verify Credential
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- ════════════ CONTACT ════════════ -->
     <section id="contact" class="section">
         <div class="section-inner">
@@ -1501,7 +1657,7 @@
             });
         });
 
-        const sections = ['hero', 'about', 'projects', 'skills', 'contact'].map(id => document.getElementById(id));
+        const sections = ['hero', 'about', 'skills', 'projects', 'certifications', 'contact'].map(id => document.getElementById(id));
 
         const navObserver = new IntersectionObserver(entries => {
             entries.forEach(entry => {

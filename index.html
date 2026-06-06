@@ -808,22 +808,30 @@
             box-shadow: 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.25);
         }
 
+        .folder-card.folder-hidden-mobile {
+            display: none !important;
+        }
+
         /* Responsive styling for folders */
         @media (max-width: 900px) {
             .projects-folders-container {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 2.2rem 1.2rem;
+                gap: 3.6rem 1.2rem;
+            }
+            .folder-card {
+                margin-top: 1.5rem;
             }
         }
 
         @media (max-width: 480px) {
             .projects-folders-container {
                 grid-template-columns: 1fr;
-                gap: 2.2rem 0;
+                gap: 3.6rem 0;
             }
             .folder-card {
                 min-height: auto;
                 padding: 1.2rem 1.2rem 1rem;
+                margin-top: 1.5rem;
             }
         }
 
@@ -2186,8 +2194,10 @@
             card.addEventListener('click', () => {
                 const isActive = card.classList.contains('active');
                 
-                // Remove active class from all folders
-                folderCards.forEach(c => c.classList.remove('active'));
+                // Remove active class and mobile hidden states from all folders
+                folderCards.forEach(c => {
+                    c.classList.remove('active', 'folder-hidden-mobile');
+                });
                 
                 let filterValue = 'none'; // Default to hiding all if no folder is active
                 if (!isActive) {
@@ -2195,6 +2205,13 @@
                     card.classList.add('active');
                     filterValue = card.getAttribute('data-filter');
                     projectsSection.classList.add('has-active-filter');
+                    
+                    // Hide other folders in mobile/tablet stacked view
+                    folderCards.forEach(c => {
+                        if (c !== card) {
+                            c.classList.add('folder-hidden-mobile');
+                        }
+                    });
                 } else {
                     projectsSection.classList.remove('has-active-filter');
                 }

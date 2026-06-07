@@ -677,7 +677,7 @@
 
         .projects-folders-container {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 1.5rem;
             margin-bottom: 0rem;
             margin-top: 1.5rem;
@@ -1727,6 +1727,22 @@
                     <div class="folder-title">Excel<br>Project</div>
                 </div>
 
+                <!-- Power BI Folder -->
+                <div class="folder-card" data-filter="powerbi">
+                    <div class="folder-tab">Power BI</div>
+                    <div class="folder-header">
+                        <div class="folder-icon-wrapper">
+                            <svg viewBox="0 0 24 24" class="folder-logo" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="3" y="11" width="5" height="10" rx="1" fill="#f2c811" />
+                                <rect x="9.5" y="6" width="5" height="15" rx="1" fill="#f29c11" />
+                                <rect x="16" y="2" width="5" height="19" rx="1" fill="#e65112" />
+                            </svg>
+                        </div>
+                        <span class="folder-count">1</span>
+                    </div>
+                    <div class="folder-title">Power BI<br>Project</div>
+                </div>
+
 
                 <!-- SQL Folder -->
                 <div class="folder-card" data-filter="sql">
@@ -1921,6 +1937,53 @@
                             <span class="project-tag">SQL Analytics</span>
                             <span class="project-tag">CTEs</span>
                             <span class="project-tag">Window Functions</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 4: Power BI Sales Dashboard -->
+                <div class="project-card sr sr-delay-6 hidden fade-out" data-category="powerbi">
+                    <div class="project-left-col">
+                        <div class="project-header">
+                            <div class="project-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                                </svg>
+                            </div>
+                            <a href="https://github.com/yashawasthi27/Power_BI_Project" class="project-github-link"
+                                target="_blank" rel="noopener noreferrer" aria-label="GitHub Repository">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path
+                                        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+                                    </path>
+                                </svg>
+                            </a>
+                        </div>
+                        <h3 class="project-title">Power BI Sales Analytics Dashboard</h3>
+                        <div class="project-footer">
+                            <a href="https://github.com/yashawasthi27/Power_BI_Project" class="btn project-btn"
+                                target="_blank" rel="noopener noreferrer">
+                                View Repository
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M5 12h14M12 5l7 7-7 7" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="project-right-col">
+                        <p class="project-description">Interactive sales analytics dashboard built on the AdventureWorks dataset. Features a structured Star Schema database, advanced DAX measures, target vs. actual KPI comparisons, and region/margin breakdown pages.</p>
+                        <div class="project-tags">
+                            <span class="project-tag">Power BI</span>
+                            <span class="project-tag">DAX</span>
+                            <span class="project-tag">Star Schema</span>
+                            <span class="project-tag">Data Modeling</span>
                         </div>
                     </div>
                 </div>

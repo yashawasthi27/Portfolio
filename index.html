@@ -296,6 +296,7 @@
         }
 
         .btn {
+            position: relative;
             cursor: pointer;
             text-decoration: none;
             color: var(--text-color);
@@ -312,6 +313,21 @@
             align-items: center;
             gap: 0.5rem;
             justify-content: center;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+        }
+
+        .btn:hover::after {
+            right: -0.2rem;
+            bottom: -0.2rem;
         }
 
         .btn:hover {
@@ -476,12 +492,28 @@
         }
 
         .skill-category {
+            position: relative;
             background: var(--card-bg);
             border: 0.18rem solid var(--card-border);
             border-radius: 0.8rem;
             padding: 1.6rem;
             box-shadow: 0.35rem 0.35rem 0px var(--text-color);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .skill-category::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+        }
+
+        .skill-category:hover::after {
+            right: -0.15rem;
+            bottom: -0.15rem;
         }
 
         .skill-category:hover {
@@ -529,6 +561,7 @@
         }
 
         .skill-tag {
+            position: relative;
             background: #ffffff;
             border: 0.12rem solid var(--text-color);
             border-radius: 0.3rem;
@@ -537,6 +570,20 @@
             font-weight: 600;
             transition: transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
             cursor: default;
+        }
+
+        .skill-tag::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+        }
+
+        .skill-tag:hover::after {
+            bottom: -1px;
         }
 
         .skill-tag:hover {
@@ -560,6 +607,7 @@
         }
 
         .cert-card {
+            position: relative;
             background: var(--card-bg);
             border: 0.18rem solid var(--card-border);
             border-radius: 1rem;
@@ -569,6 +617,21 @@
             flex-direction: column;
             height: 100%;
             transition: transform 0.25s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.2, 1, 0.3, 1);
+        }
+
+        .cert-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+        }
+
+        .cert-card:hover::after {
+            right: -0.2rem;
+            bottom: -0.2rem;
         }
 
         .cert-card:hover {
@@ -701,9 +764,25 @@
         }
 
         .back-folders-btn {
+            position: relative;
             padding: 0.55rem 1.2rem;
             font-size: 0.88rem;
             box-shadow: 0.25rem 0.25rem 0px var(--text-color);
+        }
+
+        .back-folders-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+        }
+
+        .back-folders-btn:hover::after {
+            right: -0.15rem;
+            bottom: -0.15rem;
         }
 
         .back-folders-btn:hover {
@@ -725,6 +804,21 @@
             gap: 1.2rem;
             min-height: 140px;
             margin-top: 1.2rem;
+        }
+
+        .folder-card::after {
+            content: '';
+            position: absolute;
+            top: -1.2rem;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+        }
+
+        .folder-card:hover::after {
+            right: -0.2rem;
+            bottom: -0.2rem;
         }
 
         .folder-tab {
@@ -869,6 +963,7 @@
         }
 
         .project-card {
+            position: relative;
             background: var(--card-bg);
             border: 0.18rem solid var(--card-border);
             border-radius: 1rem;
@@ -882,6 +977,21 @@
             transition: transform 0.25s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.2, 1, 0.3, 1), opacity 0.3s ease, visibility 0.3s ease;
             opacity: 1;
             visibility: visible;
+        }
+
+        .project-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+        }
+
+        .project-card:hover::after {
+            right: -0.2rem;
+            bottom: -0.2rem;
         }
 
         .project-left-col {
@@ -1007,6 +1117,7 @@
         }
 
         .project-tag {
+            position: relative;
             background: #ffffff;
             border: 0.1rem solid var(--text-color);
             border-radius: 0.35rem;
@@ -1015,6 +1126,20 @@
             font-weight: 700;
             cursor: default;
             transition: background-color 0.15s ease, transform 0.1s ease;
+        }
+
+        .project-tag::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+        }
+
+        .project-tag:hover::after {
+            bottom: -1px;
         }
 
         .project-tag:hover {
@@ -1095,6 +1220,7 @@
         }
 
         .contact-link-item {
+            position: relative;
             display: flex;
             align-items: center;
             gap: 0.9rem;
@@ -1110,6 +1236,21 @@
             transition: transform 0.2s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.2, 1, 0.3, 1), background-color 0.2s cubic-bezier(0.2, 1, 0.3, 1);
             word-break: break-all;
             min-width: 0;
+        }
+
+        .contact-link-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+        }
+
+        .contact-link-item:hover::after {
+            right: -0.15rem;
+            bottom: -0.15rem;
         }
 
         .contact-link-item:hover {
@@ -1505,6 +1646,7 @@
         }
 
         .modal-close-btn {
+            position: relative;
             background: var(--btn-color);
             border: 0.12rem solid var(--text-color);
             border-radius: 0.5rem;
@@ -1517,6 +1659,21 @@
             box-shadow: 0.15rem 0.15rem 0px var(--text-color);
             color: var(--text-color);
             transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .modal-close-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+        }
+
+        .modal-close-btn:hover::after {
+            right: -1px;
+            bottom: -1px;
         }
 
         .modal-close-btn:hover {
@@ -1714,6 +1871,7 @@
         }
 
         .modal-repo-btn {
+            position: relative;
             background: var(--btn-color);
             border: 0.15rem solid var(--text-color);
             border-radius: 0.6rem;
@@ -1727,6 +1885,21 @@
             gap: 0.6rem;
             box-shadow: 0.3rem 0.3rem 0px var(--text-color);
             transition: transform 0.2s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.2, 1, 0.3, 1), background-color 0.2s ease;
+        }
+
+        .modal-repo-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+        }
+
+        .modal-repo-btn:hover::after {
+            right: -0.15rem;
+            bottom: -0.15rem;
         }
 
         .modal-repo-btn:hover {

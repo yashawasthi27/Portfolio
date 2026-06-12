@@ -270,19 +270,23 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: rgba(209, 250, 229, 0.9); /* Translucent light green background */
+            background: rgba(209, 250, 229, 0.9);
+            /* Translucent light green background */
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
-            border: 1.5px solid #10b981; /* Accent mint green border */
+            border: 1.5px solid #10b981;
+            /* Accent mint green border */
             border-radius: 999px;
             padding: 5px 12px;
             font-size: 0.8rem;
             font-weight: 600;
-            color: #065f46; /* Dark green text */
+            color: #065f46;
+            /* Dark green text */
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
             z-index: 10;
             white-space: nowrap;
-            pointer-events: none; /* Let clicks pass through to the image wrapper */
+            pointer-events: none;
+            /* Let clicks pass through to the image wrapper */
         }
 
         .open-to-work-badge .dot {
@@ -312,6 +316,7 @@
                 transform: scale(1);
                 opacity: 1;
             }
+
             100% {
                 transform: scale(2.5);
                 opacity: 0;
@@ -327,6 +332,7 @@
                 right: 0.6rem;
             }
         }
+
         @media (max-width: 480px) {
             .open-to-work-badge {
                 padding: 3px 8px;
@@ -335,6 +341,7 @@
                 right: 0.5rem;
                 gap: 4px;
             }
+
             .open-to-work-badge .dot {
                 width: 6px;
                 height: 6px;
@@ -3339,7 +3346,7 @@ High-level performance summary with slicers for Continent, Year, and Product Cat
             if (window.marked && typeof window.marked.parse === 'function') {
                 htmlContent = window.marked.parse(markdownText);
             } else {
-                // Simple fallback if Marked is not loaded for some reason
+                // Simple fallback if Marked is not loaded for some reason //
                 htmlContent = markdownText.split('\n\n').map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
             }
 

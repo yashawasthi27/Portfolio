@@ -11,6 +11,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
         rel="stylesheet">
 
@@ -111,8 +113,14 @@
             z-index: 200;
             white-space: nowrap;
             height: 52px;
-            overflow: hidden;
+            overflow-x: auto;
+            max-width: 90vw;
+            scrollbar-width: none; /* Firefox */
             animation: navReveal 1s cubic-bezier(0.16, 1, 0.3, 1) 1.1s forwards;
+        }
+
+        .nav-pill::-webkit-scrollbar {
+            display: none; /* Safari and Chrome */
         }
 
         .nav-link {
@@ -122,7 +130,7 @@
             font-weight: 600;
             padding: 8px 16px;
             border-radius: 999px;
-            transition: all 0.2s ease;
+            transition: background-color 0.2s ease, color 0.2s ease;
             white-space: nowrap;
             line-height: 1;
             display: inline-flex;
@@ -580,7 +588,7 @@
 
         .skills-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
             gap: 1.4rem;
         }
 
@@ -694,7 +702,7 @@
 
         .certifications-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
             gap: 1.8rem;
             margin-top: 2rem;
         }
@@ -1036,14 +1044,22 @@
 
         @media (max-width: 480px) {
             .projects-folders-container {
-                grid-template-columns: 1fr;
-                gap: 3.6rem 0;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2.2rem 0.8rem;
             }
 
             .folder-card {
                 min-height: auto;
-                padding: 1.2rem 1.2rem 1rem;
-                margin-top: 1.5rem;
+                padding: 1rem 0.8rem;
+                margin-top: 1.2rem;
+            }
+            
+            .folder-title {
+                font-size: 0.9rem;
+            }
+            
+            .folder-count {
+                font-size: 2.2rem;
             }
         }
 
@@ -2028,7 +2044,7 @@
         }
     </style>
     <!-- Marked.js for markdown parsing -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
 </head>
 
 <body oncontextmenu="return false;">
@@ -2071,7 +2087,7 @@
         <div class="hero-content">
             <div class="profile-pic-container">
                 <div class="profile-pic-wrapper">
-                    <img src="images/orignal.png" alt="Yash Awasthi" class="profile-pic" fetchpriority="high">
+                    <img src="images/orignal.png" alt="Yash Awasthi" class="profile-pic" fetchpriority="high" width="192" height="192">
                     <div class="open-to-work-badge">
                         <span class="dot"></span>
                         <span>Open to Work</span>
@@ -2322,7 +2338,7 @@
             <!-- Project Folders Selector -->
             <div class="projects-folders-container sr sr-delay-2">
                 <!-- Excel Folder -->
-                <div class="folder-card" data-filter="excel">
+                <div class="folder-card" data-filter="excel" role="button" tabindex="0" aria-label="Filter Excel Projects">
                     <div class="folder-tab">Excel</div>
                     <div class="folder-header">
                         <div class="folder-icon-wrapper">
@@ -2342,7 +2358,7 @@
                 </div>
 
                 <!-- Power BI Folder -->
-                <div class="folder-card" data-filter="powerbi">
+                <div class="folder-card" data-filter="powerbi" role="button" tabindex="0" aria-label="Filter Power BI Projects">
                     <div class="folder-tab">Power BI</div>
                     <div class="folder-header">
                         <div class="folder-icon-wrapper">
@@ -2359,7 +2375,7 @@
 
 
                 <!-- SQL Folder -->
-                <div class="folder-card" data-filter="sql">
+                <div class="folder-card" data-filter="sql" role="button" tabindex="0" aria-label="Filter SQL Projects">
                     <div class="folder-tab">SQL</div>
                     <div class="folder-header">
                         <div class="folder-icon-wrapper">
@@ -2381,7 +2397,7 @@
                 </div>
 
                 <!-- Python Folder -->
-                <div class="folder-card" data-filter="python">
+                <div class="folder-card" data-filter="python" role="button" tabindex="0" aria-label="Filter Python Projects">
                     <div class="folder-tab">Python</div>
                     <div class="folder-header">
                         <div class="folder-icon-wrapper">
@@ -2943,11 +2959,19 @@
         const ctx = canvas.getContext('2d');
         let cw, ch;
 
+        let resizeTimeout;
         function resize() {
             cw = canvas.width = window.innerWidth;
             ch = canvas.height = window.innerHeight;
         }
-        window.addEventListener('resize', resize);
+        window.addEventListener('resize', () => {
+            if (!resizeTimeout) {
+                resizeTimeout = setTimeout(() => {
+                    resizeTimeout = null;
+                    resize();
+                }, 100);
+            }
+        });
         resize();
 
         const isMobile = window.innerWidth < 768;
@@ -3097,6 +3121,14 @@
                             }, 250);
                         }
                     });
+                }
+            });
+
+            // Keyboard accessibility for folder card buttons
+            card.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    card.click();
                 }
             });
         });

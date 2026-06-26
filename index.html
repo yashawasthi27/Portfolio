@@ -378,6 +378,10 @@
             color: #1f2937;
         }
 
+        .mobile-br {
+            display: none;
+        }
+
         .badge {
             background: var(--card-bg);
             padding: 0.4rem 1rem;
@@ -1590,22 +1594,21 @@
 
             .nav-pill {
                 bottom: 1.5rem;
-                width: 90vw;
-                max-width: 500px;
+                width: max-content;
+                max-width: 90vw;
                 padding: 5px;
                 gap: 4px;
-                height: 48px;
+                height: 46px;
                 animation-duration: 0.8s;
                 animation-delay: 0.2s;
-                overflow: hidden;
+                overflow-x: auto;
                 display: flex;
-                justify-content: space-between;
             }
 
             .nav-link {
-                font-size: 0.82rem;
-                padding: 6px 4px;
-                flex: 1;
+                font-size: 0.85rem;
+                padding: 6px 12px;
+                flex: 0 0 auto;
                 justify-content: center;
                 text-align: center;
             }
@@ -1665,22 +1668,21 @@
             .nav-pill {
                 top: 1rem;
                 bottom: auto;
-                width: 95vw;
-                max-width: 440px;
+                width: max-content;
+                max-width: 95vw;
                 padding: 4px;
-                gap: 2px;
+                gap: 3px;
                 height: 40px;
                 animation-duration: 0.8s;
                 animation-delay: 0.2s;
-                overflow: hidden;
+                overflow-x: auto;
                 display: flex;
-                justify-content: space-between;
             }
 
             .nav-link {
-                font-size: 0.7rem;
-                padding: 5px 2px;
-                flex: 1;
+                font-size: 0.75rem;
+                padding: 6px 8px;
+                flex: 0 0 auto;
                 justify-content: center;
                 text-align: center;
             }
@@ -1696,6 +1698,10 @@
             .hero-content {
                 margin-top: 0.5rem;
                 margin-bottom: auto;
+            }
+
+            .mobile-br {
+                display: inline;
             }
 
             footer {
@@ -2118,7 +2124,7 @@
 
             <p class="tagline reveal-item delay-3">
                 <span class="tagline-main">
-                    Turning Raw Data into Actionable Business Insights
+                    Turning Raw Data into<br class="mobile-br"> Actionable Business Insights
                 </span><br>
                 <span class="tagline-sub">
                     Building End-to-End Analytics Solutions with

@@ -847,7 +847,7 @@
 
         .projects-folders-container {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(5, 1fr);
             gap: 1.5rem;
             margin-bottom: 0rem;
             margin-top: 1.5rem;
@@ -2370,6 +2370,42 @@
 
             <!-- Project Folders Selector -->
             <div class="projects-folders-container sr sr-delay-2">
+                <!-- End-to-End Folder -->
+                <div class="folder-card" data-filter="ete" role="button" tabindex="0"
+                    aria-label="Filter End-to-End Projects">
+                    <div class="folder-tab">End-to-End</div>
+                    <div class="folder-header">
+                        <div class="folder-icon-wrapper" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; padding: 4px; align-items: center; justify-items: center;">
+                            <!-- Excel Logo -->
+                            <svg viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 14px; height: 14px; display: block;">
+                                <path d="M13.25 0H1.5C0.67 0 0 0.67 0 1.5V21.5C0 22.33 0.67 23 1.5 23H21.5C22.33 23 23 22.33 23 21.5V9.75L13.25 0Z" fill="#107C41" />
+                                <path d="M14.375 0V8.625H23L14.375 0Z" fill="#1F9A55" />
+                                <path d="M4.3125 7.1875H7.4375L9.1875 10.375L10.9375 7.1875H14.0625L10.9375 12L14.0625 16.8125H10.9375L9.1875 13.625L7.4375 16.8125H4.3125L7.4375 12L4.3125 7.1875Z" fill="white" />
+                            </svg>
+                            <!-- Power BI Logo -->
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 14px; height: 14px; display: block;">
+                                <rect x="3" y="11" width="5" height="10" rx="1" fill="#f2c811" />
+                                <rect x="9.5" y="6" width="5" height="15" rx="1" fill="#f29c11" />
+                                <rect x="16" y="2" width="5" height="19" rx="1" fill="#e65112" />
+                            </svg>
+                            <!-- SQL Logo -->
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 14px; height: 14px; display: block;">
+                                <ellipse cx="12" cy="5" rx="7" ry="2" fill="#38bdf8" stroke="#0284c7" stroke-width="1.5" />
+                                <path d="M5 5v5c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V5" stroke="#0284c7" stroke-width="1.5" fill="#0284c7" fill-opacity="0.2" />
+                                <path d="M5 10v5c0 1.1.9 2 2 2h2" stroke="#0284c7" stroke-width="1.5" />
+                                <path d="M15 17h2c1.1 0 2-.9 2-2v-5" stroke="#0284c7" stroke-width="1.5" />
+                                <path d="M15 15.5a2.5 2.5 0 0 0-2.5-2.5c-1.1 0-2.1.7-2.4 1.7A2 2 0 0 0 8 16a2 2 0 0 0 2 2h5a1.5 1.5 0 0 0 0-3h-.5Z" fill="#3b82f6" stroke="#1d4ed8" stroke-width="1.5" />
+                            </svg>
+                            <!-- Python Logo -->
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 14px; height: 14px; display: block;">
+                                <path fill="#3776AB" d="M11.897 2c-2.42 0-4.57.17-5.32.54-.99.5-1.58 1.48-1.58 2.94v2.52h6.9v1h-7.9c-1.58 0-3 1.11-3.5 2.61-.58 1.78-.58 3.51 0 5.29.42 1.25 1.56 2.1 3.14 2.1h1.76v-2.39c0-1.78 1.42-3.2 3.2-3.2h4.8c1.78 0 3.2-1.42 3.2-3.2V5.48c0-1.78-1.42-3.2-3.2-3.2H11.897zm-2.9 1.5a.75.75 0 1 1 0 1.5.75.75 0 0 1 0-1.5z" />
+                                <path fill="#FFD43B" d="M12.103 22c2.42 0 4.57-.17 5.32-.54.99-.5 1.58-1.48 1.58-2.94v-2.52h-6.9v-1h7.9c1.58 0 3-1.11 3.5-2.61.58-1.78.58-3.51 0-5.29-.42-1.25-1.56-2.1-3.14-2.1h-1.76v2.39c0 1.78-1.42 3.2-3.2 3.2h-4.8c-1.78 0-3.2 1.42-3.2 3.2v4.81c0 1.78 1.42 3.2 3.2 3.2h3.5zm2.9-1.5a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5z" />
+                            </svg>
+                        </div>
+                        <span class="folder-count">1</span>
+                    </div>
+                    <div class="folder-title">End-to-End<br>Project</div>
+                </div>
                 <!-- Excel Folder -->
                 <div class="folder-card" data-filter="excel" role="button" tabindex="0"
                     aria-label="Filter Excel Projects">
@@ -2448,6 +2484,8 @@
                     </div>
                     <div class="folder-title">Python<br>Project</div>
                 </div>
+
+
             </div>
 
             <!-- Projects Grid -->
@@ -2729,6 +2767,60 @@
                             <span class="project-tag">DAX</span>
                             <span class="project-tag">Star Schema</span>
                             <span class="project-tag">Data Modeling</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 6: End-to-End HR Analytics Dashboard -->
+                <div class="project-card sr sr-delay-5 hidden fade-out" data-category="python sql powerbi ete">
+                    <div class="project-left-col">
+                        <div class="project-header">
+                            <div class="project-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                                    <circle cx="12" cy="12" r="3" />
+                                </svg>
+                            </div>
+                        </div>
+                        <h3 class="project-title">End-to-End HR Analytics Dashboard</h3>
+                        <div class="project-footer">
+                            <button class="btn project-btn view-details-btn" data-project="hranalytics"
+                                data-category="End-to-End" data-title="End-to-End HR Analytics Dashboard"
+                                data-repo="https://github.com/yashawasthi27/HR-Analytics-Dashboard">
+                                View Details
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    <polyline points="10 9 9 9 8 9"></polyline>
+                                </svg>
+                            </button>
+                            <a href="https://github.com/yashawasthi27/HR-Analytics-Dashboard" class="btn project-btn"
+                                target="_blank" rel="noopener noreferrer">
+                                View Repository
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path
+                                        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+                                    </path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="project-right-col">
+                        <p class="project-description">An end-to-end data analytics project resolving organizational employee attrition. Features Python for data cleaning & EDA, PostgreSQL for analytical queries, and Power BI for an interactive 3-page business dashboard modeling a Star Schema with advanced DAX.</p>
+                        <div class="project-tags">
+                            <span class="project-tag">Python</span>
+                            <span class="project-tag">PostgreSQL</span>
+                            <span class="project-tag">Power BI</span>
+                            <span class="project-tag">DAX</span>
+                            <span class="project-tag">Star Schema</span>
+                            <span class="project-tag">ETL & EDA</span>
                         </div>
                     </div>
                 </div>
@@ -3084,6 +3176,20 @@
         const projectCards = document.querySelectorAll('.project-card');
         const backFoldersBtn = document.getElementById('backFoldersBtn');
 
+        // Calculate and update folder counts dynamically on page load
+        folderCards.forEach(card => {
+            const filterValue = card.getAttribute('data-filter');
+            let count = 0;
+            projectCards.forEach(project => {
+                const categories = (project.getAttribute('data-category') || '').split(' ');
+                if (categories.includes(filterValue)) {
+                    count++;
+                }
+            });
+            const countEl = card.querySelector('.folder-count');
+            if (countEl) countEl.textContent = count;
+        });
+
         // Hide all project cards initially on page load
         projectCards.forEach(card => {
             card.classList.add('hidden', 'fade-out');
@@ -3142,8 +3248,8 @@
 
                     // Show matching projects
                     projectCards.forEach(project => {
-                        const category = project.getAttribute('data-category');
-                        if (category === filterValue) {
+                        const categories = (project.getAttribute('data-category') || '').split(' ');
+                        if (categories.includes(filterValue)) {
                             if (project.timeoutId) clearTimeout(project.timeoutId);
                             project.classList.remove('hidden');
                             setTimeout(() => {
@@ -3430,7 +3536,33 @@ A fully interactive drill-down table with transaction-level detail:
 
 - **Data Modelling:** Star Schema with fact table (\`Transactions\`) and dimension tables (\`Customers\`, \`Geography\`, \`Date\`).
 - **Data Prep (Power Query):** Handled missing values, formatted columns (currency/dates), and established clean data relationships.
-- **Advanced DAX:** Built measures for Year-over-Year (YoY) growth, running totals, and active metrics.`
+- **Advanced DAX:** Built measures for Year-over-Year (YoY) growth, running totals, and active metrics.`,
+
+            hranalytics: `# HR Analytics Attrition Dashboard
+
+An End-to-End Data Analytics Project to identify the root causes of employee attrition and provide HR leadership with actionable business insights to improve retention.
+
+## 🧩 Problem Statement
+A mid-sized organization was experiencing an employee attrition rate of **~16%**, leading to increased recruitment costs, knowledge loss, and reduced team productivity.
+
+**Goal:** Identify the root causes of attrition and provide HR leadership with an interactive dashboard to take data-driven retention decisions — targeting a reduction from 16% to below 12%.
+
+## 🛠️ Tech Stack
+* **Python (Pandas, Matplotlib, Seaborn):** Data cleaning, feature engineering, and Exploratory Data Analysis (EDA).
+* **PostgreSQL:** SQL analysis layer (10 business queries) for data extraction.
+* **Power BI:** Relational data modeling (Star Schema) and interactive 3-page dashboard visualization with DAX measures.
+
+## 💡 Key Business Insights
+* **Sales is highest risk dept:** 20% attrition — highest among all departments.
+* **Overtime = 3x attrition:** Overtime: 30.53% vs No Overtime: 10%.
+* **Young employees leave most:** Age 18-25 has 34% attrition rate.
+* **First 2 years are critical:** 0-2 yr tenure: 29.82% attrition.
+* **Low salary drives exits:** Sales Rep earns \$2,626 — lowest paid, highest attrition (39%).
+
+## 📄 Dashboard Pages
+1. **Overview Page:** High-level HR KPIs (Total Employees, Active Employees, Attrition Rate).
+2. **Attrition Deep Dive:** Dynamic breakdown by department, age groups, tenure, and role.
+3. **Salary Analysis:** Detailed review of salary brackets, job satisfaction, and gender pay equity.`
         };
 
         function rewriteRelativeUrls(text, projectKey) {
@@ -3439,7 +3571,8 @@ A fully interactive drill-down table with transaction-level detail:
                 python: 'https://raw.githubusercontent.com/yashawasthi27/Face_Detective/main/',
                 sql: 'https://raw.githubusercontent.com/yashawasthi27/sql-ecommerce-analysis/main/',
                 powerbi: 'https://raw.githubusercontent.com/yashawasthi27/Power_BI_Project/main/',
-                financepowerbi: 'https://raw.githubusercontent.com/yashawasthi27/Finance-Analysis-Dashboard/main/'
+                financepowerbi: 'https://raw.githubusercontent.com/yashawasthi27/Finance-Analysis-Dashboard/main/',
+                hranalytics: 'https://raw.githubusercontent.com/yashawasthi27/HR-Analytics-Dashboard/main/'
             }[projectKey];
 
             const repoBaseUrl = {
@@ -3447,7 +3580,8 @@ A fully interactive drill-down table with transaction-level detail:
                 python: 'https://github.com/yashawasthi27/Face_Detective/blob/main/',
                 sql: 'https://github.com/yashawasthi27/sql-ecommerce-analysis/blob/main/',
                 powerbi: 'https://github.com/yashawasthi27/Power_BI_Project/blob/main/',
-                financepowerbi: 'https://github.com/yashawasthi27/Finance-Analysis-Dashboard/blob/main/'
+                financepowerbi: 'https://github.com/yashawasthi27/Finance-Analysis-Dashboard/blob/main/',
+                hranalytics: 'https://github.com/yashawasthi27/HR-Analytics-Dashboard/blob/main/'
             }[projectKey];
 
             if (!rawBaseUrl) return text;
@@ -3493,6 +3627,8 @@ A fully interactive drill-down table with transaction-level detail:
                 rawUrl = 'https://raw.githubusercontent.com/yashawasthi27/Power_BI_Project/main/README.md';
             } else if (projectKey === 'financepowerbi') {
                 rawUrl = 'https://raw.githubusercontent.com/yashawasthi27/Finance-Analysis-Dashboard/main/README.md';
+            } else if (projectKey === 'hranalytics') {
+                rawUrl = 'https://raw.githubusercontent.com/yashawasthi27/HR-Analytics-Dashboard/main/README.md';
             }
 
             try {

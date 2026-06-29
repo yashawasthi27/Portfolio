@@ -1072,124 +1072,92 @@
         .projects-grid {
             display: flex;
             flex-direction: column;
-            gap: 2rem;
+            gap: 1.6rem;
             margin-top: 0rem;
             width: 100%;
         }
 
+        /* ── NEW CARD LAYOUT ── */
         .project-card {
             position: relative;
             background: var(--card-bg);
             border: 0.18rem solid var(--card-border);
             border-radius: 1rem;
-            padding: 2.2rem;
+            padding: 0;
             box-shadow: 0.4rem 0.4rem 0px var(--text-color);
             display: flex;
-            flex-direction: row;
-            gap: 2.2rem;
-            align-items: stretch;
+            flex-direction: column;
             width: 100%;
-            transition: transform 0.25s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.2, 1, 0.3, 1), opacity 0.3s ease, visibility 0.3s ease;
+            overflow: hidden;
+            transition: transform 0.25s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.2, 1, 0.3, 1), opacity 0.3s ease;
             opacity: 1;
-            visibility: visible;
         }
 
-        .project-card::after {
+        /* Colored accent bar at top */
+        .project-card::before {
             content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: -1;
+            display: block;
+            height: 4px;
+            width: 100%;
+            background: var(--project-accent, var(--accent-mint));
+            flex-shrink: 0;
         }
 
-        .project-card:hover::after {
-            right: -0.2rem;
-            bottom: -0.2rem;
-        }
-
-        .project-left-col {
-            flex: 0 0 38%;
+        .project-card-body {
+            padding: 1.8rem 2rem;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            min-width: 0;
-            border-right: 0.15rem dashed rgba(17, 24, 39, 0.18);
-            padding-right: 2.2rem;
-        }
-
-        .project-right-col {
+            gap: 1rem;
             flex: 1;
+        }
+
+        /* Top row: icon + title + category chip + github link */
+        .project-top-row {
             display: flex;
-            flex-direction: column;
-            justify-content: center;
-            min-width: 0;
-            padding-left: 0.5rem;
-        }
-
-        @media (max-width: 768px) {
-            .project-card {
-                flex-direction: column;
-                gap: 1.8rem;
-                padding: 1.6rem;
-                align-items: stretch;
-            }
-
-            .project-left-col {
-                flex: none;
-                width: 100%;
-                border-right: none;
-                padding-right: 0;
-                gap: 1.2rem;
-            }
-
-            .project-right-col {
-                flex: none;
-                width: 100%;
-                padding-left: 0;
-            }
-        }
-
-        .project-card:hover {
-            transform: translate(-0.2rem, -0.2rem);
-            box-shadow: 0.6rem 0.6rem 0px var(--text-color);
-        }
-
-        .project-card.hidden {
-            display: none !important;
-        }
-
-        .project-card.fade-out {
-            opacity: 0;
-            transform: scale(0.95) !important;
-        }
-
-        .project-header {
-            display: flex;
-            justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 1.2rem;
+            gap: 1rem;
         }
 
         .project-icon {
             background: var(--btn-color);
             border: 0.15rem solid var(--text-color);
             border-radius: 0.5rem;
-            width: 2.8rem;
-            height: 2.8rem;
+            width: 2.6rem;
+            height: 2.6rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0.2rem 0.2rem 0px var(--text-color);
+            box-shadow: 0.18rem 0.18rem 0px var(--text-color);
             color: var(--text-color);
             flex-shrink: 0;
         }
 
         .project-icon svg {
-            width: 1.4rem;
-            height: 1.4rem;
+            width: 1.3rem;
+            height: 1.3rem;
             stroke-width: 2.2;
+        }
+
+        .project-title-block {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .project-category-chip {
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--project-chip-color, var(--accent-mint));
+            margin-bottom: 0.25rem;
+        }
+
+        .project-title {
+            font-family: inherit;
+            font-size: 1.1rem;
+            font-weight: 800;
+            line-height: 1.3;
         }
 
         .project-github-link {
@@ -1198,9 +1166,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 2.2rem;
-            height: 2.2rem;
+            width: 2rem;
+            height: 2rem;
             border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 0.1rem;
         }
 
         .project-github-link:hover {
@@ -1208,27 +1178,47 @@
             color: var(--accent-peach);
         }
 
-        .project-title {
-            font-family: inherit;
-            font-size: 1.15rem;
-            font-weight: 800;
-            margin-bottom: 0.6rem;
-            line-height: 1.35;
+        .project-description {
+            font-size: 0.875rem;
+            line-height: 1.65;
+            color: #374151;
         }
 
-        .project-description {
-            font-size: 0.88rem;
-            line-height: 1.6;
-            color: #374151;
-            margin-bottom: 1.4rem;
-            flex-grow: 1;
+        /* Impact stats row */
+        .project-stats {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .project-stat {
+            background: rgba(255, 255, 255, 0.7);
+            border: 0.1rem solid rgba(17, 24, 39, 0.15);
+            border-radius: 0.5rem;
+            padding: 0.5rem 0.9rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+        }
+
+        .project-stat-value {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--project-accent, var(--accent-mint));
+            line-height: 1;
+        }
+
+        .project-stat-label {
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: #6b7280;
+            white-space: nowrap;
         }
 
         .project-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.45rem;
-            margin-bottom: 1.4rem;
+            gap: 0.4rem;
         }
 
         .project-tag {
@@ -1236,25 +1226,11 @@
             background: #ffffff;
             border: 0.1rem solid var(--text-color);
             border-radius: 0.35rem;
-            padding: 0.25rem 0.55rem;
-            font-size: 0.72rem;
+            padding: 0.22rem 0.55rem;
+            font-size: 0.7rem;
             font-weight: 700;
             cursor: default;
             transition: background-color 0.15s ease, transform 0.1s ease;
-        }
-
-        .project-tag::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: -1;
-        }
-
-        .project-tag:hover::after {
-            bottom: -1px;
         }
 
         .project-tag:hover {
@@ -1262,8 +1238,10 @@
             transform: translateY(-1px);
         }
 
-        .project-footer {
-            margin-top: auto;
+        /* Divider before footer */
+        .project-card-footer {
+            border-top: 0.12rem dashed rgba(17, 24, 39, 0.15);
+            padding: 1rem 2rem 1.5rem;
             display: flex;
             gap: 0.8rem;
             flex-wrap: wrap;
@@ -1286,6 +1264,48 @@
             width: 1.05rem;
             height: 1.05rem;
             flex-shrink: 0;
+        }
+
+        .project-card:hover {
+            transform: translate(-0.2rem, -0.2rem);
+            box-shadow: 0.6rem 0.6rem 0px var(--text-color);
+        }
+
+        .project-card.hidden {
+            display: none !important;
+        }
+
+        .project-card.fade-out {
+            opacity: 0;
+            transform: scale(0.95) !important;
+        }
+
+        /* Left col / right col stubs — no longer used but kept for safety */
+        .project-left-col,
+        .project-right-col {
+            display: none;
+        }
+
+        .project-header {
+            display: none;
+        }
+
+        .project-footer {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .project-card-body {
+                padding: 1.4rem 1.4rem;
+            }
+
+            .project-card-footer {
+                padding: 0.9rem 1.4rem 1.2rem;
+            }
+
+            .project-stat-value {
+                font-size: 1rem;
+            }
         }
 
         /* ══════════════════════════════
@@ -2375,31 +2395,46 @@
                     aria-label="Filter End-to-End Projects">
                     <div class="folder-tab">End-to-End</div>
                     <div class="folder-header">
-                        <div class="folder-icon-wrapper" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; padding: 4px; align-items: center; justify-items: center;">
+                        <div class="folder-icon-wrapper"
+                            style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; padding: 4px; align-items: center; justify-items: center;">
                             <!-- Excel Logo -->
-                            <svg viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 14px; height: 14px; display: block;">
-                                <path d="M13.25 0H1.5C0.67 0 0 0.67 0 1.5V21.5C0 22.33 0.67 23 1.5 23H21.5C22.33 23 23 22.33 23 21.5V9.75L13.25 0Z" fill="#107C41" />
+                            <svg viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                style="width: 14px; height: 14px; display: block;">
+                                <path
+                                    d="M13.25 0H1.5C0.67 0 0 0.67 0 1.5V21.5C0 22.33 0.67 23 1.5 23H21.5C22.33 23 23 22.33 23 21.5V9.75L13.25 0Z"
+                                    fill="#107C41" />
                                 <path d="M14.375 0V8.625H23L14.375 0Z" fill="#1F9A55" />
-                                <path d="M4.3125 7.1875H7.4375L9.1875 10.375L10.9375 7.1875H14.0625L10.9375 12L14.0625 16.8125H10.9375L9.1875 13.625L7.4375 16.8125H4.3125L7.4375 12L4.3125 7.1875Z" fill="white" />
+                                <path
+                                    d="M4.3125 7.1875H7.4375L9.1875 10.375L10.9375 7.1875H14.0625L10.9375 12L14.0625 16.8125H10.9375L9.1875 13.625L7.4375 16.8125H4.3125L7.4375 12L4.3125 7.1875Z"
+                                    fill="white" />
                             </svg>
                             <!-- Power BI Logo -->
-                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 14px; height: 14px; display: block;">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                style="width: 14px; height: 14px; display: block;">
                                 <rect x="3" y="11" width="5" height="10" rx="1" fill="#f2c811" />
                                 <rect x="9.5" y="6" width="5" height="15" rx="1" fill="#f29c11" />
                                 <rect x="16" y="2" width="5" height="19" rx="1" fill="#e65112" />
                             </svg>
                             <!-- SQL Logo -->
-                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 14px; height: 14px; display: block;">
-                                <ellipse cx="12" cy="5" rx="7" ry="2" fill="#38bdf8" stroke="#0284c7" stroke-width="1.5" />
-                                <path d="M5 5v5c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V5" stroke="#0284c7" stroke-width="1.5" fill="#0284c7" fill-opacity="0.2" />
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                style="width: 14px; height: 14px; display: block;">
+                                <ellipse cx="12" cy="5" rx="7" ry="2" fill="#38bdf8" stroke="#0284c7"
+                                    stroke-width="1.5" />
+                                <path d="M5 5v5c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V5" stroke="#0284c7" stroke-width="1.5"
+                                    fill="#0284c7" fill-opacity="0.2" />
                                 <path d="M5 10v5c0 1.1.9 2 2 2h2" stroke="#0284c7" stroke-width="1.5" />
                                 <path d="M15 17h2c1.1 0 2-.9 2-2v-5" stroke="#0284c7" stroke-width="1.5" />
-                                <path d="M15 15.5a2.5 2.5 0 0 0-2.5-2.5c-1.1 0-2.1.7-2.4 1.7A2 2 0 0 0 8 16a2 2 0 0 0 2 2h5a1.5 1.5 0 0 0 0-3h-.5Z" fill="#3b82f6" stroke="#1d4ed8" stroke-width="1.5" />
+                                <path
+                                    d="M15 15.5a2.5 2.5 0 0 0-2.5-2.5c-1.1 0-2.1.7-2.4 1.7A2 2 0 0 0 8 16a2 2 0 0 0 2 2h5a1.5 1.5 0 0 0 0-3h-.5Z"
+                                    fill="#3b82f6" stroke="#1d4ed8" stroke-width="1.5" />
                             </svg>
                             <!-- Python Logo -->
-                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 14px; height: 14px; display: block;">
-                                <path fill="#3776AB" d="M11.897 2c-2.42 0-4.57.17-5.32.54-.99.5-1.58 1.48-1.58 2.94v2.52h6.9v1h-7.9c-1.58 0-3 1.11-3.5 2.61-.58 1.78-.58 3.51 0 5.29.42 1.25 1.56 2.1 3.14 2.1h1.76v-2.39c0-1.78 1.42-3.2 3.2-3.2h4.8c1.78 0 3.2-1.42 3.2-3.2V5.48c0-1.78-1.42-3.2-3.2-3.2H11.897zm-2.9 1.5a.75.75 0 1 1 0 1.5.75.75 0 0 1 0-1.5z" />
-                                <path fill="#FFD43B" d="M12.103 22c2.42 0 4.57-.17 5.32-.54.99-.5 1.58-1.48 1.58-2.94v-2.52h-6.9v-1h7.9c1.58 0 3-1.11 3.5-2.61.58-1.78.58-3.51 0-5.29-.42-1.25-1.56-2.1-3.14-2.1h-1.76v2.39c0 1.78-1.42 3.2-3.2 3.2h-4.8c-1.78 0-3.2 1.42-3.2 3.2v4.81c0 1.78 1.42 3.2 3.2 3.2h3.5zm2.9-1.5a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5z" />
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                style="width: 14px; height: 14px; display: block;">
+                                <path fill="#3776AB"
+                                    d="M11.897 2c-2.42 0-4.57.17-5.32.54-.99.5-1.58 1.48-1.58 2.94v2.52h6.9v1h-7.9c-1.58 0-3 1.11-3.5 2.61-.58 1.78-.58 3.51 0 5.29.42 1.25 1.56 2.1 3.14 2.1h1.76v-2.39c0-1.78 1.42-3.2 3.2-3.2h4.8c1.78 0 3.2-1.42 3.2-3.2V5.48c0-1.78-1.42-3.2-3.2-3.2H11.897zm-2.9 1.5a.75.75 0 1 1 0 1.5.75.75 0 0 1 0-1.5z" />
+                                <path fill="#FFD43B"
+                                    d="M12.103 22c2.42 0 4.57-.17 5.32-.54.99-.5 1.58-1.48 1.58-2.94v-2.52h-6.9v-1h7.9c1.58 0 3-1.11 3.5-2.61.58-1.78.58-3.51 0-5.29-.42-1.25-1.56-2.1-3.14-2.1h-1.76v2.39c0 1.78-1.42 3.2-3.2 3.2h-4.8c-1.78 0-3.2 1.42-3.2 3.2v4.81c0 1.78 1.42 3.2 3.2 3.2h3.5zm2.9-1.5a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5z" />
                             </svg>
                         </div>
                         <span class="folder-count">1</span>
@@ -2491,9 +2526,10 @@
             <!-- Projects Grid -->
             <div class="projects-grid">
                 <!-- Project 1: Excel Salary Dashboard -->
-                <div class="project-card sr sr-delay-3 hidden fade-out" data-category="excel">
-                    <div class="project-left-col">
-                        <div class="project-header">
+                <div class="project-card sr sr-delay-3 hidden fade-out" data-category="excel"
+                    style="--project-accent: #107C41; --project-chip-color: #107C41;">
+                    <div class="project-card-body">
+                        <div class="project-top-row">
                             <div class="project-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                                     stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -2502,28 +2538,14 @@
                                     <line x1="6" y1="20" x2="6" y2="14"></line>
                                 </svg>
                             </div>
-                        </div>
-                        <h3 class="project-title">Excel Job Salary Dashboard</h3>
-                        <div class="project-footer">
-                            <button class="btn project-btn view-details-btn" data-project="excel" data-category="Excel"
-                                data-title="Excel Job Salary Dashboard"
-                                data-repo="https://github.com/yashawasthi27/Excel_Project">
-                                View Details
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                    <polyline points="14 2 14 8 20 8"></polyline>
-                                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                                    <line x1="16" y1="17" x2="8" y2="17"></line>
-                                    <polyline points="10 9 9 9 8 9"></polyline>
-                                </svg>
-                            </button>
-                            <a href="https://github.com/yashawasthi27/Excel_Project" class="btn project-btn"
-                                target="_blank" rel="noopener noreferrer">
-                                View Repository
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                            <div class="project-title-block">
+                                <div class="project-category-chip">Excel</div>
+                                <h3 class="project-title">Job Salary Dashboard</h3>
+                            </div>
+                            <a href="https://github.com/yashawasthi27/Excel_Project" target="_blank"
+                                rel="noopener noreferrer" class="project-github-link" aria-label="GitHub Repository">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round">
                                     <path
                                         d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
@@ -2531,25 +2553,60 @@
                                 </svg>
                             </a>
                         </div>
-                    </div>
-                    <div class="project-right-col">
-                        <p class="project-description">Dynamic Excel dashboard to analyze and visualize data domain job
-                            salaries. Features interactive filters for job title, country, and type, with real-time
-                            KPIs.
-                        </p>
+                        <p class="project-description">Built an interactive Excel dashboard that answers "What salary
+                            should I expect?" for any data job role. Pivot tables, dynamic slicers, and named ranges let
+                            hiring managers or job seekers filter by title, country, and work type in one click.</p>
+                        <div class="project-stats">
+                            <div class="project-stat">
+                                <span class="project-stat-value">5+</span>
+                                <span class="project-stat-label">Interactive Filters</span>
+                            </div>
+                            <div class="project-stat">
+                                <span class="project-stat-value">Real-time</span>
+                                <span class="project-stat-label">KPI Updates</span>
+                            </div>
+                        </div>
                         <div class="project-tags">
                             <span class="project-tag">Excel</span>
                             <span class="project-tag">Pivot Tables</span>
                             <span class="project-tag">Slicers</span>
                             <span class="project-tag">Data Visualization</span>
+                            <span class="project-tag">Named Ranges</span>
                         </div>
+                    </div>
+                    <div class="project-card-footer">
+                        <button class="btn project-btn view-details-btn" data-project="excel" data-category="Excel"
+                            data-title="Excel Job Salary Dashboard"
+                            data-repo="https://github.com/yashawasthi27/Excel_Project">
+                            View Details
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                            </svg>
+                        </button>
+                        <a href="https://github.com/yashawasthi27/Excel_Project" class="btn project-btn btn-outline"
+                            target="_blank" rel="noopener noreferrer">
+                            GitHub Repo
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                        </a>
                     </div>
                 </div>
 
                 <!-- Project 2: Face Detective (Biometrics) -->
-                <div class="project-card sr sr-delay-4 hidden fade-out" data-category="python">
-                    <div class="project-left-col">
-                        <div class="project-header">
+                <div class="project-card sr sr-delay-4 hidden fade-out" data-category="python"
+                    style="--project-accent: #3776AB; --project-chip-color: #3776AB;">
+                    <div class="project-card-body">
+                        <div class="project-top-row">
                             <div class="project-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                                     stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -2561,28 +2618,14 @@
                                     <path d="M7 18c0-2 2-3 5-3s5 1 5 3" />
                                 </svg>
                             </div>
-                        </div>
-                        <h3 class="project-title">Face Detective (Biometrics)</h3>
-                        <div class="project-footer">
-                            <button class="btn project-btn view-details-btn" data-project="python"
-                                data-category="Python" data-title="Face Detective (Biometrics)"
-                                data-repo="https://github.com/yashawasthi27/Face_Detective">
-                                View Details
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                    <polyline points="14 2 14 8 20 8"></polyline>
-                                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                                    <line x1="16" y1="17" x2="8" y2="17"></line>
-                                    <polyline points="10 9 9 9 8 9"></polyline>
-                                </svg>
-                            </button>
-                            <a href="https://github.com/yashawasthi27/Face_Detective" class="btn project-btn"
-                                target="_blank" rel="noopener noreferrer">
-                                View Repository
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                            <div class="project-title-block">
+                                <div class="project-category-chip">Python</div>
+                                <h3 class="project-title">Face Detective — Biometric Attendance</h3>
+                            </div>
+                            <a href="https://github.com/yashawasthi27/Face_Detective" target="_blank"
+                                rel="noopener noreferrer" class="project-github-link" aria-label="GitHub Repository">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round">
                                     <path
                                         d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
@@ -2590,25 +2633,60 @@
                                 </svg>
                             </a>
                         </div>
-                    </div>
-                    <div class="project-right-col">
-                        <p class="project-description">A secure, client-side biometric attendance system running
-                            entirely in
-                            the browser. Features face enrollment, automated attendance logging, and admin dashboard
-                            controls.</p>
+                        <p class="project-description">A privacy-first biometric attendance system that runs entirely in
+                            the browser — no server, no backend. Enrolls faces using client-side ML, auto-logs
+                            attendance with timestamps, and provides an admin dashboard with CSV export.</p>
+                        <div class="project-stats">
+                            <div class="project-stat">
+                                <span class="project-stat-value">100%</span>
+                                <span class="project-stat-label">Client-side (no server)</span>
+                            </div>
+                            <div class="project-stat">
+                                <span class="project-stat-value">Real-time</span>
+                                <span class="project-stat-label">Face Recognition</span>
+                            </div>
+                        </div>
                         <div class="project-tags">
                             <span class="project-tag">TypeScript</span>
                             <span class="project-tag">Client-side ML</span>
                             <span class="project-tag">Face API</span>
                             <span class="project-tag">Biometrics</span>
+                            <span class="project-tag">IndexedDB</span>
                         </div>
+                    </div>
+                    <div class="project-card-footer">
+                        <button class="btn project-btn view-details-btn" data-project="python" data-category="Python"
+                            data-title="Face Detective (Biometrics)"
+                            data-repo="https://github.com/yashawasthi27/Face_Detective">
+                            View Details
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                            </svg>
+                        </button>
+                        <a href="https://github.com/yashawasthi27/Face_Detective" class="btn project-btn btn-outline"
+                            target="_blank" rel="noopener noreferrer">
+                            GitHub Repo
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                        </a>
                     </div>
                 </div>
 
                 <!-- Project 3: SQL E-Commerce Retail Analysis -->
-                <div class="project-card sr sr-delay-5 hidden fade-out" data-category="sql">
-                    <div class="project-left-col">
-                        <div class="project-header">
+                <div class="project-card sr sr-delay-5 hidden fade-out" data-category="sql"
+                    style="--project-accent: #0284c7; --project-chip-color: #0284c7;">
+                    <div class="project-card-body">
+                        <div class="project-top-row">
                             <div class="project-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                                     stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -2617,28 +2695,14 @@
                                     <path d="M3 12A9 3 0 0 0 21 12"></path>
                                 </svg>
                             </div>
-                        </div>
-                        <h3 class="project-title">SQL E-Commerce Retail Analysis</h3>
-                        <div class="project-footer">
-                            <button class="btn project-btn view-details-btn" data-project="sql" data-category="SQL"
-                                data-title="SQL E-Commerce Retail Analysis"
-                                data-repo="https://github.com/yashawasthi27/sql-ecommerce-analysis">
-                                View Details
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                    <polyline points="14 2 14 8 20 8"></polyline>
-                                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                                    <line x1="16" y1="17" x2="8" y2="17"></line>
-                                    <polyline points="10 9 9 9 8 9"></polyline>
-                                </svg>
-                            </button>
-                            <a href="https://github.com/yashawasthi27/sql-ecommerce-analysis" class="btn project-btn"
-                                target="_blank" rel="noopener noreferrer">
-                                View Repository
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                            <div class="project-title-block">
+                                <div class="project-category-chip">SQL / PostgreSQL</div>
+                                <h3 class="project-title">E-Commerce Retail SQL Analysis</h3>
+                            </div>
+                            <a href="https://github.com/yashawasthi27/sql-ecommerce-analysis" target="_blank"
+                                rel="noopener noreferrer" class="project-github-link" aria-label="GitHub Repository">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round">
                                     <path
                                         d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
@@ -2646,26 +2710,65 @@
                                 </svg>
                             </a>
                         </div>
-                    </div>
-                    <div class="project-right-col">
-                        <p class="project-description">End-to-end retail sales analysis using PostgreSQL — revenue
-                            trends,
-                            customer segmentation, churn analysis, and product performance using CTEs and window
-                            functions.
-                        </p>
+                        <p class="project-description">Full analytical layer on a 5-table retail schema in PostgreSQL —
+                            revenue trends, RFM customer segmentation, churn detection, and product performance. Each
+                            query answers a real business question, structured like an analyst would present to
+                            stakeholders.</p>
+                        <div class="project-stats">
+                            <div class="project-stat">
+                                <span class="project-stat-value">20+</span>
+                                <span class="project-stat-label">Business Queries</span>
+                            </div>
+                            <div class="project-stat">
+                                <span class="project-stat-value">5-table</span>
+                                <span class="project-stat-label">Normalized Schema</span>
+                            </div>
+                            <div class="project-stat">
+                                <span class="project-stat-value">RFM</span>
+                                <span class="project-stat-label">Customer Segmentation</span>
+                            </div>
+                        </div>
                         <div class="project-tags">
                             <span class="project-tag">PostgreSQL</span>
-                            <span class="project-tag">SQL Analytics</span>
                             <span class="project-tag">CTEs</span>
                             <span class="project-tag">Window Functions</span>
+                            <span class="project-tag">Subqueries</span>
+                            <span class="project-tag">Churn Analysis</span>
                         </div>
+                    </div>
+                    <div class="project-card-footer">
+                        <button class="btn project-btn view-details-btn" data-project="sql" data-category="SQL"
+                            data-title="SQL E-Commerce Retail Analysis"
+                            data-repo="https://github.com/yashawasthi27/sql-ecommerce-analysis">
+                            View Details
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                            </svg>
+                        </button>
+                        <a href="https://github.com/yashawasthi27/sql-ecommerce-analysis"
+                            class="btn project-btn btn-outline" target="_blank" rel="noopener noreferrer">
+                            GitHub Repo
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                        </a>
                     </div>
                 </div>
 
                 <!-- Project 4: Finance Analysis Dashboard -->
-                <div class="project-card sr sr-delay-5 hidden fade-out" data-category="powerbi">
-                    <div class="project-left-col">
-                        <div class="project-header">
+                <div class="project-card sr sr-delay-5 hidden fade-out" data-category="powerbi"
+                    style="--project-accent: #f2c811; --project-chip-color: #b38f00;">
+                    <div class="project-card-body">
+                        <div class="project-top-row">
                             <div class="project-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                                     stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -2673,28 +2776,14 @@
                                     <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                                 </svg>
                             </div>
-                        </div>
-                        <h3 class="project-title">Finance Analysis Dashboard</h3>
-                        <div class="project-footer">
-                            <button class="btn project-btn view-details-btn" data-project="financepowerbi"
-                                data-category="Power BI" data-title="Finance Analysis Dashboard"
-                                data-repo="https://github.com/yashawasthi27/Finance-Analysis-Dashboard">
-                                View Details
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                    <polyline points="14 2 14 8 20 8"></polyline>
-                                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                                    <line x1="16" y1="17" x2="8" y2="17"></line>
-                                    <polyline points="10 9 9 9 8 9"></polyline>
-                                </svg>
-                            </button>
-                            <a href="https://github.com/yashawasthi27/Finance-Analysis-Dashboard"
-                                class="btn project-btn" target="_blank" rel="noopener noreferrer">
-                                View Repository
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                            <div class="project-title-block">
+                                <div class="project-category-chip">Power BI</div>
+                                <h3 class="project-title">Finance Analysis Dashboard</h3>
+                            </div>
+                            <a href="https://github.com/yashawasthi27/Finance-Analysis-Dashboard" target="_blank"
+                                rel="noopener noreferrer" class="project-github-link" aria-label="GitHub Repository">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round">
                                     <path
                                         d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
@@ -2702,24 +2791,65 @@
                                 </svg>
                             </a>
                         </div>
-                    </div>
-                    <div class="project-right-col">
-                        <p class="project-description">Professional, multi-page Power BI report built for Awasthi
-                            Finance. Delivering dynamic visibility into transactions, sales performance, customer
-                            segments, and regional distributions with a DAX-based metric switching system.</p>
+                        <p class="project-description">3-page Power BI report for a fictional finance firm tracking
+                            ₹137.73M in sales across 14.94K transactions. DAX-powered dynamic metric switching lets
+                            stakeholders toggle between revenue, profit, and YoY growth views without changing pages.
+                        </p>
+                        <div class="project-stats">
+                            <div class="project-stat">
+                                <span class="project-stat-value">₹137.73M</span>
+                                <span class="project-stat-label">Total Sales Tracked</span>
+                            </div>
+                            <div class="project-stat">
+                                <span class="project-stat-value">14.94K</span>
+                                <span class="project-stat-label">Transactions</span>
+                            </div>
+                            <div class="project-stat">
+                                <span class="project-stat-value">3-page</span>
+                                <span class="project-stat-label">Report</span>
+                            </div>
+                        </div>
                         <div class="project-tags">
                             <span class="project-tag">Power BI</span>
                             <span class="project-tag">DAX</span>
                             <span class="project-tag">Power Query</span>
+                            <span class="project-tag">Star Schema</span>
                             <span class="project-tag">Finance Analytics</span>
                         </div>
+                    </div>
+                    <div class="project-card-footer">
+                        <button class="btn project-btn view-details-btn" data-project="financepowerbi"
+                            data-category="Power BI" data-title="Finance Analysis Dashboard"
+                            data-repo="https://github.com/yashawasthi27/Finance-Analysis-Dashboard">
+                            View Details
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                            </svg>
+                        </button>
+                        <a href="https://github.com/yashawasthi27/Finance-Analysis-Dashboard"
+                            class="btn project-btn btn-outline" target="_blank" rel="noopener noreferrer">
+                            GitHub Repo
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                        </a>
                     </div>
                 </div>
 
                 <!-- Project 5: Power BI Sales Dashboard -->
-                <div class="project-card sr sr-delay-6 hidden fade-out" data-category="powerbi">
-                    <div class="project-left-col">
-                        <div class="project-header">
+                <div class="project-card sr sr-delay-6 hidden fade-out" data-category="powerbi"
+                    style="--project-accent: #e65112; --project-chip-color: #c44e10;">
+                    <div class="project-card-body">
+                        <div class="project-top-row">
                             <div class="project-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                                     stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -2728,28 +2858,14 @@
                                     <line x1="6" y1="20" x2="6" y2="14"></line>
                                 </svg>
                             </div>
-                        </div>
-                        <h3 class="project-title">Power BI Sales Analytics Dashboard</h3>
-                        <div class="project-footer">
-                            <button class="btn project-btn view-details-btn" data-project="powerbi"
-                                data-category="Power BI" data-title="Power BI Sales Analytics Dashboard"
-                                data-repo="https://github.com/yashawasthi27/Power_BI_Project">
-                                View Details
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                    <polyline points="14 2 14 8 20 8"></polyline>
-                                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                                    <line x1="16" y1="17" x2="8" y2="17"></line>
-                                    <polyline points="10 9 9 9 8 9"></polyline>
-                                </svg>
-                            </button>
-                            <a href="https://github.com/yashawasthi27/Power_BI_Project" class="btn project-btn"
-                                target="_blank" rel="noopener noreferrer">
-                                View Repository
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                            <div class="project-title-block">
+                                <div class="project-category-chip">Power BI</div>
+                                <h3 class="project-title">AdventureWorks Sales Analytics Dashboard</h3>
+                            </div>
+                            <a href="https://github.com/yashawasthi27/Power_BI_Project" target="_blank"
+                                rel="noopener noreferrer" class="project-github-link" aria-label="GitHub Repository">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round">
                                     <path
                                         d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
@@ -2757,53 +2873,76 @@
                                 </svg>
                             </a>
                         </div>
-                    </div>
-                    <div class="project-right-col">
-                        <p class="project-description">Interactive sales analytics dashboard built on the AdventureWorks
-                            dataset. Features a structured Star Schema database, advanced DAX measures, target vs.
-                            actual KPI comparisons, and region/margin breakdown pages.</p>
+                        <p class="project-description">Multi-page Power BI dashboard on the AdventureWorks dataset —
+                            $9.72M actual vs $6M target KPIs, region-wise margin breakdown, and a product performance
+                            page with 6 custom DAX measures built on a Star Schema model.</p>
+                        <div class="project-stats">
+                            <div class="project-stat">
+                                <span class="project-stat-value">$9.72M</span>
+                                <span class="project-stat-label">Actual vs $6M Target</span>
+                            </div>
+                            <div class="project-stat">
+                                <span class="project-stat-value">6</span>
+                                <span class="project-stat-label">Custom DAX Measures</span>
+                            </div>
+                        </div>
                         <div class="project-tags">
                             <span class="project-tag">Power BI</span>
                             <span class="project-tag">DAX</span>
                             <span class="project-tag">Star Schema</span>
                             <span class="project-tag">Data Modeling</span>
+                            <span class="project-tag">KPI Tracking</span>
                         </div>
+                    </div>
+                    <div class="project-card-footer">
+                        <button class="btn project-btn view-details-btn" data-project="powerbi" data-category="Power BI"
+                            data-title="Power BI Sales Analytics Dashboard"
+                            data-repo="https://github.com/yashawasthi27/Power_BI_Project">
+                            View Details
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                            </svg>
+                        </button>
+                        <a href="https://github.com/yashawasthi27/Power_BI_Project" class="btn project-btn btn-outline"
+                            target="_blank" rel="noopener noreferrer">
+                            GitHub Repo
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                        </a>
                     </div>
                 </div>
 
                 <!-- Project 6: End-to-End HR Analytics Dashboard -->
-                <div class="project-card sr sr-delay-5 hidden fade-out" data-category="python sql powerbi ete">
-                    <div class="project-left-col">
-                        <div class="project-header">
+                <div class="project-card sr sr-delay-5 hidden fade-out" data-category="python sql powerbi ete"
+                    style="--project-accent: #8b5cf6; --project-chip-color: #7c3aed;">
+                    <div class="project-card-body">
+                        <div class="project-top-row">
                             <div class="project-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                                     stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                                    <path
+                                        d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
                                     <circle cx="12" cy="12" r="3" />
                                 </svg>
                             </div>
-                        </div>
-                        <h3 class="project-title">End-to-End HR Analytics Dashboard</h3>
-                        <div class="project-footer">
-                            <button class="btn project-btn view-details-btn" data-project="hranalytics"
-                                data-category="End-to-End" data-title="End-to-End HR Analytics Dashboard"
-                                data-repo="https://github.com/yashawasthi27/HR-Analytics-Dashboard">
-                                View Details
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                    <polyline points="14 2 14 8 20 8"></polyline>
-                                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                                    <line x1="16" y1="17" x2="8" y2="17"></line>
-                                    <polyline points="10 9 9 9 8 9"></polyline>
-                                </svg>
-                            </button>
-                            <a href="https://github.com/yashawasthi27/HR-Analytics-Dashboard" class="btn project-btn"
-                                target="_blank" rel="noopener noreferrer">
-                                View Repository
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                            <div class="project-title-block">
+                                <div class="project-category-chip">End-to-End · Python · SQL · Power BI</div>
+                                <h3 class="project-title">HR Analytics — Employee Attrition Dashboard</h3>
+                            </div>
+                            <a href="https://github.com/yashawasthi27/HR-Analytics-Dashboard" target="_blank"
+                                rel="noopener noreferrer" class="project-github-link" aria-label="GitHub Repository">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round">
                                     <path
                                         d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
@@ -2811,17 +2950,58 @@
                                 </svg>
                             </a>
                         </div>
-                    </div>
-                    <div class="project-right-col">
-                        <p class="project-description">An end-to-end data analytics project resolving organizational employee attrition. Features Python for data cleaning & EDA, PostgreSQL for analytical queries, and Power BI for an interactive 3-page business dashboard modeling a Star Schema with advanced DAX.</p>
+                        <p class="project-description">Full pipeline from raw HR data to boardroom-ready dashboard:
+                            Python EDA uncovered a 16% attrition rate and key risk factors (overtime, salary, tenure),
+                            PostgreSQL answered 10 business queries, and a 3-page Power BI dashboard targets reduction
+                            below 12%.</p>
+                        <div class="project-stats">
+                            <div class="project-stat">
+                                <span class="project-stat-value">16% → 12%</span>
+                                <span class="project-stat-label">Attrition Target</span>
+                            </div>
+                            <div class="project-stat">
+                                <span class="project-stat-value">3x</span>
+                                <span class="project-stat-label">Overtime Attrition Risk</span>
+                            </div>
+                            <div class="project-stat">
+                                <span class="project-stat-value">10</span>
+                                <span class="project-stat-label">SQL Business Queries</span>
+                            </div>
+                        </div>
                         <div class="project-tags">
                             <span class="project-tag">Python</span>
                             <span class="project-tag">PostgreSQL</span>
                             <span class="project-tag">Power BI</span>
                             <span class="project-tag">DAX</span>
                             <span class="project-tag">Star Schema</span>
-                            <span class="project-tag">ETL & EDA</span>
+                            <span class="project-tag">EDA</span>
                         </div>
+                    </div>
+                    <div class="project-card-footer">
+                        <button class="btn project-btn view-details-btn" data-project="hranalytics"
+                            data-category="End-to-End" data-title="End-to-End HR Analytics Dashboard"
+                            data-repo="https://github.com/yashawasthi27/HR-Analytics-Dashboard">
+                            View Details
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                            </svg>
+                        </button>
+                        <a href="https://github.com/yashawasthi27/HR-Analytics-Dashboard"
+                            class="btn project-btn btn-outline" target="_blank" rel="noopener noreferrer">
+                            GitHub Repo
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                        </a>
                     </div>
                 </div>
             </div>

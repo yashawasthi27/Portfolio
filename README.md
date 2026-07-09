@@ -15,7 +15,7 @@ Welcome to my personal portfolio repository! This is a modern, high-performance,
   - **Nav Selection Caching**: Optimized navigation link states by caching node lookups, avoiding layout shifts and CPU thrashing during scrolling.
 - **Clipboard Integration**: Single-click copy-to-clipboard functionality to instantly grab my email address.
 
-## 🛠️ Tech Stack
+## 🛠️ Tech Stack 
 
 - **Frontend Core**: Semantic HTML5 & Modern CSS3 (CSS Variables, Flexbox, Keyframe Animations)
 - **Vanilla JavaScript**: Lightweight interactions, IntersectionObserver API, dynamic GitHub README integration, and Clipboard API.

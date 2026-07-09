@@ -1,21 +1,25 @@
-# Yash Awasthi | Personal Portfolio
+# Yash Awasthi — Personal Portfolio
 
-Welcome to my personal portfolio repository! This is a refined, single-page web portfolio showcasing my background as an aspiring Data Analyst and AI enthusiast and Student @ SAGE University Bhopal.
+Welcome to my personal portfolio repository! This is a modern, high-performance, single-page web portfolio showcasing my projects, skills, and background as an aspiring Data Analyst and Student at SAGE University Bhopal.
 
 ![Portfolio Preview](images/portfolio.png)
-## ✨ Features
 
-- **Aesthetic Peach & Mint Theme**: A vibrant and professional color palette designed for a modern, clean look.
-- **Flocking Birds Canvas**: A lightweight, custom-built HTML5 `<canvas>` animation of flocking birds gracefully overlapping the background.
-- **Parallax Ocean Waves**: Animated, overlapping SVG waves located at the bottom of the screen to create a calm, atmospheric parallax drift effect.
-- **Noise Texture Overlay**: The entire webpage features a sophisticated soft-grain texture achieved entirely through SVG noise filters. 
-- **Clipboard Integration**: A clean, single-click copy-to-clipboard functionality to quickly grab my email address.
+## ✨ Core Features & Optimizations
+
+- **Modern Palette**: A carefully curated, professional color scheme with sleek transitions and fully responsive layouts.
+- **Parallax Ocean Waves**: Animated, overlapping SVG waves at the bottom of the page creating an atmospheric, smooth drift effect.
+- **Sophisticated Noise Overlay**: A clean SVG-based soft-grain texture filter running efficiently on top of the layout.
+- **High Performance & Optimization**:
+  - **In-Memory Caching**: Implemented a caching layer for GitHub README requests so clicking project cards loads details instantly.
+  - **Hardware Acceleration**: Promoted scroll-reveal modules to composite GPU layers via `will-change` for stutter-free page scrolling.
+  - **Nav Selection Caching**: Optimized navigation link states by caching node lookups, avoiding layout shifts and CPU thrashing during scrolling.
+- **Clipboard Integration**: Single-click copy-to-clipboard functionality to instantly grab my email address.
 
 ## 🛠️ Tech Stack
 
-- **HTML5**
-- **CSS3** (Custom Properties, Flexbox, SVG Parallax Animations)
-- **Vanilla JavaScript** (Canvas API for mathematical bird flight patterns, Clipboard API)
+- **Frontend Core**: Semantic HTML5 & Modern CSS3 (CSS Variables, Flexbox, Keyframe Animations)
+- **Vanilla JavaScript**: Lightweight interactions, IntersectionObserver API, dynamic GitHub README integration, and Clipboard API.
+- **Markdown Rendering**: Marked.js (for client-side repository README parsing)
 
 ## 📫 Connect with me
 

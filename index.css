@@ -465,6 +465,51 @@ img {
     animation: reveal 1s var(--ease-out-expo) 0.6s forwards;
 }
 
+/* Hero Connect Socials */
+.hero-connect {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    opacity: 0;
+    animation: reveal 1s var(--ease-out-expo) 0.7s forwards;
+}
+
+.hero-connect-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    opacity: 0.8;
+}
+
+.hero-socials {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.hero-social-btn {
+    background: rgba(6, 95, 70, 0.05);
+    border: 1px solid rgba(6, 95, 70, 0.1);
+    border-radius: var(--radius-md);
+    width: 2.6rem;
+    height: 2.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-green);
+    text-decoration: none;
+    transition: var(--transition-fast);
+}
+
+.hero-social-btn:hover {
+    background: var(--primary-green);
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(6, 95, 70, 0.15);
+}
+
 /* ══════════════════════════════
    BUTTONS
    ══════════════════════════════ */
@@ -527,7 +572,7 @@ img {
     margin: 2.5rem auto 0;
     padding: 0;
     opacity: 0;
-    animation: reveal 1s var(--ease-out-expo) 0.7s forwards;
+    animation: reveal 1s var(--ease-out-expo) 0.8s forwards;
 }
 
 .overview-strip {

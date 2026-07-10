@@ -1819,3 +1819,31 @@ footer {
         font-size: 1.1rem;
     }
 }
+
+/* ══════════════════════════════
+   PERFORMANCE OPTIMIZATIONS
+   ══════════════════════════════ */
+/* Modern content-visibility to bypass layout/render for offscreen sections */
+#about, #skills, #projects, #contact {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 800px;
+}
+footer {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 300px;
+}
+
+/* Hardware accelerate animation/transition heavy elements */
+.project-card,
+.btn,
+.contact-link-item,
+.hero-social-btn,
+.footer-social-btn,
+.navbar,
+.mobile-menu {
+    will-change: transform, opacity;
+}
+
+.skill-badge {
+    will-change: transform, border-color, box-shadow;
+}

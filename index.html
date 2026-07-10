@@ -13,6 +13,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://raw.githubusercontent.com">
+    <link rel="dns-prefetch" href="https://raw.githubusercontent.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="./index.css?v=10">
@@ -78,7 +80,7 @@
                 <div class="hero-profile-column">
                     <div class="profile-img-wrapper">
                         <div class="profile-img-glow"></div>
-                        <img src="images/original.png" alt="Yash Awasthi" class="profile-img" fetchpriority="high">
+                        <img src="images/original.png" alt="Yash Awasthi" class="profile-img" fetchpriority="high" decoding="async">
                     </div>
                 </div>
 
@@ -408,7 +410,7 @@
                 <div class="project-card">
                     <div class="project-card-image-wrapper">
                         <img src="https://raw.githubusercontent.com/yashawasthi27/Excel_Project/main/DashBoad.png"
-                            alt="Excel Job Salary Dashboard" class="project-card-image" loading="lazy">
+                            alt="Excel Job Salary Dashboard" class="project-card-image" loading="lazy" decoding="async">
                         <span class="project-card-badge">Excel</span>
                         <a href="https://github.com/yashawasthi27/Excel_Project" target="_blank"
                             rel="noopener noreferrer" class="project-card-github" aria-label="GitHub Repository">
@@ -465,7 +467,7 @@
                 <div class="project-card">
                     <div class="project-card-image-wrapper">
                         <img src="https://raw.githubusercontent.com/yashawasthi27/Face_Detective/main/images/dashboard.png"
-                            alt="Face Detective" class="project-card-image" loading="lazy">
+                            alt="Face Detective" class="project-card-image" loading="lazy" decoding="async">
                         <span class="project-card-badge">TypeScript</span>
                         <a href="https://github.com/yashawasthi27/Face_Detective" target="_blank"
                             rel="noopener noreferrer" class="project-card-github" aria-label="GitHub Repository">
@@ -522,7 +524,7 @@
                 <div class="project-card">
                     <div class="project-card-image-wrapper">
                         <img src="./images/sql_thumbnail.svg" alt="SQL retail analysis" class="project-card-image"
-                            loading="lazy">
+                            loading="lazy" decoding="async">
                         <span class="project-card-badge">SQL</span>
                         <a href="https://github.com/yashawasthi27/sql-ecommerce-analysis" target="_blank"
                             rel="noopener noreferrer" class="project-card-github" aria-label="GitHub Repository">
@@ -580,7 +582,7 @@
                 <div class="project-card">
                     <div class="project-card-image-wrapper">
                         <img src="https://raw.githubusercontent.com/yashawasthi27/Finance-Analysis-Dashboard/main/Dashboard_Images/Overview.jpg"
-                            alt="Finance Analysis Dashboard" class="project-card-image" loading="lazy">
+                            alt="Finance Analysis Dashboard" class="project-card-image" loading="lazy" decoding="async">
                         <span class="project-card-badge">Power BI</span>
                         <a href="https://github.com/yashawasthi27/Finance-Analysis-Dashboard" target="_blank"
                             rel="noopener noreferrer" class="project-card-github" aria-label="GitHub Repository">
@@ -638,7 +640,7 @@
                 <div class="project-card">
                     <div class="project-card-image-wrapper">
                         <img src="https://raw.githubusercontent.com/yashawasthi27/Power_BI_Project/main/images/Sales_page-0001.jpg"
-                            alt="Sales Analytics Dashboard" class="project-card-image" loading="lazy">
+                            alt="Sales Analytics Dashboard" class="project-card-image" loading="lazy" decoding="async">
                         <span class="project-card-badge">Power BI</span>
                         <a href="https://github.com/yashawasthi27/Power_BI_Project" target="_blank"
                             rel="noopener noreferrer" class="project-card-github" aria-label="GitHub Repository">
@@ -695,7 +697,7 @@
                 <div class="project-card">
                     <div class="project-card-image-wrapper">
                         <img src="https://raw.githubusercontent.com/yashawasthi27/HR-Analytics-Dashboard/main/screenshots/screenshot_page1_overview.jpg"
-                            alt="HR Analytics Dashboard" class="project-card-image" loading="lazy">
+                            alt="HR Analytics Dashboard" class="project-card-image" loading="lazy" decoding="async">
                         <span class="project-card-badge">End-to-End</span>
                         <a href="https://github.com/yashawasthi27/HR-Analytics-Dashboard" target="_blank"
                             rel="noopener noreferrer" class="project-card-github" aria-label="GitHub Repository">
@@ -957,8 +959,9 @@
 
         if (menuToggle && mobileMenu) {
             menuToggle.addEventListener('click', () => {
-                menuToggle.classList.toggle('active');
+                const isActive = menuToggle.classList.toggle('active');
                 mobileMenu.classList.toggle('active');
+                document.body.style.overflow = isActive ? 'hidden' : '';
             });
         }
 
@@ -993,6 +996,7 @@
             if (menuToggle && mobileMenu) {
                 menuToggle.classList.remove('active');
                 mobileMenu.classList.remove('active');
+                document.body.style.overflow = '';
             }
         }
 

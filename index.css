@@ -231,7 +231,7 @@ img {
     height: 2px;
     background-color: var(--primary-green);
     border-radius: 2px;
-    transition: all 0.3s var(--ease-out-expo);
+    transition: transform 0.3s var(--ease-out-expo), opacity 0.3s var(--ease-out-expo);
 }
 
 /* Mobile Dropdown Menu */
@@ -1135,7 +1135,7 @@ img {
     align-items: center;
     justify-content: center;
     gap: 0.65rem;
-    transition: all 0.25s ease;
+    transition: transform 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
 }
 
@@ -1813,4 +1813,18 @@ footer {
 /* Performance optimizations - keep GPU compositing minimal to avoid memory thrashing on mobile */
 .mobile-menu.active {
     will-change: transform, opacity;
+}
+
+/* Offscreen rendering optimization for below-the-fold sections */
+#skills {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 600px;
+}
+#projects {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 1200px;
+}
+#contact {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 500px;
 }

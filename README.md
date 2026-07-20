@@ -1,26 +1,19 @@
-# 🚀 Yash Awasthi — Personal Portfolio
+# Yash Awasthi — Personal Portfolio
 
-Welcome to my personal portfolio repository! This project showcases my skills, projects, and journey as an aspiring **Data Analyst** and **BCA (AI & Data Science)** student at **SAGE University, Bhopal**.
-
-🌐 **Live Portfolio:** https://yashawasthi27.github.io/Portfolio/
+Welcome to my personal portfolio repository! This is a modern, high-performance, single-page web portfolio showcasing my projects, skills, and background as an aspiring Data Analyst and Student at SAGE University Bhopal.
 
 ![Portfolio Preview](images/portfolio.jpg)
 
----
+## ✨ Core Features & Optimizations
 
-## ✨ Highlights
-
-- 🎨 **Modern & Responsive UI** – Clean design with a professional color palette and seamless responsiveness across all devices.
-- 🌊 **Animated Parallax Waves** – Smooth SVG wave animations creating an immersive visual experience.
-- ✨ **Noise Texture Overlay** – Lightweight SVG-based grain effect for enhanced aesthetics.
-- ⚡ **Performance Optimized**
-  - In-memory caching for instant GitHub README loading.
-  - GPU-accelerated animations using `will-change`.
-  - Optimized navigation state caching for smooth scrolling.
-- 📋 **Clipboard Integration** – One-click email copy functionality.
-- 📱 **Mobile-First Design** – Optimized for desktop, tablet, and mobile devices.
-
----
+- **Modern Palette**: A carefully curated, professional color scheme with sleek transitions and fully responsive layouts.
+- **Parallax Ocean Waves**: Animated, overlapping SVG waves at the bottom of the page creating an atmospheric, smooth drift effect.
+- **Sophisticated Noise Overlay**: A clean SVG-based soft-grain texture filter running efficiently on top of the layout.
+- **High Performance & Optimization**:
+  - **In-Memory Caching**: Implemented a caching layer for GitHub README requests so clicking project cards loads details instantly.
+  - **Hardware Acceleration**: Promoted scroll-reveal modules to composite GPU layers via `will-change` for stutter-free page scrolling.
+  - **Nav Selection Caching**: Optimized navigation link states by caching node lookups, avoiding layout shifts and CPU thrashing during scrolling.
+- **Clipboard Integration**: Single-click copy-to-clipboard functionality to instantly grab my email address.
 
 ## 🛠️ Tech Stack
 
@@ -40,38 +33,12 @@ Welcome to my personal portfolio repository! This project showcases my skills, p
   <img src="https://img.shields.io/badge/Git-F05032?style=flat&logo=git&logoColor=white" alt="Git" />
 </p>
 
-### Frontend
-- HTML5
-- CSS3 (CSS Variables, Flexbox, Animations)
-- Vanilla JavaScript (ES6+)
+- **Frontend Core**: Semantic HTML5 & Modern CSS3 (CSS Variables, Flexbox, Keyframe Animations)
+- **Vanilla JavaScript**: Lightweight interactions, IntersectionObserver API, dynamic GitHub README integration, and Clipboard API.
+- **Markdown Rendering**: Marked.js (for client-side repository README parsing)
 
-### Libraries & APIs
-- Intersection Observer API
-- Clipboard API
-- Marked.js (Markdown Rendering)
+## 📫 Connect with me
 
-### Data Analytics
-- Python
-- SQL
-- PostgreSQL
-- Power BI
-- Microsoft Excel
-- Pandas
-- NumPy
-- Matplotlib
-
----
-
-## 📫 Connect With Me
-
-🌐 **Portfolio:** https://yashawasthi27.github.io/Portfolio/
-
-💼 **LinkedIn:** https://www.linkedin.com/in/yashawasthi27/
-
-💻 **GitHub:** https://github.com/yashawasthi27
-
-📧 **Email:** yashonwork247@gmail.com
-
----
-
-⭐ If you like this project, consider giving it a **Star**. Feedback and suggestions are always welcome!
+- **LinkedIn**: [Yash Awasthi](https://www.linkedin.com/in/yashawasthi27/)
+- **GitHub**: [@yashawasthi27](https://github.com/yashawasthi27)
+- **Email**: yashonwork247@gmail.com

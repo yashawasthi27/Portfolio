@@ -28,9 +28,6 @@
     <!-- Fixed background -->
     <div class="bg-fixed"></div>
 
-    <!-- Noise overlay -->
-    <div class="noise-bg"></div>
-
     <!-- ════════════ NAVBAR ════════════ -->
     <header class="navbar">
         <a href="#hero" class="logo-container">
@@ -410,7 +407,7 @@
                 <div class="project-card">
                     <div class="project-card-image-wrapper">
                         <img src="https://raw.githubusercontent.com/yashawasthi27/Excel_Project/main/DashBoad.png"
-                            alt="Excel Job Salary Dashboard" class="project-card-image" loading="lazy" decoding="async">
+                            alt="Excel Job Salary Dashboard" class="project-card-image" decoding="async">
                         <span class="project-card-badge">Excel</span>
                         <a href="https://github.com/yashawasthi27/Excel_Project" target="_blank"
                             rel="noopener noreferrer" class="project-card-github" aria-label="GitHub Repository">
@@ -467,7 +464,7 @@
                 <div class="project-card">
                     <div class="project-card-image-wrapper">
                         <img src="https://raw.githubusercontent.com/yashawasthi27/Face_Detective/main/images/dashboard.png"
-                            alt="Face Detective" class="project-card-image" loading="lazy" decoding="async">
+                            alt="Face Detective" class="project-card-image" decoding="async">
                         <span class="project-card-badge">TypeScript</span>
                         <a href="https://github.com/yashawasthi27/Face_Detective" target="_blank"
                             rel="noopener noreferrer" class="project-card-github" aria-label="GitHub Repository">
@@ -524,7 +521,7 @@
                 <div class="project-card">
                     <div class="project-card-image-wrapper">
                         <img src="./images/sql_thumbnail.svg" alt="SQL retail analysis" class="project-card-image"
-                            loading="lazy" decoding="async">
+                            decoding="async">
                         <span class="project-card-badge">SQL</span>
                         <a href="https://github.com/yashawasthi27/sql-ecommerce-analysis" target="_blank"
                             rel="noopener noreferrer" class="project-card-github" aria-label="GitHub Repository">
@@ -582,7 +579,7 @@
                 <div class="project-card">
                     <div class="project-card-image-wrapper">
                         <img src="https://raw.githubusercontent.com/yashawasthi27/Finance-Analysis-Dashboard/main/Dashboard_Images/Overview.jpg"
-                            alt="Finance Analysis Dashboard" class="project-card-image" loading="lazy" decoding="async">
+                            alt="Finance Analysis Dashboard" class="project-card-image" decoding="async">
                         <span class="project-card-badge">Power BI</span>
                         <a href="https://github.com/yashawasthi27/Finance-Analysis-Dashboard" target="_blank"
                             rel="noopener noreferrer" class="project-card-github" aria-label="GitHub Repository">
@@ -640,7 +637,7 @@
                 <div class="project-card">
                     <div class="project-card-image-wrapper">
                         <img src="https://raw.githubusercontent.com/yashawasthi27/Power_BI_Project/main/images/Sales_page-0001.jpg"
-                            alt="Sales Analytics Dashboard" class="project-card-image" loading="lazy" decoding="async">
+                            alt="Sales Analytics Dashboard" class="project-card-image" decoding="async">
                         <span class="project-card-badge">Power BI</span>
                         <a href="https://github.com/yashawasthi27/Power_BI_Project" target="_blank"
                             rel="noopener noreferrer" class="project-card-github" aria-label="GitHub Repository">
@@ -697,7 +694,7 @@
                 <div class="project-card">
                     <div class="project-card-image-wrapper">
                         <img src="https://raw.githubusercontent.com/yashawasthi27/HR-Analytics-Dashboard/main/screenshots/screenshot_page1_overview.jpg"
-                            alt="HR Analytics Dashboard" class="project-card-image" loading="lazy" decoding="async">
+                            alt="HR Analytics Dashboard" class="project-card-image" decoding="async">
                         <span class="project-card-badge">End-to-End</span>
                         <a href="https://github.com/yashawasthi27/HR-Analytics-Dashboard" target="_blank"
                             rel="noopener noreferrer" class="project-card-github" aria-label="GitHub Repository">
@@ -981,8 +978,7 @@
             if (!target) return;
             const targetPosition = target.getBoundingClientRect().top + (window.scrollY || window.pageYOffset) - 75; // Account for sticky navbar height
             window.scrollTo({
-                top: targetPosition,
-                behavior: 'smooth'
+                top: targetPosition
             });
         }
 

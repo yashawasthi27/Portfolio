@@ -1,6 +1,7 @@
 # Yash Awasthi — Personal Portfolio
 
 Welcome to my personal portfolio repository! This is a modern, high-performance, single-page web portfolio showcasing my projects, skills, and background as an aspiring Data Analyst and Student at SAGE University Bhopal.
+
 ![Portfolio Preview](images/portfolio.jpg)
 
 ## ✨ Core Features & Optimizations

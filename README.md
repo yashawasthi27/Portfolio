@@ -2,7 +2,7 @@
 
 Welcome to my personal portfolio repository! This is a modern, high-performance, single-page web portfolio showcasing my projects, skills, and background as an aspiring Data Analyst and Student at SAGE University Bhopal.
 
-![Portfolio Preview](images/portfolio.png)
+![Portfolio Preview](images/portfolio.jpg)
 
 ## ✨ Core Features & Optimizations
 
@@ -15,7 +15,7 @@ Welcome to my personal portfolio repository! This is a modern, high-performance,
   - **Nav Selection Caching**: Optimized navigation link states by caching node lookups, avoiding layout shifts and CPU thrashing during scrolling.
 - **Clipboard Integration**: Single-click copy-to-clipboard functionality to instantly grab my email address.
 
-## 🛠️ Tech Stack 
+## 🛠️ Tech Stack
 
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white" alt="Python" />

@@ -963,11 +963,29 @@
         const menuToggle = document.getElementById('menuToggle');
         const mobileMenu = document.getElementById('mobileMenu');
 
+        let lockedScrollY = 0;
+
+        function openMobileMenu() {
+            lockedScrollY = window.scrollY || window.pageYOffset;
+            document.body.style.top = `-${lockedScrollY}px`;
+            document.body.classList.add('menu-open');
+        }
+
+        function closeMobileMenu() {
+            document.body.classList.remove('menu-open');
+            document.body.style.top = '';
+            window.scrollTo(0, lockedScrollY);
+        }
+
         if (menuToggle && mobileMenu) {
             menuToggle.addEventListener('click', () => {
                 const isActive = menuToggle.classList.toggle('active');
                 mobileMenu.classList.toggle('active');
-                document.body.style.overflow = isActive ? 'hidden' : '';
+                if (isActive) {
+                    openMobileMenu();
+                } else {
+                    closeMobileMenu();
+                }
             });
         }
 
@@ -995,14 +1013,15 @@
             if (this.getAttribute('href').indexOf('#') !== 0) return; // Allow normal resume PDF loading
             e.preventDefault();
             const target = document.getElementById(this.dataset.section);
-            smoothScrollTo(target);
 
-            // Close mobile menu if open
-            if (menuToggle && mobileMenu) {
+            // Close mobile menu first so scroll position is restored before navigating
+            if (menuToggle && mobileMenu && menuToggle.classList.contains('active')) {
                 menuToggle.classList.remove('active');
                 mobileMenu.classList.remove('active');
-                document.body.style.overflow = '';
+                closeMobileMenu();
             }
+
+            smoothScrollTo(target);
         }
 
         navLinks.forEach(link => link.addEventListener('click', handleLinkClick));

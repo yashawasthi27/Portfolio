@@ -64,6 +64,15 @@ body {
     line-height: 1.5;
 }
 
+/* Locks background scroll while mobile menu is open (handles iOS touch/momentum scroll) */
+body.menu-open {
+    overflow: hidden;
+    position: fixed;
+    left: 0;
+    right: 0;
+    width: 100%;
+}
+
 img {
     max-width: 100%;
     height: auto;

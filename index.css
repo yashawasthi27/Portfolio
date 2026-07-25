@@ -947,6 +947,8 @@ button:focus-visible,
     transition: transform 0.25s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.2, 1, 0.3, 1);
     cursor: pointer;
     contain: layout paint style;
+    content-visibility: auto;
+    contain-intrinsic-size: auto 480px;
 }
 
 .project-card:hover {
@@ -1946,7 +1948,7 @@ footer {
 
     .mobile-menu {
         top: 60px;
-        /* Match smaller navbar height  */
+        /* Match smaller navbar height */
     }
 
     .mobile-nav-links {

@@ -24,7 +24,7 @@ Welcome to my personal portfolio repository! This is a modern, high-performance,
 - **Cached Nav Lookups**: Navigation link elements are queried once and cached in a map, avoiding repeated DOM lookups during scroll.
 - **Passive Scroll Listeners** + `requestAnimationFrame` throttling on scroll-driven UI (e.g. the back-to-top button).
 
-## ♿ Accessibility & SEO
+##  Accessibility & SEO
 
 - Skip-to-content link, visible `:focus-visible` states, and `aria-current="page"` on the active nav link.
 - Open Graph & Twitter Card meta tags for rich link previews, JSON-LD `Person` schema, canonical URL, `robots.txt`, and `sitemap.xml`.

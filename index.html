@@ -1033,10 +1033,34 @@
         const mobileNavLinks = document.querySelectorAll('.mobile-nav-link[data-section]');
         const menuToggle = document.getElementById('menuToggle');
         const mobileMenu = document.getElementById('mobileMenu');
+        const navbarEl = document.querySelector('.navbar');
 
         let lockedScrollY = 0;
 
+        // Keep the mobile dropdown pinned exactly to the navbar's real rendered
+        // height (instead of guessing with hardcoded px per breakpoint — that's
+        // what caused the gap/overlap bug on smaller phones).
+        function syncNavbarHeight() {
+            if (navbarEl) {
+                document.documentElement.style.setProperty('--navbar-height', `${navbarEl.offsetHeight}px`);
+            }
+        }
+        syncNavbarHeight();
+        window.addEventListener('load', syncNavbarHeight);
+        window.addEventListener('resize', () => {
+            syncNavbarHeight();
+            // If the viewport is resized/rotated past the mobile breakpoint while
+            // the menu is open (e.g. tablet rotation, browser resize), close it
+            // instead of leaving it stuck open with scroll locked.
+            if (window.innerWidth > 768 && menuToggle && menuToggle.classList.contains('active')) {
+                menuToggle.classList.remove('active');
+                mobileMenu.classList.remove('active');
+                closeMobileMenu();
+            }
+        }, { passive: true });
+
         function openMobileMenu() {
+            syncNavbarHeight();
             lockedScrollY = window.scrollY || window.pageYOffset;
             document.body.style.top = `-${lockedScrollY}px`;
             document.body.classList.add('menu-open');
@@ -1056,6 +1080,29 @@
                     openMobileMenu();
                 } else {
                     closeMobileMenu();
+                }
+            });
+
+            // Tap/click anywhere outside the open menu closes it — standard
+            // real-world hamburger menu behavior.
+            document.addEventListener('click', (e) => {
+                if (!menuToggle.classList.contains('active')) return;
+                const clickedInsideMenu = mobileMenu.contains(e.target);
+                const clickedToggle = menuToggle.contains(e.target);
+                if (!clickedInsideMenu && !clickedToggle) {
+                    menuToggle.classList.remove('active');
+                    mobileMenu.classList.remove('active');
+                    closeMobileMenu();
+                }
+            });
+
+            // Escape key closes the menu, same as the project modal.
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && menuToggle.classList.contains('active')) {
+                    menuToggle.classList.remove('active');
+                    mobileMenu.classList.remove('active');
+                    closeMobileMenu();
+                    menuToggle.focus();
                 }
             });
         }

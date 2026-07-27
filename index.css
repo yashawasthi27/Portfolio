@@ -321,8 +321,7 @@ button:focus-visible,
 /* Mobile Dropdown Menu */
 .mobile-menu {
     position: fixed;
-    top: 72px;
-    /* Height of navbar */
+    top: var(--navbar-height, 72px);
     left: 0;
     width: 100%;
     background: rgba(255, 255, 255, 0.95);
@@ -1658,7 +1657,8 @@ footer {
 /* Performance: backdrop-filter on a sticky/fixed element forces a re-blur
    on every scroll frame — expensive on phones. Swap to a near-opaque solid
    background on touch devices so scrolling stays smooth. */
-@media (max-width: 768px), (hover: none) and (pointer: coarse) {
+@media (max-width: 768px),
+(hover: none) and (pointer: coarse) {
     .navbar {
         background: rgba(255, 255, 255, 0.96);
         backdrop-filter: none;
@@ -1973,11 +1973,6 @@ footer {
         padding: 0.5rem;
         font-size: 0.8rem;
         justify-content: center;
-    }
-
-    .mobile-menu {
-        top: 60px;
-        /* Match smaller navbar height */
     }
 
     .mobile-nav-links {

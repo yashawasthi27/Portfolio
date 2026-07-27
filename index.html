@@ -1069,7 +1069,10 @@
         function closeMobileMenu() {
             document.body.classList.remove('menu-open');
             document.body.style.top = '';
-            window.scrollTo(0, lockedScrollY);
+            // Instant, not smooth — this is just correcting the scroll-lock hack
+            // (the page never actually visually moved), so it must not compete
+            // with the smooth-scroll navigation that may run right after it.
+            window.scrollTo({ top: lockedScrollY, left: 0, behavior: 'instant' });
         }
 
         if (menuToggle && mobileMenu) {

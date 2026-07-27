@@ -151,11 +151,12 @@ button:focus-visible,
 }
 
 /* ══════════════════════════════
-   NAVBAR (STICKY TOP)
+   NAVBAR (FIXED TOP)
    ══════════════════════════════  */
 .navbar {
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
     width: 100%;
     display: flex;
     align-items: center;
@@ -369,7 +370,8 @@ button:focus-visible,
    ══════════════════════════════ */
 #hero {
     position: relative;
-    min-height: calc(100vh - 72px);
+    margin-top: var(--navbar-height, 72px);
+    min-height: calc(100vh - var(--navbar-height, 72px));
     display: flex;
     flex-direction: column;
     justify-content: center;

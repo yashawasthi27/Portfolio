@@ -38,7 +38,7 @@
     <link rel="preconnect" href="https://raw.githubusercontent.com">
     <link rel="dns-prefetch" href="https://raw.githubusercontent.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./index.css?v=11">
+    <link rel="stylesheet" href="./index.css?v=12">
 
     <!-- Marked.js for markdown parsing -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
@@ -117,7 +117,8 @@
                     </svg>
                 </a>
             </div>
-            <button class="hamburger-btn" id="menuToggle" aria-label="Toggle Menu">
+            <button class="hamburger-btn" id="menuToggle" aria-label="Toggle Menu" aria-expanded="false"
+                aria-controls="mobileMenu">
                 <span class="bar"></span>
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -962,7 +963,7 @@
     </footer>
 
     <!-- Project Details Modal -->
-    <div id="projectModal" class="modal-overlay">
+    <div id="projectModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalProjectTitle">
         <div class="modal-box">
             <div class="modal-header">
                 <div class="modal-header-title">
@@ -1069,6 +1070,7 @@
         function closeMobileMenu() {
             document.body.classList.remove('menu-open');
             document.body.style.top = '';
+            if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
             // Instant, not smooth — this is just correcting the scroll-lock hack
             // (the page never actually visually moved), so it must not compete
             // with the smooth-scroll navigation that may run right after it.
@@ -1079,6 +1081,7 @@
             menuToggle.addEventListener('click', () => {
                 const isActive = menuToggle.classList.toggle('active');
                 mobileMenu.classList.toggle('active');
+                menuToggle.setAttribute('aria-expanded', String(isActive));
                 if (isActive) {
                     openMobileMenu();
                 } else {

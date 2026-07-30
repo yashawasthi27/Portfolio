@@ -1710,6 +1710,15 @@ footer {
     transform: translateY(0);
 }
 
+/* While any modal is open, the floating back-to-top button sits above it
+   (z-index 500 vs 300) and can overlap/block the modal's action buttons,
+   especially on mobile where space is tight. Hide it while a modal is open. */
+.modal-overlay.show~#backToTop {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
 .back-to-top:hover {
     background: var(--primary-green-hover);
     transform: translateY(-3px);

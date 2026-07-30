@@ -84,7 +84,7 @@
             <a href="#about" class="nav-link" data-section="about">About</a>
             <a href="#skills" class="nav-link" data-section="skills">Skills</a>
             <a href="#projects" class="nav-link" data-section="projects">Projects</a>
-            <a href="resume/Yash_Awasthi_Resume.pdf" class="nav-link" target="_blank"
+            <a href="resume/Yash_Awasthi_Resume.pdf" class="nav-link resume-preview-trigger" target="_blank"
                 rel="noopener noreferrer">Resume</a>
             <a href="#contact" class="nav-link" data-section="contact">Contact</a>
         </nav>
@@ -133,7 +133,7 @@
             <a href="#about" class="mobile-nav-link" data-section="about">About</a>
             <a href="#skills" class="mobile-nav-link" data-section="skills">Skills</a>
             <a href="#projects" class="mobile-nav-link" data-section="projects">Projects</a>
-            <a href="resume/Yash_Awasthi_Resume.pdf" class="mobile-nav-link" target="_blank"
+            <a href="resume/Yash_Awasthi_Resume.pdf" class="mobile-nav-link resume-preview-trigger" target="_blank"
                 rel="noopener noreferrer">Resume</a>
             <a href="#contact" class="mobile-nav-link" data-section="contact">Contact</a>
         </nav>
@@ -175,8 +175,8 @@
                             </svg>
                             View My Work
                         </a>
-                        <a href="resume/Yash_Awasthi_Resume.pdf" class="btn btn-secondary" target="_blank"
-                            rel="noopener noreferrer">
+                        <a href="resume/Yash_Awasthi_Resume.pdf" class="btn btn-secondary resume-preview-trigger"
+                            target="_blank" rel="noopener noreferrer">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
                                 stroke-linejoin="round">
@@ -879,8 +879,8 @@
                         GitHub
                     </a>
 
-                    <a href="resume/Yash_Awasthi_Resume.pdf" class="contact-link-item" target="_blank"
-                        rel="noopener noreferrer">
+                    <a href="resume/Yash_Awasthi_Resume.pdf" class="contact-link-item resume-preview-trigger"
+                        target="_blank" rel="noopener noreferrer">
                         <div class="contact-link-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
@@ -943,7 +943,7 @@
                         </svg>
                     </a>
                     <a href="resume/Yash_Awasthi_Resume.pdf" target="_blank" rel="noopener noreferrer"
-                        class="footer-social-btn" aria-label="Resume">
+                        class="footer-social-btn resume-preview-trigger" aria-label="Resume">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -980,6 +980,58 @@
             </div>
             <div class="modal-body" id="modalBody">
                 <!-- Content will be injected dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Resume Preview Modal -->
+    <div id="resumeModal" class="modal-overlay resume-modal-overlay" role="dialog" aria-modal="true"
+        aria-labelledby="resumeModalTitle">
+        <div class="modal-box resume-modal-box">
+            <div class="modal-header">
+                <div class="modal-header-title">
+                    <span class="project-tag">PDF</span>
+                    <h3 id="resumeModalTitle">Resume Preview</h3>
+                </div>
+                <button class="modal-close-btn" id="closeResumeModalBtn" aria-label="Close resume preview">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body resume-modal-body">
+                <div class="resume-iframe-wrapper">
+                    <iframe id="resumeIframe" class="resume-iframe" title="Yash Awasthi Resume Preview"
+                        loading="lazy"></iframe>
+                    <p class="resume-fallback-note">
+                        Preview not showing? Some mobile browsers can't display PDFs inline —
+                        use the buttons below instead.
+                    </p>
+                </div>
+                <div class="resume-modal-actions">
+                    <a href="resume/Yash_Awasthi_Resume.pdf" download="Yash_Awasthi_Resume.pdf"
+                        class="btn btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        Download Resume
+                    </a>
+                    <a href="resume/Yash_Awasthi_Resume.pdf" target="_blank" rel="noopener noreferrer"
+                        class="btn btn-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                        Open in New Tab
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -1372,6 +1424,55 @@
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && modal.classList.contains('show')) {
                 closeModal();
+            }
+        });
+
+        // ── Resume Preview Modal ──
+        const resumeModal = document.getElementById('resumeModal');
+        const resumeIframe = document.getElementById('resumeIframe');
+        const closeResumeModalBtn = document.getElementById('closeResumeModalBtn');
+        const resumeTriggers = document.querySelectorAll('.resume-preview-trigger');
+        const RESUME_PDF_PATH = 'resume/Yash_Awasthi_Resume.pdf';
+
+        function openResumeModal() {
+            // Lazy-load the PDF only when the modal is actually opened, not on page load
+            if (!resumeIframe.src) {
+                resumeIframe.src = RESUME_PDF_PATH;
+            }
+            resumeModal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeResumeModal() {
+            resumeModal.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        resumeTriggers.forEach(trigger => {
+            trigger.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                // If opened from inside the mobile dropdown, close that first
+                // so we don't end up with the menu and the modal both open.
+                if (menuToggle && menuToggle.classList.contains('active')) {
+                    menuToggle.classList.remove('active');
+                    mobileMenu.classList.remove('active');
+                    closeMobileMenu();
+                }
+
+                openResumeModal();
+            });
+        });
+
+        closeResumeModalBtn.addEventListener('click', closeResumeModal);
+        resumeModal.addEventListener('click', (e) => {
+            if (e.target === resumeModal) {
+                closeResumeModal();
+            }
+        });
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && resumeModal.classList.contains('show')) {
+                closeResumeModal();
             }
         });
 

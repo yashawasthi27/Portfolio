@@ -1239,6 +1239,25 @@
 
         sections.forEach(s => s && navObserver.observe(s));
 
+        // ── Shared modal scroll-lock (project modal + resume modal) ──
+        // Same technique as the mobile menu: a plain `overflow: hidden` on
+        // body still lets the background scroll on iOS via touch/momentum
+        // scrolling, so we pin the body in place and restore the exact
+        // scroll position on close instead.
+        let modalLockedScrollY = 0;
+
+        function lockBodyScroll() {
+            modalLockedScrollY = window.scrollY || window.pageYOffset;
+            document.body.style.top = `-${modalLockedScrollY}px`;
+            document.body.classList.add('menu-open');
+        }
+
+        function unlockBodyScroll() {
+            document.body.classList.remove('menu-open');
+            document.body.style.top = '';
+            window.scrollTo({ top: modalLockedScrollY, left: 0, behavior: 'instant' });
+        }
+
         // ── Project Details Modal Logic ──
         const modal = document.getElementById('projectModal');
         const modalTitle = document.getElementById('modalProjectTitle');
@@ -1356,7 +1375,7 @@
             modalCategory.textContent = category;
 
             modal.classList.add('show');
-            document.body.style.overflow = 'hidden';
+            lockBodyScroll();
 
             showLoading();
             let markdownText = await fetchReadme(projectKey, repoUrl);
@@ -1388,7 +1407,7 @@
 
         function closeModal() {
             modal.classList.remove('show');
-            document.body.style.overflow = '';
+            unlockBodyScroll();
         }
 
         document.querySelectorAll('.project-card').forEach(card => {
@@ -1429,12 +1448,12 @@
                 resumeIframe.src = RESUME_PDF_PATH;
             }
             resumeModal.classList.add('show');
-            document.body.style.overflow = 'hidden';
+            lockBodyScroll();
         }
 
         function closeResumeModal() {
             resumeModal.classList.remove('show');
-            document.body.style.overflow = '';
+            unlockBodyScroll();
         }
 
         resumeTriggers.forEach(trigger => {

@@ -1211,33 +1211,62 @@
 
         const sections = ['hero', 'about', 'skills', 'projects', 'contact'].map(id => document.getElementById(id));
 
+        function setActiveSection(id) {
+            const active = navLinksMap[id];
+            if (active) {
+                navLinks.forEach(l => {
+                    l.classList.remove('active');
+                    l.removeAttribute('aria-current');
+                });
+                active.classList.add('active');
+                active.setAttribute('aria-current', 'page');
+            }
+
+            const mobileActive = mobileNavLinksMap[id];
+            if (mobileActive) {
+                mobileNavLinks.forEach(l => {
+                    l.classList.remove('active');
+                    l.removeAttribute('aria-current');
+                });
+                mobileActive.classList.add('active');
+                mobileActive.setAttribute('aria-current', 'page');
+            }
+        }
+
+        // Bug fix: the old version set "active" for every section that fired
+        // as intersecting in a callback batch, in whatever order the browser
+        // reported them — not the order of visibility. On first load, before
+        // layout/images settle, two sections (e.g. hero + about) could both
+        // briefly report isIntersecting:true, and whichever was processed
+        // last silently won, even if barely on screen (that's the "About"
+        // highlighted while sitting on Home bug).
+        //
+        // Fix: collapse the intersection root to a thin horizontal line near
+        // the top of the viewport. Only the section currently crossing that
+        // line can ever be "active", so there's no ambiguity to resolve.
         const navObserver = new IntersectionObserver(entries => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    const active = navLinksMap[entry.target.id];
-                    if (active && !active.classList.contains('active')) {
-                        navLinks.forEach(l => {
-                            l.classList.remove('active');
-                            l.removeAttribute('aria-current');
-                        });
-                        active.classList.add('active');
-                        active.setAttribute('aria-current', 'page');
-                    }
-
-                    const mobileActive = mobileNavLinksMap[entry.target.id];
-                    if (mobileActive && !mobileActive.classList.contains('active')) {
-                        mobileNavLinks.forEach(l => {
-                            l.classList.remove('active');
-                            l.removeAttribute('aria-current');
-                        });
-                        mobileActive.classList.add('active');
-                        mobileActive.setAttribute('aria-current', 'page');
-                    }
+                    setActiveSection(entry.target.id);
                 }
             });
-        }, { threshold: 0.2 });
+        }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
 
         sections.forEach(s => s && navObserver.observe(s));
+
+        // Belt-and-braces: once the user hits the very bottom of the page
+        // (footer area, below the last observed section), force Contact to
+        // show active instead of leaving whatever was last set.
+        let bottomTicking = false;
+        window.addEventListener('scroll', () => {
+            if (bottomTicking) return;
+            bottomTicking = true;
+            window.requestAnimationFrame(() => {
+                const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+                if (atBottom) setActiveSection('contact');
+                bottomTicking = false;
+            });
+        }, { passive: true });
 
         // ── Shared modal scroll-lock (project modal + resume modal) ──
         // Same technique as the mobile menu: a plain `overflow: hidden` on

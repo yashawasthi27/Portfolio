@@ -52,9 +52,34 @@ body {
 }
 
 html {
-    scroll-behavior: smooth !important;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
+}
+
+/* Native smooth-scroll only kicks in as a fallback when Lenis (inertia
+   scroll) isn't running — e.g. reduced-motion users. When Lenis IS active
+   it drives scrolling itself, and having both fight over the same scroll
+   produces stutter, so JS toggles this class off once Lenis boots. */
+html.native-smooth-scroll {
+    scroll-behavior: smooth;
+}
+
+/* Lenis fades the whole page in size/scroll setup slightly differently on
+   some browsers during first paint — this keeps it seamless. */
+html.lenis {
+    height: auto;
+}
+
+html.lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+}
+
+html.lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+}
+
+html.lenis.lenis-stopped {
+    overflow: hidden;
 }
 
 /* Removes the ~300ms tap delay and gray flash on tap for buttons/links on mobile */
@@ -717,30 +742,40 @@ button:focus-visible,
     border-radius: var(--radius-sm);
 }
 
-/* Scroll reveal helper */
+/* Scroll reveal helper — slightly longer, eased-out motion with a soft
+   scale-in reads as "premium" the way Framer-built sites do, instead of a
+   flat slide-up. */
 .sr {
     opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.5s var(--ease-out-expo), transform 0.5s var(--ease-out-expo);
+    transform: translateY(28px) scale(0.98);
+    transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
     will-change: opacity, transform;
 }
 
 .sr.visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
     will-change: auto;
 }
 
 .sr-delay-1 {
-    transition-delay: 0.1s;
+    transition-delay: 0.12s;
 }
 
 .sr-delay-2 {
-    transition-delay: 0.2s;
+    transition-delay: 0.24s;
 }
 
 .sr-delay-3 {
-    transition-delay: 0.3s;
+    transition-delay: 0.36s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sr {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
 }
 
 /* ══════════════════════════════

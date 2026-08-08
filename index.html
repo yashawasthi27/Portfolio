@@ -43,6 +43,12 @@
     <!-- Marked.js for markdown parsing -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
 
+    <!-- Lenis: inertia-based smooth scroll (the buttery, weighted scroll feel
+         behind most Framer sites) — kept out of the critical path with defer,
+         initialized further down once the DOM is ready. Skipped entirely for
+         users who've asked for reduced motion. -->
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
+
     <!-- Structured data for search engines -->
     <script type="application/ld+json">
     {
@@ -1045,6 +1051,43 @@
     </button>
 
     <script defer>
+        // ── Lenis smooth scroll ──
+        // Framer-built sites (like the one that inspired this) get their
+        // "silky" feel mainly from inertia-based scrolling instead of the
+        // browser's default 1:1 wheel scroll. Lenis interpolates scroll
+        // position every frame, which is what actually reads as "smooth".
+        // window.lenis is exposed so smoothScrollTo() and the back-to-top
+        // button (further down) can drive it directly for anchor jumps too.
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        function initLenis() {
+            if (prefersReducedMotion || typeof Lenis === 'undefined') {
+                // No inertia scroll — fall back to the browser's native
+                // smooth anchor-jump so navigation still feels intentional.
+                document.documentElement.classList.add('native-smooth-scroll');
+                return;
+            }
+            const lenis = new Lenis({
+                duration: 1.1,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // ease-out-expo, matches --ease-out-expo
+                smoothWheel: true,
+                smoothTouch: false, // touch scroll is already smooth natively; don't fight it
+                touchMultiplier: 1.5,
+            });
+            function raf(time) {
+                lenis.raf(time);
+                requestAnimationFrame(raf);
+            }
+            requestAnimationFrame(raf);
+            window.lenis = lenis;
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initLenis);
+        } else {
+            initLenis();
+        }
+
         // ── Email copy ──
         const copyEmail = (e) => {
             e.preventDefault();
@@ -1106,6 +1149,7 @@
             lockedScrollY = window.scrollY || window.pageYOffset;
             document.body.style.top = `-${lockedScrollY}px`;
             document.body.classList.add('menu-open');
+            if (window.lenis) window.lenis.stop();
         }
 
         function closeMobileMenu() {
@@ -1116,6 +1160,7 @@
             // (the page never actually visually moved), so it must not compete
             // with the smooth-scroll navigation that may run right after it.
             window.scrollTo({ top: lockedScrollY, left: 0, behavior: 'instant' });
+            if (window.lenis) window.lenis.start();
         }
 
         if (menuToggle && mobileMenu) {
@@ -1168,9 +1213,16 @@
 
         function smoothScrollTo(target) {
             if (!target) return;
+            if (window.lenis) {
+                // Let Lenis own the animation so anchor navigation has the
+                // same weighted, eased feel as wheel scrolling.
+                window.lenis.scrollTo(target, { offset: -75, duration: 1.1 });
+                return;
+            }
             const targetPosition = target.getBoundingClientRect().top + (window.scrollY || window.pageYOffset) - 75; // Account for sticky navbar height
             window.scrollTo({
-                top: targetPosition
+                top: targetPosition,
+                behavior: 'smooth'
             });
         }
 
@@ -1250,12 +1302,14 @@
             modalLockedScrollY = window.scrollY || window.pageYOffset;
             document.body.style.top = `-${modalLockedScrollY}px`;
             document.body.classList.add('menu-open');
+            if (window.lenis) window.lenis.stop(); // pause inertia scroll so it can't fight the fixed-position lock
         }
 
         function unlockBodyScroll() {
             document.body.classList.remove('menu-open');
             document.body.style.top = '';
             window.scrollTo({ top: modalLockedScrollY, left: 0, behavior: 'instant' });
+            if (window.lenis) window.lenis.start();
         }
 
         // ── Project Details Modal Logic ──
@@ -1499,7 +1553,11 @@
             }, { passive: true });
 
             backToTopBtn.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                if (window.lenis) {
+                    window.lenis.scrollTo(0, { duration: 1.2 });
+                } else {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
             });
         }
     </script>

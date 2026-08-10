@@ -331,7 +331,17 @@ button:focus-visible,
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
     transform: translate3d(0, -110%, 0);
     opacity: 0;
-    transition: transform 0.4s var(--ease-out-expo), opacity 0.3s ease;
+    /* visibility is the hard guarantee here: on the very first paint, a
+       fixed + backdrop-filter element can render at its untransformed
+       position for a frame before the browser promotes it to its own
+       compositing layer — that's the "flashes open for a second on load"
+       bug. transform/opacity alone don't stop that frame from painting;
+       visibility:hidden does, since nothing renders until it flips. */
+    visibility: hidden;
+    /* Promote the compositing layer immediately in the closed state too,
+       instead of lazily the first time .active is toggled. */
+    will-change: transform, opacity;
+    transition: transform 0.4s var(--ease-out-expo), opacity 0.3s ease, visibility 0s linear 0.4s;
     z-index: 999;
     pointer-events: none;
 }
@@ -339,6 +349,8 @@ button:focus-visible,
 .mobile-menu.active {
     transform: translate3d(0, 0, 0);
     opacity: 1;
+    visibility: visible;
+    transition: transform 0.4s var(--ease-out-expo), opacity 0.3s ease;
     pointer-events: all;
 }
 
@@ -1843,6 +1855,12 @@ footer {
    RESPONSIVE MEDIA QUERIES
    ══════════════════════════════ */
 @media (max-width: 1024px) {
+
+    /* Intermediate tablet: tighten section vertical rhythm */
+    .section {
+        padding: 5rem 1.5rem;
+    }
+
     .hero-grid {
         gap: 2.5rem;
     }
@@ -1876,6 +1894,12 @@ footer {
 }
 
 @media (max-width: 768px) {
+
+    /* Mobile section vertical rhythm */
+    .section {
+        padding: 3.5rem 1.25rem;
+    }
+
     .navbar {
         padding: 0.75rem 1rem;
         z-index: 1000;
@@ -1899,9 +1923,10 @@ footer {
         gap: 0.4rem;
     }
 
+    /* Increase touch target to meet 44px standard */
     .navbar-social-btn {
-        width: 2rem;
-        height: 2rem;
+        width: 2.5rem;
+        height: 2.5rem;
     }
 
     .navbar-social-btn svg {
@@ -1929,13 +1954,13 @@ footer {
 
     .hero-grid {
         grid-template-columns: 1fr;
-        gap: 2rem;
+        gap: 1.5rem;
         text-align: center;
     }
 
     .hero-profile-column {
         order: 1;
-        margin-bottom: 1rem;
+        margin-bottom: 0;
     }
 
     .hero-text-column {
@@ -1962,12 +1987,19 @@ footer {
         width: 100%;
         flex-direction: column;
         gap: 0.75rem;
-        margin-top: 1.5rem;
+        margin-top: 0.5rem;
     }
 
-    .btn {
+    /* Only widen buttons inside the hero CTA group on mobile.
+       Scoping prevents modal, contact card, and footer buttons from
+       being forced full-width where they should not be. */
+    .hero-cta-group .btn {
         width: 100%;
         justify-content: center;
+    }
+
+    .about-card {
+        padding: 1.5rem;
     }
 
     .overview-strip {
@@ -2065,16 +2097,28 @@ footer {
         font-size: 1.15rem;
     }
 
+    /* Allow badges to wrap naturally instead of forcing 2-col grid:
+       long badge names (PostgreSQL, Matplotlib) would get squeezed. */
     .skills-strip-badges {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        display: flex;
+        flex-wrap: wrap;
         gap: 0.5rem;
+        justify-content: center;
     }
 
     .skill-badge {
-        padding: 0.5rem;
-        font-size: 0.8rem;
-        justify-content: center;
+        padding: 0.45rem 0.9rem;
+        font-size: 0.82rem;
+    }
+
+    /* Proportional heading scale for small phones */
+    .section-title {
+        font-size: 1.85rem;
+        margin-bottom: 2rem;
+    }
+
+    .hero-description {
+        font-size: 1rem;
     }
 
     .mobile-nav-links {

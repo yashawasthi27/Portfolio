@@ -38,7 +38,7 @@
     <link rel="preconnect" href="https://raw.githubusercontent.com">
     <link rel="dns-prefetch" href="https://raw.githubusercontent.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./index.css?v=12">
+    <link rel="stylesheet" href="./index.css?v=13">
 
     <!-- Marked.js for markdown parsing -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
@@ -117,7 +117,7 @@
                     </svg>
                 </a>
             </div>
-            <button class="hamburger-btn" id="menuToggle" aria-label="Toggle Menu" aria-expanded="false"
+            <button type="button" class="hamburger-btn" id="menuToggle" aria-label="Toggle Menu" aria-expanded="false"
                 aria-controls="mobileMenu">
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -1046,29 +1046,64 @@
 
     <script defer>
         // ── Email copy ──
+        // Guarded per-button + real fallback: on non-secure contexts or old
+        // browsers navigator.clipboard can be undefined, and a single
+        // missing button id used to throw here and silently kill every
+        // feature wired up further down the script (hamburger, nav
+        // highlighting, modals, back-to-top).
+        function fallbackCopyText(text) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            try { document.execCommand('copy'); } catch (err) { /* no-op */ }
+            document.body.removeChild(ta);
+        }
+
         const copyEmail = (e) => {
             e.preventDefault();
-            navigator.clipboard.writeText('yashonwork247@gmail.com').then(() => {
+            const showToast = () => {
                 const toast = document.getElementById('toast');
+                if (!toast) return;
                 toast.className = 'show';
                 setTimeout(() => { toast.className = ''; }, 3000);
-            });
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText('yashonwork247@gmail.com').then(showToast).catch(() => {
+                    fallbackCopyText('yashonwork247@gmail.com');
+                    showToast();
+                });
+            } else {
+                fallbackCopyText('yashonwork247@gmail.com');
+                showToast();
+            }
         };
-        document.getElementById('emailBtn').addEventListener('click', copyEmail);
-        document.getElementById('footerEmailBtn').addEventListener('click', copyEmail);
-        document.getElementById('heroEmailBtn').addEventListener('click', copyEmail);
+        ['emailBtn', 'footerEmailBtn', 'heroEmailBtn'].forEach(id => {
+            const btn = document.getElementById(id);
+            if (btn) btn.addEventListener('click', copyEmail);
+        });
 
         // ── Scroll reveal observer ──
-        const observer = new IntersectionObserver((entries, observerInstance) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observerInstance.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.15 });
-
-        document.querySelectorAll('.sr').forEach(el => observer.observe(el));
+        // Guard against browsers without IntersectionObserver support —
+        // fall back to just showing the content instead of leaving it
+        // permanently hidden (and instead of throwing and breaking the
+        // rest of this script).
+        if ('IntersectionObserver' in window) {
+            const observer = new IntersectionObserver((entries, observerInstance) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observerInstance.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15 });
+            document.querySelectorAll('.sr').forEach(el => observer.observe(el));
+        } else {
+            document.querySelectorAll('.sr').forEach(el => el.classList.add('visible'));
+        }
 
         // ── Nav smooth scroll + active state ──
         const navLinks = document.querySelectorAll('.nav-link[data-section]');
@@ -1089,6 +1124,22 @@
         }
         syncNavbarHeight();
         window.addEventListener('load', syncNavbarHeight);
+
+        // The very first paint on a fresh (uncached) visit can measure the
+        // navbar BEFORE the Inter webfont has swapped in or the logo image
+        // has decoded — both change the navbar's rendered height slightly.
+        // That stale --navbar-height is what caused the mobile menu to open
+        // with a gap/overlap only on first load. A ResizeObserver keeps it
+        // correct automatically whenever the navbar's actual box size
+        // changes, and document.fonts.ready is a belt-and-suspenders catch
+        // for the font-swap case specifically.
+        if ('ResizeObserver' in window && navbarEl) {
+            new ResizeObserver(() => syncNavbarHeight()).observe(navbarEl);
+        }
+        if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(syncNavbarHeight);
+        }
+
         window.addEventListener('resize', () => {
             syncNavbarHeight();
             // If the viewport is resized/rotated past the mobile breakpoint while
@@ -1117,6 +1168,22 @@
             // with the smooth-scroll navigation that may run right after it.
             window.scrollTo({ top: lockedScrollY, left: 0, behavior: 'instant' });
         }
+
+        // If the browser restores this page from bfcache (e.g. user opened
+        // the menu, navigated away via a link, then hit Back), the DOM
+        // state — including an open .mobile-menu and the scroll-lock — is
+        // restored exactly as it was, with no 'load' event firing. Without
+        // this, that shows up to the user as the menu being open/flashing
+        // the instant the page "loads" on Back navigation.
+        window.addEventListener('pageshow', (e) => {
+            if (e.persisted && menuToggle && mobileMenu) {
+                menuToggle.classList.remove('active');
+                mobileMenu.classList.remove('active');
+                menuToggle.setAttribute('aria-expanded', 'false');
+                document.body.classList.remove('menu-open');
+                document.body.style.top = '';
+            }
+        });
 
         if (menuToggle && mobileMenu) {
             menuToggle.addEventListener('click', () => {
@@ -1168,9 +1235,11 @@
 
         function smoothScrollTo(target) {
             if (!target) return;
-            const targetPosition = target.getBoundingClientRect().top + (window.scrollY || window.pageYOffset) - 75; // Account for sticky navbar height
+            const navbarHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--navbar-height')) || 75;
+            const targetPosition = target.getBoundingClientRect().top + (window.scrollY || window.pageYOffset) - navbarHeight; // Account for sticky navbar height
             window.scrollTo({
-                top: targetPosition
+                top: targetPosition,
+                behavior: 'smooth'
             });
         }
 
@@ -1322,6 +1391,7 @@
         }
 
         function showLoading() {
+            if (!modalBody) return;
             modalBody.innerHTML = `
                 <div class="modal-loader">
                     <div class="spinner"></div>
@@ -1354,18 +1424,22 @@
             }
 
             try {
-                const response = await fetch(rawUrl);
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 8000);
+                const response = await fetch(rawUrl, { signal: controller.signal });
+                clearTimeout(timeoutId);
                 if (!response.ok) throw new Error('Failed to fetch from GitHub');
                 const text = await response.text();
                 readmeCache[projectKey] = text;
                 return text;
             } catch (err) {
-                console.warn("GitHub fetch failed, falling back to local copy:", err);
+                console.warn("GitHub fetch failed (or timed out), falling back to local copy:", err);
                 return LOCAL_PROJECT_READMES[projectKey] || 'No content available.';
             }
         }
 
         async function openModal(btn) {
+            if (!modal || !modalTitle || !modalCategory || !modalBody) return;
             const projectKey = btn.getAttribute('data-project');
             const category = btn.getAttribute('data-category');
             const title = btn.getAttribute('data-title');
@@ -1406,6 +1480,7 @@
         }
 
         function closeModal() {
+            if (!modal) return;
             modal.classList.remove('show');
             unlockBodyScroll();
         }
@@ -1423,14 +1498,16 @@
             });
         });
 
-        closeModalBtn.addEventListener('click', closeModal);
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                closeModal();
-            }
-        });
+        if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+        }
         window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modal.classList.contains('show')) {
+            if (e.key === 'Escape' && modal && modal.classList.contains('show')) {
                 closeModal();
             }
         });
@@ -1443,6 +1520,7 @@
         const RESUME_PDF_PATH = 'resume/Yash_Awasthi_Resume.pdf';
 
         function openResumeModal() {
+            if (!resumeModal || !resumeIframe) return;
             // Lazy-load the PDF only when the modal is actually opened, not on page load
             if (!resumeIframe.src) {
                 resumeIframe.src = RESUME_PDF_PATH;
@@ -1452,6 +1530,7 @@
         }
 
         function closeResumeModal() {
+            if (!resumeModal) return;
             resumeModal.classList.remove('show');
             unlockBodyScroll();
         }
@@ -1472,14 +1551,16 @@
             });
         });
 
-        closeResumeModalBtn.addEventListener('click', closeResumeModal);
-        resumeModal.addEventListener('click', (e) => {
-            if (e.target === resumeModal) {
-                closeResumeModal();
-            }
-        });
+        if (closeResumeModalBtn) closeResumeModalBtn.addEventListener('click', closeResumeModal);
+        if (resumeModal) {
+            resumeModal.addEventListener('click', (e) => {
+                if (e.target === resumeModal) {
+                    closeResumeModal();
+                }
+            });
+        }
         window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && resumeModal.classList.contains('show')) {
+            if (e.key === 'Escape' && resumeModal && resumeModal.classList.contains('show')) {
                 closeResumeModal();
             }
         });

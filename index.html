@@ -1046,38 +1046,17 @@
 
     <script defer>
         // ── Email copy ──
-        const copyEmail = async (e) => {
+        const copyEmail = (e) => {
             e.preventDefault();
-            const email = 'yashonwork247@gmail.com';
-
-            try {
-                if (navigator.clipboard && window.isSecureContext) {
-                    await navigator.clipboard.writeText(email);
-                } else {
-                    const textarea = document.createElement('textarea');
-                    textarea.value = email;
-                    textarea.setAttribute('readonly', '');
-                    textarea.style.position = 'fixed';
-                    textarea.style.opacity = '0';
-                    document.body.appendChild(textarea);
-                    textarea.select();
-                    document.execCommand('copy');
-                    textarea.remove();
-                }
-
+            navigator.clipboard.writeText('yashonwork247@gmail.com').then(() => {
                 const toast = document.getElementById('toast');
                 toast.className = 'show';
-                clearTimeout(copyEmail.toastTimer);
-                copyEmail.toastTimer = setTimeout(() => { toast.className = ''; }, 3000);
-            } catch (error) {
-                // Copy may be blocked by browser permissions; open the mail client instead.
-                window.location.href = `mailto:${email}`;
-            }
+                setTimeout(() => { toast.className = ''; }, 3000);
+            });
         };
-        ['emailBtn', 'footerEmailBtn', 'heroEmailBtn'].forEach(id => {
-            const button = document.getElementById(id);
-            if (button) button.addEventListener('click', copyEmail);
-        });
+        document.getElementById('emailBtn').addEventListener('click', copyEmail);
+        document.getElementById('footerEmailBtn').addEventListener('click', copyEmail);
+        document.getElementById('heroEmailBtn').addEventListener('click', copyEmail);
 
         // ── Scroll reveal observer ──
         const observer = new IntersectionObserver((entries, observerInstance) => {
@@ -1097,11 +1076,8 @@
         const menuToggle = document.getElementById('menuToggle');
         const mobileMenu = document.getElementById('mobileMenu');
         const navbarEl = document.querySelector('.navbar');
-        if (mobileMenu) mobileMenu.setAttribute('aria-hidden', 'true');
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
         let lockedScrollY = 0;
-        let previousBodyPaddingRight = '';
 
         // Keep the mobile dropdown pinned exactly to the navbar's real rendered
         // height (instead of guessing with hardcoded px per breakpoint — that's
@@ -1125,31 +1101,21 @@
             }
         }, { passive: true });
 
-        function applyScrollLock(scrollY) {
-            const scrollbarWidth = Math.max(0, window.innerWidth - document.documentElement.clientWidth);
-            previousBodyPaddingRight = document.body.style.paddingRight;
-            document.documentElement.style.setProperty('--scrollbar-compensation', `${scrollbarWidth}px`);
-            document.body.style.top = `-${scrollY}px`;
-            document.body.classList.add('menu-open');
-        }
-
-        function releaseScrollLock(scrollY) {
-            document.body.classList.remove('menu-open');
-            document.body.style.top = '';
-            document.body.style.paddingRight = previousBodyPaddingRight;
-            document.documentElement.style.removeProperty('--scrollbar-compensation');
-            window.scrollTo(0, scrollY);
-        }
-
         function openMobileMenu() {
             syncNavbarHeight();
             lockedScrollY = window.scrollY || window.pageYOffset;
-            applyScrollLock(lockedScrollY);
+            document.body.style.top = `-${lockedScrollY}px`;
+            document.body.classList.add('menu-open');
         }
 
         function closeMobileMenu() {
-            releaseScrollLock(lockedScrollY);
+            document.body.classList.remove('menu-open');
+            document.body.style.top = '';
             if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
+            // Instant, not smooth — this is just correcting the scroll-lock hack
+            // (the page never actually visually moved), so it must not compete
+            // with the smooth-scroll navigation that may run right after it.
+            window.scrollTo({ top: lockedScrollY, left: 0, behavior: 'instant' });
         }
 
         if (menuToggle && mobileMenu) {
@@ -1157,7 +1123,6 @@
                 const isActive = menuToggle.classList.toggle('active');
                 mobileMenu.classList.toggle('active');
                 menuToggle.setAttribute('aria-expanded', String(isActive));
-                mobileMenu.setAttribute('aria-hidden', String(!isActive));
                 if (isActive) {
                     openMobileMenu();
                 } else {
@@ -1174,7 +1139,6 @@
                 if (!clickedInsideMenu && !clickedToggle) {
                     menuToggle.classList.remove('active');
                     mobileMenu.classList.remove('active');
-                    mobileMenu.setAttribute('aria-hidden', 'true');
                     closeMobileMenu();
                 }
             });
@@ -1184,7 +1148,6 @@
                 if (e.key === 'Escape' && menuToggle.classList.contains('active')) {
                     menuToggle.classList.remove('active');
                     mobileMenu.classList.remove('active');
-                    mobileMenu.setAttribute('aria-hidden', 'true');
                     closeMobileMenu();
                     menuToggle.focus();
                 }
@@ -1205,21 +1168,11 @@
 
         function smoothScrollTo(target) {
             if (!target) return;
-
-            const navbarHeight = parseInt(
-                getComputedStyle(document.documentElement).getPropertyValue('--navbar-height'),
-                10
-            ) || 75;
-
-            const currentScrollY = window.scrollY || window.pageYOffset;
-            const targetPosition = Math.max(
-                0,
-                target.getBoundingClientRect().top + currentScrollY - navbarHeight
-            );
-
+            const navbarHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--navbar-height')) || 75;
+            const targetPosition = target.getBoundingClientRect().top + (window.scrollY || window.pageYOffset) - navbarHeight; // Account for sticky navbar height
             window.scrollTo({
                 top: targetPosition,
-                behavior: prefersReducedMotion.matches ? 'auto' : 'smooth'
+                behavior: 'smooth'
             });
         }
 
@@ -1297,11 +1250,14 @@
 
         function lockBodyScroll() {
             modalLockedScrollY = window.scrollY || window.pageYOffset;
-            applyScrollLock(modalLockedScrollY);
+            document.body.style.top = `-${modalLockedScrollY}px`;
+            document.body.classList.add('menu-open');
         }
 
         function unlockBodyScroll() {
-            releaseScrollLock(modalLockedScrollY);
+            document.body.classList.remove('menu-open');
+            document.body.style.top = '';
+            window.scrollTo({ top: modalLockedScrollY, left: 0, behavior: 'instant' });
         }
 
         // ── Project Details Modal Logic ──
@@ -1311,8 +1267,6 @@
         const modalBody = document.getElementById('modalBody');
         const closeModalBtn = document.getElementById('closeModalBtn');
         const viewDetailsBtns = document.querySelectorAll('.view-details-btn');
-
-        modal.setAttribute('aria-hidden', 'true');
 
         // Embedded backup markdown readmes for offline/fallback mode
         const LOCAL_PROJECT_READMES = {
@@ -1402,22 +1356,8 @@
             }
 
             try {
-                if (!rawUrl) throw new Error('Unknown project README');
-
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 8000);
-
-                let response;
-                try {
-                    response = await fetch(rawUrl, {
-                        signal: controller.signal,
-                        cache: 'force-cache'
-                    });
-                } finally {
-                    clearTimeout(timeoutId);
-                }
-
-                if (!response.ok) throw new Error(`GitHub returned ${response.status}`);
+                const response = await fetch(rawUrl);
+                if (!response.ok) throw new Error('Failed to fetch from GitHub');
                 const text = await response.text();
                 readmeCache[projectKey] = text;
                 return text;
@@ -1427,69 +1367,28 @@
             }
         }
 
-        function sanitizeRenderedMarkdown(htmlContent) {
-            const template = document.createElement('template');
-            template.innerHTML = htmlContent;
-
-            template.content.querySelectorAll('script, iframe, object, embed, form').forEach(el => el.remove());
-
-            template.content.querySelectorAll('*').forEach(el => {
-                [...el.attributes].forEach(attr => {
-                    if (/^on/i.test(attr.name)) {
-                        el.removeAttribute(attr.name);
-                    }
-                });
-
-                ['href', 'src'].forEach(name => {
-                    const value = el.getAttribute(name);
-                    if (value && /^\s*javascript:/i.test(value)) {
-                        el.removeAttribute(name);
-                    }
-                });
-            });
-
-            return template.innerHTML;
-        }
-
-        let modalRequestId = 0;
-        let lastModalTrigger = null;
-
         async function openModal(btn) {
             const projectKey = btn.getAttribute('data-project');
             const category = btn.getAttribute('data-category');
             const title = btn.getAttribute('data-title');
             const repoUrl = btn.getAttribute('data-repo');
-            const requestId = ++modalRequestId;
-            lastModalTrigger = btn;
 
             modalTitle.textContent = title;
             modalCategory.textContent = category;
 
             modal.classList.add('show');
-            modal.setAttribute('aria-hidden', 'false');
             lockBodyScroll();
 
             showLoading();
-            if (closeModalBtn) closeModalBtn.focus({ preventScroll: true });
-
             let markdownText = await fetchReadme(projectKey, repoUrl);
-
-            // Ignore stale responses if another project was opened meanwhile.
-            if (requestId !== modalRequestId || !modal.classList.contains('show')) return;
-
             markdownText = rewriteRelativeUrls(markdownText, projectKey);
 
             let htmlContent = '';
             if (window.marked && typeof window.marked.parse === 'function') {
-                htmlContent = window.marked.parse(markdownText, {
-                    headerIds: false,
-                    mangle: false
-                });
+                htmlContent = window.marked.parse(markdownText);
             } else {
                 htmlContent = markdownText.split('\n\n').map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
             }
-
-            htmlContent = sanitizeRenderedMarkdown(htmlContent);
 
             modalBody.innerHTML = `
                 <div class="modal-markdown">
@@ -1510,12 +1409,7 @@
 
         function closeModal() {
             modal.classList.remove('show');
-            modal.setAttribute('aria-hidden', 'true');
             unlockBodyScroll();
-            if (lastModalTrigger && document.contains(lastModalTrigger)) {
-                lastModalTrigger.focus({ preventScroll: true });
-            }
-            lastModalTrigger = null;
         }
 
         document.querySelectorAll('.project-card').forEach(card => {
@@ -1550,31 +1444,18 @@
         const resumeTriggers = document.querySelectorAll('.resume-preview-trigger');
         const RESUME_PDF_PATH = 'resume/Yash_Awasthi_Resume.pdf';
 
-        resumeModal.setAttribute('aria-hidden', 'true');
-
-        let lastResumeTrigger = null;
-
-        function openResumeModal(trigger) {
-            // Lazy-load the PDF only when the modal is actually opened.
-            if (!resumeIframe.getAttribute('src')) {
+        function openResumeModal() {
+            // Lazy-load the PDF only when the modal is actually opened, not on page load
+            if (!resumeIframe.src) {
                 resumeIframe.src = RESUME_PDF_PATH;
             }
-
-            lastResumeTrigger = trigger || null;
             resumeModal.classList.add('show');
-            resumeModal.setAttribute('aria-hidden', 'false');
             lockBodyScroll();
-            if (closeResumeModalBtn) closeResumeModalBtn.focus({ preventScroll: true });
         }
 
         function closeResumeModal() {
             resumeModal.classList.remove('show');
-            resumeModal.setAttribute('aria-hidden', 'true');
             unlockBodyScroll();
-            if (lastResumeTrigger && document.contains(lastResumeTrigger)) {
-                lastResumeTrigger.focus({ preventScroll: true });
-            }
-            lastResumeTrigger = null;
         }
 
         resumeTriggers.forEach(trigger => {
@@ -1586,11 +1467,10 @@
                 if (menuToggle && menuToggle.classList.contains('active')) {
                     menuToggle.classList.remove('active');
                     mobileMenu.classList.remove('active');
-                    mobileMenu.setAttribute('aria-hidden', 'true');
                     closeMobileMenu();
                 }
 
-                openResumeModal(trigger);
+                openResumeModal();
             });
         });
 
@@ -1621,10 +1501,7 @@
             }, { passive: true });
 
             backToTopBtn.addEventListener('click', () => {
-                window.scrollTo({
-                    top: 0,
-                    behavior: prefersReducedMotion.matches ? 'auto' : 'smooth'
-                });
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             });
         }
     </script>

@@ -13,52 +13,6 @@
     animation: none !important;
 }
 
-/* ══════════════════════════════
-   REDUCED MOTION
-   ══════════════════════════════
-   Was missing entirely — this collapses every animation/transition to
-   near-instant for users who've asked the OS for reduced motion, and
-   makes sure scroll-reveal (.sr) elements never get stuck invisible
-   since they rely on a transition finishing to add `.visible`. */
-@media (prefers-reduced-motion: reduce) {
-
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-    }
-
-    .sr {
-        opacity: 1 !important;
-        transform: none !important;
-    }
-
-    html.lenis-smooth {
-        scroll-behavior: auto !important;
-    }
-}
-
-/* ══════════════════════════════
-   LENIS SMOOTH SCROLL
-   ══════════════════════════════
-   Recommended Lenis setup CSS: hand scroll-behavior fully to Lenis
-   while it's active (avoids the native `scroll-behavior: smooth` on
-   <html> fighting with Lenis's own easing on every wheel/anchor jump). */
-html.lenis {
-    height: auto;
-}
-
-html.lenis.lenis-smooth {
-    scroll-behavior: auto !important;
-}
-
-html.lenis.lenis-stopped {
-    overflow: hidden;
-}
-
 /* ═════════════════════════════
    DESIGN SYSTEM & VARIABLES
    ═════════════════════════════ */
@@ -196,16 +150,6 @@ img {
     z-index: 200;
     box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.02);
     transform: translateZ(0);
-    transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-}
-
-/* Applied via JS (rAF-throttled scroll listener) once the page has
-   scrolled past the hero — gives the navbar a touch more presence over
-   busy section backgrounds instead of staying static the whole page. */
-.navbar.scrolled {
-    background: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 4px 24px -6px rgba(0, 0, 0, 0.07);
-    border-bottom-color: rgba(9, 9, 11, 0.1);
 }
 
 .logo-container {
@@ -999,7 +943,7 @@ img {
     display: flex;
     flex-direction: column;
     box-shadow: var(--card-shadow);
-    transition: transform 0.25s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.2, 1, 0.3, 1), border-color 0.25s ease;
+    transition: transform 0.25s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.2, 1, 0.3, 1);
     cursor: pointer;
     contain: layout paint style;
     content-visibility: auto;
@@ -1009,7 +953,6 @@ img {
 .project-card:hover {
     transform: translateY(-5px);
     box-shadow: var(--card-shadow-hover);
-    border-color: rgba(9, 9, 11, 0.18);
     will-change: transform;
 }
 

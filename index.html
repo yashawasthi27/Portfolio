@@ -1062,7 +1062,7 @@
                     observerInstance.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.15 });
+        }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
 
         document.querySelectorAll('.sr').forEach(el => observer.observe(el));
 
@@ -1098,16 +1098,25 @@
         // Safety net: never leave transitions permanently disabled if the
         // load event is delayed by a slow-loading asset.
         setTimeout(() => document.documentElement.classList.remove('preload'), 2500);
+        let resizeTicking = false;
         window.addEventListener('resize', () => {
-            syncNavbarHeight();
-            // If the viewport is resized/rotated past the mobile breakpoint while
-            // the menu is open (e.g. tablet rotation, browser resize), close it
-            // instead of leaving it stuck open with scroll locked.
-            if (window.innerWidth > 768 && menuToggle && menuToggle.classList.contains('active')) {
-                menuToggle.classList.remove('active');
-                mobileMenu.classList.remove('active');
-                closeMobileMenu();
-            }
+            // Throttle to one layout read/write per frame — resize can fire
+            // in rapid bursts (drag-resizing, rotation) and syncNavbarHeight
+            // reads offsetHeight, which forces a reflow if run unthrottled.
+            if (resizeTicking) return;
+            resizeTicking = true;
+            requestAnimationFrame(() => {
+                syncNavbarHeight();
+                // If the viewport is resized/rotated past the mobile breakpoint while
+                // the menu is open (e.g. tablet rotation, browser resize), close it
+                // instead of leaving it stuck open with scroll locked.
+                if (window.innerWidth > 768 && menuToggle && menuToggle.classList.contains('active')) {
+                    menuToggle.classList.remove('active');
+                    mobileMenu.classList.remove('active');
+                    closeMobileMenu();
+                }
+                resizeTicking = false;
+            });
         }, { passive: true });
 
         function openMobileMenu() {
@@ -1176,8 +1185,12 @@
         function smoothScrollTo(target) {
             if (!target) return;
             const targetPosition = target.getBoundingClientRect().top + (window.scrollY || window.pageYOffset) - 75; // Account for sticky navbar height
+            // Explicit behavior:'smooth' here (not just relying on the CSS
+            // scroll-behavior rule) keeps it consistent across browsers and
+            // guarantees it never falls back to an instant jump.
             window.scrollTo({
-                top: targetPosition
+                top: targetPosition,
+                behavior: 'smooth'
             });
         }
 

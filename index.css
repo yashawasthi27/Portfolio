@@ -1425,6 +1425,10 @@ footer {
     padding: 2rem;
     overflow-y: auto;
     flex-grow: 1;
+    /* Momentum scroll on iOS + stop rubber-banding from chaining to the
+       page behind the modal, which otherwise feels janky on touch. */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
 }
 
 /* ══════════════════════════════
@@ -1445,6 +1449,8 @@ footer {
     overflow-y: auto;
     flex-grow: 1;
     min-height: 0;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
 }
 
 .resume-iframe-wrapper {

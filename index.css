@@ -13,9 +13,9 @@
     animation: none !important;
 }
 
-/* ══════════════════════════════
+/* ═════════════════════════════
    DESIGN SYSTEM & VARIABLES
-   ══════════════════════════════ */
+   ═════════════════════════════ */
 :root {
     --primary-green: #09090b;
     /* Zinc 950 - deep black theme primary */

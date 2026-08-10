@@ -18,6 +18,24 @@
         .skip-link:focus {
             top: 1rem;
         }
+
+        /* Same FOUC problem, different element: .nav-pill (full desktop
+           nav) is visible and .hamburger-btn is hidden by default; they
+           only swap inside a max-width:768px rule that lives in the
+           external index.css. On mobile, until that stylesheet loads,
+           the full nav-pill flashes open in the navbar before snapping
+           to the hamburger-only layout. Mirroring the swap here removes
+           the flash — index.css re-applies the same values once it
+           loads, so there's no visual jump. */
+        @media (max-width: 768px) {
+            .nav-pill {
+                display: none;
+            }
+
+            .hamburger-btn {
+                display: flex;
+            }
+        }
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"

@@ -36,6 +36,37 @@
                 display: flex;
             }
         }
+
+        /* Same FOUC problem again, this time for several elements whose
+           hidden state is defined only in the external index.css:
+           - .mobile-menu sits in the DOM right after the header (before
+             the hero section) and contains the full nav link list — until
+             index.css loads, it renders as a plain, unstyled block of link
+             text right at the top of the page.
+           - .modal-overlay (project + resume modals) contains real text
+             ("Category", "Resume Preview", etc.) that would otherwise
+             flash in normal document flow.
+           - #toast and .back-to-top are fixed-position widgets that would
+             otherwise render inline, in the wrong place, unstyled.
+           Only the hiding properties are mirrored here; index.css supplies
+           the full positioning/transition once it loads, with no visual
+           jump since both states start "invisible". */
+        .mobile-menu,
+        #toast,
+        .back-to-top {
+            position: fixed;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            pointer-events: none;
+        }
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"

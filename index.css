@@ -1843,6 +1843,11 @@ footer {
    RESPONSIVE MEDIA QUERIES
    ══════════════════════════════ */
 @media (max-width: 1024px) {
+    /* Intermediate tablet: tighten section vertical rhythm */
+    .section {
+        padding: 5rem 1.5rem;
+    }
+
     .hero-grid {
         gap: 2.5rem;
     }
@@ -1876,6 +1881,11 @@ footer {
 }
 
 @media (max-width: 768px) {
+    /* Mobile section vertical rhythm */
+    .section {
+        padding: 3.5rem 1.25rem;
+    }
+
     .navbar {
         padding: 0.75rem 1rem;
         z-index: 1000;
@@ -1899,9 +1909,10 @@ footer {
         gap: 0.4rem;
     }
 
+    /* Increase touch target to meet 44px standard */
     .navbar-social-btn {
-        width: 2rem;
-        height: 2rem;
+        width: 2.5rem;
+        height: 2.5rem;
     }
 
     .navbar-social-btn svg {
@@ -1929,13 +1940,13 @@ footer {
 
     .hero-grid {
         grid-template-columns: 1fr;
-        gap: 2rem;
+        gap: 1.5rem;
         text-align: center;
     }
 
     .hero-profile-column {
         order: 1;
-        margin-bottom: 1rem;
+        margin-bottom: 0;
     }
 
     .hero-text-column {
@@ -1962,12 +1973,19 @@ footer {
         width: 100%;
         flex-direction: column;
         gap: 0.75rem;
-        margin-top: 1.5rem;
+        margin-top: 0.5rem;
     }
 
-    .btn {
+    /* Only widen buttons inside the hero CTA group on mobile.
+       Scoping prevents modal, contact card, and footer buttons from
+       being forced full-width where they should not be. */
+    .hero-cta-group .btn {
         width: 100%;
         justify-content: center;
+    }
+
+    .about-card {
+        padding: 1.5rem;
     }
 
     .overview-strip {
@@ -2065,16 +2083,28 @@ footer {
         font-size: 1.15rem;
     }
 
+    /* Allow badges to wrap naturally instead of forcing 2-col grid:
+       long badge names (PostgreSQL, Matplotlib) would get squeezed. */
     .skills-strip-badges {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        display: flex;
+        flex-wrap: wrap;
         gap: 0.5rem;
+        justify-content: center;
     }
 
     .skill-badge {
-        padding: 0.5rem;
-        font-size: 0.8rem;
-        justify-content: center;
+        padding: 0.45rem 0.9rem;
+        font-size: 0.82rem;
+    }
+
+    /* Proportional heading scale for small phones */
+    .section-title {
+        font-size: 1.85rem;
+        margin-bottom: 2rem;
+    }
+
+    .hero-description {
+        font-size: 1rem;
     }
 
     .mobile-nav-links {

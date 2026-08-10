@@ -117,7 +117,7 @@
                     </svg>
                 </a>
             </div>
-            <button class="hamburger-btn" id="menuToggle" aria-label="Toggle Menu" aria-expanded="false"
+            <button type="button" class="hamburger-btn" id="menuToggle" aria-label="Toggle Menu" aria-expanded="false"
                 aria-controls="mobileMenu">
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -1089,6 +1089,22 @@
         }
         syncNavbarHeight();
         window.addEventListener('load', syncNavbarHeight);
+
+        // The very first paint on a fresh (uncached) visit can measure the
+        // navbar BEFORE the Inter webfont has swapped in or the logo image
+        // has decoded — both change the navbar's rendered height slightly.
+        // That stale --navbar-height is what caused the mobile menu to open
+        // with a gap/overlap only on first load. A ResizeObserver keeps it
+        // correct automatically whenever the navbar's actual box size
+        // changes, and document.fonts.ready is a belt-and-suspenders catch
+        // for the font-swap case specifically.
+        if ('ResizeObserver' in window && navbarEl) {
+            new ResizeObserver(() => syncNavbarHeight()).observe(navbarEl);
+        }
+        if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(syncNavbarHeight);
+        }
+
         window.addEventListener('resize', () => {
             syncNavbarHeight();
             // If the viewport is resized/rotated past the mobile breakpoint while

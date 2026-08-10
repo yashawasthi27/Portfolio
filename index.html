@@ -43,6 +43,12 @@
     <!-- Marked.js for markdown parsing -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
 
+    <!-- Lenis: buttery smooth wheel/keyboard scrolling on desktop. Touch
+         scrolling (syncTouch: false, set at init below) is left native so
+         mobile keeps its normal, responsive feel instead of Lenis's own
+         momentum layer fighting the OS's. -->
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
+
     <!-- Structured data for search engines -->
     <script type="application/ld+json">
     {
@@ -1041,6 +1047,35 @@
     </button>
 
     <script defer>
+        // ── Lenis smooth scroll ──
+        // Initialized on DOMContentLoaded (not immediately) because this
+        // inline script runs synchronously during parsing, before the
+        // deferred lenis.min.js in <head> has actually executed — waiting
+        // for DOMContentLoaded guarantees `window.Lenis` exists.
+        // Respects prefers-reduced-motion and is skipped entirely if the
+        // library fails to load (e.g. offline), falling back cleanly to
+        // the native `scroll-behavior: smooth` already set in CSS.
+        let lenis = null;
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (prefersReducedMotion || typeof window.Lenis === 'undefined') return;
+
+            lenis = new window.Lenis({
+                duration: 1.0,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                smoothWheel: true,
+                syncTouch: false, // keep native touch scrolling on mobile — natural, no added lag
+                touchMultiplier: 1,
+            });
+
+            function raf(time) {
+                lenis.raf(time);
+                requestAnimationFrame(raf);
+            }
+            requestAnimationFrame(raf);
+        });
+
         // ── Email copy ──
         const copyEmail = (e) => {
             e.preventDefault();
@@ -1124,6 +1159,7 @@
             lockedScrollY = window.scrollY || window.pageYOffset;
             document.body.style.top = `-${lockedScrollY}px`;
             document.body.classList.add('menu-open');
+            if (lenis) lenis.stop(); // pause Lenis so it can't fight the position:fixed scroll-lock
         }
 
         function closeMobileMenu() {
@@ -1133,6 +1169,7 @@
             // (the page never actually visually moved), so it must not compete
             // with the smooth-scroll navigation that may run right after it.
             window.scrollTo({ top: lockedScrollY, left: 0, behavior: 'instant' });
+            if (lenis) lenis.start();
         }
 
         if (menuToggle && mobileMenu) {
@@ -1184,6 +1221,10 @@
 
         function smoothScrollTo(target) {
             if (!target) return;
+            if (lenis) {
+                lenis.scrollTo(target, { offset: -75 }); // Account for sticky navbar height
+                return;
+            }
             const targetPosition = target.getBoundingClientRect().top + (window.scrollY || window.pageYOffset) - 75; // Account for sticky navbar height
             // Explicit behavior:'smooth' here (not just relying on the CSS
             // scroll-behavior rule) keeps it consistent across browsers and
@@ -1262,12 +1303,14 @@
             modalLockedScrollY = window.scrollY || window.pageYOffset;
             document.body.style.top = `-${modalLockedScrollY}px`;
             document.body.classList.add('menu-open');
+            if (lenis) lenis.stop();
         }
 
         function unlockBodyScroll() {
             document.body.classList.remove('menu-open');
             document.body.style.top = '';
             window.scrollTo({ top: modalLockedScrollY, left: 0, behavior: 'instant' });
+            if (lenis) lenis.start();
         }
 
         // ── Project Details Modal Logic ──
@@ -1496,23 +1539,33 @@
             }
         });
 
-        // ── Back to Top ──
+        // ── Back to Top + Navbar scroll elevation ──
+        // Shared single scroll listener (rAF-throttled, passive) rather than
+        // two separate ones — one layout read per frame instead of two.
         const backToTopBtn = document.getElementById('backToTop');
-        if (backToTopBtn) {
-            let ticking = false;
+        if (backToTopBtn || navbarEl) {
+            let scrollTicking = false;
             window.addEventListener('scroll', () => {
-                if (!ticking) {
+                if (!scrollTicking) {
                     window.requestAnimationFrame(() => {
-                        backToTopBtn.classList.toggle('visible', window.scrollY > 500);
-                        ticking = false;
+                        const y = window.scrollY;
+                        if (backToTopBtn) backToTopBtn.classList.toggle('visible', y > 500);
+                        if (navbarEl) navbarEl.classList.toggle('scrolled', y > 20);
+                        scrollTicking = false;
                     });
-                    ticking = true;
+                    scrollTicking = true;
                 }
             }, { passive: true });
 
-            backToTopBtn.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
+            if (backToTopBtn) {
+                backToTopBtn.addEventListener('click', () => {
+                    if (lenis) {
+                        lenis.scrollTo(0);
+                    } else {
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                });
+            }
         }
     </script>
 

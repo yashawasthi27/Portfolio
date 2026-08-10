@@ -1169,6 +1169,22 @@
             window.scrollTo({ top: lockedScrollY, left: 0, behavior: 'instant' });
         }
 
+        // If the browser restores this page from bfcache (e.g. user opened
+        // the menu, navigated away via a link, then hit Back), the DOM
+        // state — including an open .mobile-menu and the scroll-lock — is
+        // restored exactly as it was, with no 'load' event firing. Without
+        // this, that shows up to the user as the menu being open/flashing
+        // the instant the page "loads" on Back navigation.
+        window.addEventListener('pageshow', (e) => {
+            if (e.persisted && menuToggle && mobileMenu) {
+                menuToggle.classList.remove('active');
+                mobileMenu.classList.remove('active');
+                menuToggle.setAttribute('aria-expanded', 'false');
+                document.body.classList.remove('menu-open');
+                document.body.style.top = '';
+            }
+        });
+
         if (menuToggle && mobileMenu) {
             menuToggle.addEventListener('click', () => {
                 const isActive = menuToggle.classList.toggle('active');

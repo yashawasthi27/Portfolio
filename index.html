@@ -1046,29 +1046,64 @@
 
     <script defer>
         // ── Email copy ──
+        // Guarded per-button + real fallback: on non-secure contexts or old
+        // browsers navigator.clipboard can be undefined, and a single
+        // missing button id used to throw here and silently kill every
+        // feature wired up further down the script (hamburger, nav
+        // highlighting, modals, back-to-top).
+        function fallbackCopyText(text) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            try { document.execCommand('copy'); } catch (err) { /* no-op */ }
+            document.body.removeChild(ta);
+        }
+
         const copyEmail = (e) => {
             e.preventDefault();
-            navigator.clipboard.writeText('yashonwork247@gmail.com').then(() => {
+            const showToast = () => {
                 const toast = document.getElementById('toast');
+                if (!toast) return;
                 toast.className = 'show';
                 setTimeout(() => { toast.className = ''; }, 3000);
-            });
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText('yashonwork247@gmail.com').then(showToast).catch(() => {
+                    fallbackCopyText('yashonwork247@gmail.com');
+                    showToast();
+                });
+            } else {
+                fallbackCopyText('yashonwork247@gmail.com');
+                showToast();
+            }
         };
-        document.getElementById('emailBtn').addEventListener('click', copyEmail);
-        document.getElementById('footerEmailBtn').addEventListener('click', copyEmail);
-        document.getElementById('heroEmailBtn').addEventListener('click', copyEmail);
+        ['emailBtn', 'footerEmailBtn', 'heroEmailBtn'].forEach(id => {
+            const btn = document.getElementById(id);
+            if (btn) btn.addEventListener('click', copyEmail);
+        });
 
         // ── Scroll reveal observer ──
-        const observer = new IntersectionObserver((entries, observerInstance) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observerInstance.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.15 });
-
-        document.querySelectorAll('.sr').forEach(el => observer.observe(el));
+        // Guard against browsers without IntersectionObserver support —
+        // fall back to just showing the content instead of leaving it
+        // permanently hidden (and instead of throwing and breaking the
+        // rest of this script).
+        if ('IntersectionObserver' in window) {
+            const observer = new IntersectionObserver((entries, observerInstance) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observerInstance.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15 });
+            document.querySelectorAll('.sr').forEach(el => observer.observe(el));
+        } else {
+            document.querySelectorAll('.sr').forEach(el => el.classList.add('visible'));
+        }
 
         // ── Nav smooth scroll + active state ──
         const navLinks = document.querySelectorAll('.nav-link[data-section]');
@@ -1340,6 +1375,7 @@
         }
 
         function showLoading() {
+            if (!modalBody) return;
             modalBody.innerHTML = `
                 <div class="modal-loader">
                     <div class="spinner"></div>
@@ -1372,18 +1408,22 @@
             }
 
             try {
-                const response = await fetch(rawUrl);
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 8000);
+                const response = await fetch(rawUrl, { signal: controller.signal });
+                clearTimeout(timeoutId);
                 if (!response.ok) throw new Error('Failed to fetch from GitHub');
                 const text = await response.text();
                 readmeCache[projectKey] = text;
                 return text;
             } catch (err) {
-                console.warn("GitHub fetch failed, falling back to local copy:", err);
+                console.warn("GitHub fetch failed (or timed out), falling back to local copy:", err);
                 return LOCAL_PROJECT_READMES[projectKey] || 'No content available.';
             }
         }
 
         async function openModal(btn) {
+            if (!modal || !modalTitle || !modalCategory || !modalBody) return;
             const projectKey = btn.getAttribute('data-project');
             const category = btn.getAttribute('data-category');
             const title = btn.getAttribute('data-title');
@@ -1424,6 +1464,7 @@
         }
 
         function closeModal() {
+            if (!modal) return;
             modal.classList.remove('show');
             unlockBodyScroll();
         }
@@ -1441,14 +1482,16 @@
             });
         });
 
-        closeModalBtn.addEventListener('click', closeModal);
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                closeModal();
-            }
-        });
+        if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+        }
         window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modal.classList.contains('show')) {
+            if (e.key === 'Escape' && modal && modal.classList.contains('show')) {
                 closeModal();
             }
         });
@@ -1461,6 +1504,7 @@
         const RESUME_PDF_PATH = 'resume/Yash_Awasthi_Resume.pdf';
 
         function openResumeModal() {
+            if (!resumeModal || !resumeIframe) return;
             // Lazy-load the PDF only when the modal is actually opened, not on page load
             if (!resumeIframe.src) {
                 resumeIframe.src = RESUME_PDF_PATH;
@@ -1470,6 +1514,7 @@
         }
 
         function closeResumeModal() {
+            if (!resumeModal) return;
             resumeModal.classList.remove('show');
             unlockBodyScroll();
         }
@@ -1490,14 +1535,16 @@
             });
         });
 
-        closeResumeModalBtn.addEventListener('click', closeResumeModal);
-        resumeModal.addEventListener('click', (e) => {
-            if (e.target === resumeModal) {
-                closeResumeModal();
-            }
-        });
+        if (closeResumeModalBtn) closeResumeModalBtn.addEventListener('click', closeResumeModal);
+        if (resumeModal) {
+            resumeModal.addEventListener('click', (e) => {
+                if (e.target === resumeModal) {
+                    closeResumeModal();
+                }
+            });
+        }
         window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && resumeModal.classList.contains('show')) {
+            if (e.key === 'Escape' && resumeModal && resumeModal.classList.contains('show')) {
                 closeResumeModal();
             }
         });

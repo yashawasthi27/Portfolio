@@ -1,4 +1,19 @@
 /* ══════════════════════════════
+   PRELOAD GUARD
+   ══════════════════════════════
+   Prevents transitions/animations (hamburger bars, mobile menu, etc.)
+   from visibly "playing" during the very first paint — e.g. before the
+   navbar height custom property is synced by JS on mobile, the hamburger
+   bars can otherwise be seen settling/animating into place. This class
+   is removed by JS right after load, once layout has stabilized. */
+.preload *,
+.preload *::before,
+.preload *::after {
+    transition: none !important;
+    animation: none !important;
+}
+
+/* ══════════════════════════════
    DESIGN SYSTEM & VARIABLES
    ══════════════════════════════ */
 :root {

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="preload">
 
 <head>
     <meta charset="UTF-8">
@@ -1085,6 +1085,19 @@
         }
         syncNavbarHeight();
         window.addEventListener('load', syncNavbarHeight);
+        // Release the preload guard only after layout (navbar height, fonts,
+        // images) has settled, so nothing animates in on first paint —
+        // this is what causes the hamburger icon to "glitch" on load.
+        window.addEventListener('load', () => {
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    document.documentElement.classList.remove('preload');
+                });
+            });
+        });
+        // Safety net: never leave transitions permanently disabled if the
+        // load event is delayed by a slow-loading asset.
+        setTimeout(() => document.documentElement.classList.remove('preload'), 2500);
         window.addEventListener('resize', () => {
             syncNavbarHeight();
             // If the viewport is resized/rotated past the mobile breakpoint while

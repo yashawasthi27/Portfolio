@@ -3,6 +3,22 @@
 
 <head>
     <meta charset="UTF-8">
+    <!-- Inline critical CSS: hides .skip-link before any external stylesheet
+         (Google Fonts, index.css) has loaded. Prevents FOUC where the skip
+         link briefly renders as plain visible text in the top-left corner
+         on slow connections while waiting for external CSS. -->
+    <style>
+        .skip-link {
+            position: absolute;
+            top: -100px;
+            left: 1rem;
+            z-index: 2000;
+        }
+
+        .skip-link:focus {
+            top: 1rem;
+        }
+    </style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
         content="Portfolio of Yash Awasthi - Aspiring Data Analyst. Explore my projects in Python, SQL, Power BI & Excel.">

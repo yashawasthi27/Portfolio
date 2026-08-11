@@ -894,7 +894,10 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="cf-message">Message</label>
+                        <div class="form-label-row">
+                            <label for="cf-message">Message</label>
+                            <span class="char-counter" id="cf-message-counter">0/2000</span>
+                        </div>
                         <textarea id="cf-message" name="message" rows="3"
                             placeholder="Tell me a bit about the role or opportunity..." minlength="10"
                             maxlength="2000" required></textarea>
@@ -906,6 +909,10 @@
                         <label for="cf-company">Company</label>
                         <input type="text" id="cf-company" name="company" tabindex="-1" autocomplete="off">
                     </div>
+
+                    <!-- Time-trap — records when the form became visible; submissions that arrive
+                         too quickly are almost always bots, not people typing. -->
+                    <input type="hidden" id="cf-loadedAt" name="loadedAt">
 
                     <button type="submit" class="btn btn-primary contact-submit-btn" id="contactSubmitBtn">
                         <span class="btn-label">Send Message</span>
@@ -1096,10 +1103,29 @@
         //    (Execute as: Me, Who has access: Anyone), and paste the deployment
         //    URL below.
         const CONTACT_SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbz6gvRlRhPQlRu3RNuI39iHV1-FK8Ml89NqkiqbhAPHXhSEKKELKBXXnttItR9UbBqs/exec';
+        const CONTACT_SUBMIT_TIMEOUT_MS = 8000; // don't let the button spin forever on a bad connection
 
         const contactForm = document.getElementById('contactForm');
         const contactSubmitBtn = document.getElementById('contactSubmitBtn');
         const formStatus = document.getElementById('formStatus');
+        const messageInput = document.getElementById('cf-message');
+        const messageCounter = document.getElementById('cf-message-counter');
+        const loadedAtInput = document.getElementById('cf-loadedAt');
+
+        // Stamp the moment the form became interactive — used as a lightweight
+        // spam check (real people take at least a couple seconds to fill a form).
+        if (loadedAtInput) loadedAtInput.value = String(Date.now());
+
+        // Live character counter
+        if (messageInput && messageCounter) {
+            const updateCounter = () => {
+                const len = messageInput.value.length;
+                messageCounter.textContent = `${len}/2000`;
+                messageCounter.classList.toggle('char-counter-warn', len > 1800);
+            };
+            messageInput.addEventListener('input', updateCounter);
+            updateCounter();
+        }
 
         // ── Field validation rules ──
         const EMAIL_RE = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
@@ -1173,6 +1199,12 @@
                 // Honeypot — if filled, silently drop (likely a bot)
                 if (contactForm.company.value.trim() !== '') return;
 
+                // Time-trap — form filled out impossibly fast, likely a bot.
+                // Fails silent-fast with zero network round trip, so it never
+                // slows down a real submission.
+                const loadedAt = Number(contactForm.loadedAt.value) || 0;
+                if (loadedAt && Date.now() - loadedAt < 1500) return;
+
                 if (!validateAllFields()) {
                     formStatus.textContent = 'Please fix the highlighted fields.';
                     formStatus.className = 'form-status show error';
@@ -1193,33 +1225,46 @@
                 }
 
                 contactSubmitBtn.disabled = true;
+                contactSubmitBtn.setAttribute('aria-busy', 'true');
                 contactSubmitBtn.classList.add('is-loading');
                 formStatus.className = 'form-status';
                 formStatus.textContent = '';
 
+                // Abort if the network is slow, so the button never spins forever.
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), CONTACT_SUBMIT_TIMEOUT_MS);
+
                 try {
                     await fetch(CONTACT_SHEET_ENDPOINT, {
                         method: 'POST',
-                        mode: 'no-cors', // Apps Script web apps don't return CORS headers by default
+                        mode: 'no-cors', // Apps Script web apps don't send back CORS headers, so the
+                                         // response body can't be read cross-origin — but the request
+                                         // itself still reaches the sheet reliably.
+                        keepalive: true, // lets the request finish even during a page transition
+                        signal: controller.signal,
                         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                        body: JSON.stringify({
-                            name, email, subject, message,
-                            page: window.location.href,
-                            submittedAt: new Date().toISOString()
-                        })
+                        body: JSON.stringify({ name, email, subject, message, page: window.location.href })
                     });
 
+                    clearTimeout(timeoutId);
                     contactForm.reset();
+                    if (loadedAtInput) loadedAtInput.value = String(Date.now());
+                    if (messageCounter) messageCounter.textContent = '0/2000';
                     Object.keys(fieldValidators).forEach((fieldName) => setFieldError(fieldName, ''));
                     formStatus.textContent = 'Message sent — thanks! I\'ll get back to you soon.';
                     formStatus.className = 'form-status show success';
                     showToast('Message sent successfully!');
                 } catch (err) {
-                    formStatus.textContent = 'Something went wrong. Please try emailing me directly.';
+                    clearTimeout(timeoutId);
+                    const timedOut = err && err.name === 'AbortError';
+                    formStatus.textContent = timedOut
+                        ? 'This is taking longer than expected. Please try again or email me directly.'
+                        : 'Something went wrong. Please try emailing me directly.';
                     formStatus.className = 'form-status show error';
                     showToast('Could not send message.', true);
                 } finally {
                     contactSubmitBtn.disabled = false;
+                    contactSubmitBtn.removeAttribute('aria-busy');
                     contactSubmitBtn.classList.remove('is-loading');
                 }
             });

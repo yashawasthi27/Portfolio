@@ -1259,6 +1259,24 @@ img {
     color: var(--text-primary);
 }
 
+.form-label-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.char-counter {
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.char-counter.char-counter-warn {
+    color: #dc2626;
+}
+
 .form-group input,
 .form-group textarea {
     width: 100%;

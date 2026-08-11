@@ -1167,57 +1167,70 @@ img {
     margin-bottom: 2rem;
 }
 
-/* Quick social links (left column) */
-.contact-quick-links {
+/* Contact info list (left column) — full email + LinkedIn id, industry-standard style */
+.contact-info-list {
     display: flex;
+    flex-direction: column;
     gap: 0.75rem;
     margin-top: 1.75rem;
+    max-width: 380px;
 }
 
-.quick-link-btn {
-    position: relative;
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(9, 9, 11, 0.1);
-    color: var(--primary-green);
+.contact-info-item {
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 0.9rem;
+    padding: 0.85rem 1.1rem;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(9, 9, 11, 0.1);
+    border-radius: 0.9rem;
     text-decoration: none;
-    transition: transform 0.25s ease, border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+    color: var(--text-primary);
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
 }
 
-.quick-link-btn:hover {
-    transform: translateY(-3px);
+.contact-info-item:hover {
+    transform: translateY(-2px);
     border-color: var(--accent-mint);
-    background: var(--primary-green);
-    color: #fff;
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
 }
 
-.quick-link-tooltip {
-    position: absolute;
-    bottom: calc(100% + 8px);
-    left: 50%;
-    transform: translateX(-50%) translateY(4px);
+.contact-info-icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
     background: var(--primary-green);
     color: #fff;
-    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.contact-info-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    text-align: left;
+    min-width: 0;
+}
+
+.contact-info-label {
+    font-size: 0.72rem;
     font-weight: 700;
-    padding: 0.3rem 0.6rem;
-    border-radius: var(--radius-sm);
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--text-secondary);
 }
 
-.quick-link-btn:hover .quick-link-tooltip {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
+.contact-info-value {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 /* Contact form (right column) */
@@ -1270,6 +1283,24 @@ img {
     outline: none;
     border-color: var(--primary-green);
     box-shadow: 0 0 0 3px rgba(9, 9, 11, 0.08);
+}
+
+.form-group input.invalid,
+.form-group textarea.invalid {
+    border-color: #dc2626;
+}
+
+.form-group input.invalid:focus,
+.form-group textarea.invalid:focus {
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12);
+}
+
+.field-error {
+    display: block;
+    min-height: 1.1em;
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: #dc2626;
 }
 
 /* Honeypot — visually hidden, still reachable by bots that fill every field */
@@ -2159,8 +2190,8 @@ footer {
         padding: 2rem 1.25rem;
     }
 
-    .contact-quick-links {
-        justify-content: center;
+    .contact-info-list {
+        max-width: 100%;
     }
 
     .form-row {

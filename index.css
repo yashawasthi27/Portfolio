@@ -67,7 +67,6 @@ body {
 }
 
 html {
-    scroll-behavior: smooth !important;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
 }
@@ -673,7 +672,7 @@ img {
        offset, which was landing short of the target ("stuck in the
        middle") whenever the navbar's real height differed from the
        assumed value. */
-    scroll-margin-top: calc(var(--navbar-height, 72px) + 12px);
+    scroll-margin-top: calc(var(--navbar-height, 72px) + 8px);
 }
 
 .section-inner {
@@ -1129,7 +1128,7 @@ img {
    CONTACT SECTION (TWO-COLUMN)
    ══════════════════════════════ */
 .contact-section {
-    padding-top: 4rem;
+    padding-top: 2rem;
     padding-bottom: 4rem;
 }
 
@@ -2413,6 +2412,11 @@ footer {
 
 #projects {
     contain: layout style;
+    /* Trim the bottom breathing room here since Contact's own top padding
+       (just reduced) already provides separation — stacking two full 96px
+       gaps back-to-back was what made the Contact scroll target feel like
+       it landed in a big empty middle zone instead of near the top. */
+    padding-bottom: 3.5rem;
 }
 
 #contact {

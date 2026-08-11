@@ -1317,11 +1317,30 @@ img {
     width: 100%;
     margin-top: 0.25rem;
     position: relative;
+    transition: transform 0.2s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.2, 1, 0.3, 1), background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.contact-submit-btn .btn-label {
+    transition: opacity 0.15s ease;
 }
 
 .contact-submit-btn .btn-spinner {
     display: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -9px;
+    margin-top: -9px;
     animation: spin 0.7s linear infinite;
+}
+
+.contact-submit-btn.is-loading {
+    cursor: progress;
 }
 
 .contact-submit-btn.is-loading .btn-label {
@@ -1330,21 +1349,12 @@ img {
 
 .contact-submit-btn.is-loading .btn-spinner {
     display: block;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
 }
 
 .contact-submit-btn:disabled {
     cursor: not-allowed;
     opacity: 0.85;
-}
-
-@keyframes spin {
-    to {
-        transform: translate(-50%, -50%) rotate(360deg);
-    }
+    transform: none;
 }
 
 .form-status {

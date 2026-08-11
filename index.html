@@ -40,6 +40,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./index.css?v=12">
 
+    <!-- Lenis smooth scroll (60fps eased scrolling) -->
+    <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.23/dist/lenis.css">
+    <script src="https://unpkg.com/lenis@1.3.23/dist/lenis.min.js" defer></script>
+
     <!-- Marked.js for markdown parsing -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
 
@@ -1270,6 +1274,25 @@
         }
 
 
+        // ── Lenis smooth scroll (eased, 60fps momentum scrolling) ──
+        // Skipped entirely for users who've asked the OS/browser for reduced
+        // motion — native instant scroll stays the accessible default for them.
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let lenis = null;
+        if (!prefersReducedMotion && typeof Lenis !== 'undefined') {
+            lenis = new Lenis({
+                autoRaf: true,       // Lenis drives its own requestAnimationFrame loop
+                duration: 1.15,      // scroll-to-target animation length (seconds)
+                lerp: 0.1,           // wheel/touch easing intensity — lower = smoother/slower
+                wheelMultiplier: 1,
+                touchMultiplier: 1.5,
+                smoothWheel: true,
+                syncTouch: false,    // native touch feel on mobile, eased on desktop wheel/trackpad
+                anchors: false       // we drive anchor-link scrolling ourselves below (see smoothScrollTo)
+            });
+            window.lenis = lenis;
+        }
+
         // ── Scroll reveal observer ──
         const observer = new IntersectionObserver((entries, observerInstance) => {
             entries.forEach(entry => {
@@ -1340,6 +1363,10 @@
             lockedScrollY = window.scrollY || window.pageYOffset;
             document.body.style.top = `-${lockedScrollY}px`;
             document.body.classList.add('menu-open');
+            // Pause Lenis while the body is pinned via position:fixed, so its
+            // internal target-scroll value doesn't drift away from the real
+            // (frozen) scroll position while the menu is open.
+            if (lenis) lenis.stop();
         }
 
         function closeMobileMenu() {
@@ -1349,6 +1376,10 @@
             // (the page never actually visually moved), so it must not compete
             // with the smooth-scroll navigation that may run right after it.
             window.scrollTo({ top: lockedScrollY, left: 0, behavior: 'instant' });
+            if (lenis) {
+                lenis.start();
+                lenis.scrollTo(lockedScrollY, { immediate: true });
+            }
         }
 
         if (menuToggle && mobileMenu) {
@@ -1406,13 +1437,23 @@
             // of the section — especially if the assumed 75px didn't match
             // the navbar's real rendered height — leaving nav clicks
             // stopping partway between sections instead of at the top of
-            // the target. scrollIntoView + the sections' own
-            // scroll-margin-top (kept in sync with --navbar-height) lets
-            // the browser recalculate the correct stopping point itself.
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
+            // the target.
+            if (lenis) {
+                // Lenis's scrollTo doesn't read the CSS scroll-margin-top box
+                // model property itself, so we read the same value the browser
+                // would've used for scrollIntoView and pass it as an offset —
+                // this keeps every section landing exactly below the navbar.
+                const marginTop = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
+                lenis.scrollTo(target, { offset: -marginTop, duration: 1.15 });
+            } else {
+                // Fallback when Lenis hasn't loaded (e.g. CDN blocked) or
+                // reduced motion is requested — native smooth scroll still
+                // respects each section's scroll-margin-top automatically.
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
         }
 
         function handleLinkClick(e) {
@@ -1483,12 +1524,17 @@
             modalLockedScrollY = window.scrollY || window.pageYOffset;
             document.body.style.top = `-${modalLockedScrollY}px`;
             document.body.classList.add('menu-open');
+            if (lenis) lenis.stop();
         }
 
         function unlockBodyScroll() {
             document.body.classList.remove('menu-open');
             document.body.style.top = '';
             window.scrollTo({ top: modalLockedScrollY, left: 0, behavior: 'instant' });
+            if (lenis) {
+                lenis.start();
+                lenis.scrollTo(modalLockedScrollY, { immediate: true });
+            }
         }
 
         // ── Project Details Modal Logic ──
@@ -1732,7 +1778,11 @@
             }, { passive: true });
 
             backToTopBtn.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                if (lenis) {
+                    lenis.scrollTo(0, { duration: 1.15 });
+                } else {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
             });
         }
     </script>

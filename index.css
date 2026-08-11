@@ -668,6 +668,12 @@ img {
     position: relative;
     padding: 6rem 2rem;
     z-index: 1;
+    /* Anchor target for nav clicks / scrollIntoView. Keeps section content
+       clear of the fixed navbar without relying on a hardcoded JS pixel
+       offset, which was landing short of the target ("stuck in the
+       middle") whenever the navbar's real height differed from the
+       assumed value. */
+    scroll-margin-top: calc(var(--navbar-height, 72px) + 12px);
 }
 
 .section-inner {
@@ -1127,6 +1133,10 @@ img {
     padding-bottom: 4rem;
 }
 
+#hero {
+    scroll-margin-top: 0;
+}
+
 .contact-layout {
     display: grid;
     grid-template-columns: 0.9fr 1fr;
@@ -1333,7 +1343,13 @@ img {
 
 .contact-submit-btn {
     width: 100%;
-    margin-top: 0.25rem;
+    /* Base .btn padding (0.75rem 1.6rem) reads oversized on a full-width
+       button sitting right under compact form fields (0.55rem padding).
+       Trim it down and tighten the label so it lines up visually with the
+       rest of the form instead of towering over it. */
+    padding: 0.65rem 1.5rem;
+    font-size: 0.88rem;
+    margin-top: 0.15rem;
     position: relative;
     transition: transform 0.2s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.2, 1, 0.3, 1), background-color 0.2s ease, opacity 0.2s ease;
 }
@@ -2230,7 +2246,7 @@ footer {
     }
 
     .contact-card {
-        padding: 1.5rem 1.25rem;
+        padding: 1.5rem 1.25rem 1.25rem;
         max-width: 100%;
         margin-left: 0;
     }

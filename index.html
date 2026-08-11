@@ -1401,13 +1401,18 @@
 
         function smoothScrollTo(target) {
             if (!target) return;
-            const targetPosition = target.getBoundingClientRect().top + (window.scrollY || window.pageYOffset) - 75; // Account for sticky navbar height
-            // Explicit behavior:'smooth' here (not just relying on the CSS
-            // scroll-behavior rule) keeps it consistent across browsers and
-            // guarantees it never falls back to an instant jump.
-            window.scrollTo({
-                top: targetPosition,
-                behavior: 'smooth'
+            // Was: manually computing an absolute pixel offset
+            // (getBoundingClientRect + hardcoded "-75") and calling
+            // window.scrollTo. That snapshot-based target could land short
+            // of the section — especially if the assumed 75px didn't match
+            // the navbar's real rendered height — leaving nav clicks
+            // stopping partway between sections instead of at the top of
+            // the target. scrollIntoView + the sections' own
+            // scroll-margin-top (kept in sync with --navbar-height) lets
+            // the browser recalculate the correct stopping point itself.
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
             });
         }
 

@@ -1133,7 +1133,11 @@ img {
 }
 
 #hero {
-    scroll-margin-top: 0;
+    /* Must match #hero's own margin-top (navbar height) — not 0 — or
+       scrollIntoView (used by the "Home" nav click) overscrolls by the
+       navbar's height and tucks hero content under the fixed navbar
+       instead of landing at the natural top-of-page position. */
+    scroll-margin-top: var(--navbar-height, 72px);
 }
 
 .contact-layout {

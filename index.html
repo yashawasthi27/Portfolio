@@ -899,8 +899,8 @@
                             <span class="char-counter" id="cf-message-counter">0/2000</span>
                         </div>
                         <textarea id="cf-message" name="message" rows="3"
-                            placeholder="Tell me a bit about the role or opportunity..." minlength="10"
-                            maxlength="2000" required></textarea>
+                            placeholder="Tell me a bit about the role or opportunity..." minlength="10" maxlength="2000"
+                            required></textarea>
                         <span class="field-error" id="cf-message-error"></span>
                     </div>
 
@@ -960,8 +960,7 @@
                             </path>
                         </svg>
                     </a>
-                    <a href="mailto:yashonwork247@gmail.com" class="footer-social-btn"
-                        id="footerEmailBtn">
+                    <a href="mailto:yashonwork247@gmail.com" class="footer-social-btn" id="footerEmailBtn">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
@@ -1206,7 +1205,7 @@
                 if (loadedAt && Date.now() - loadedAt < 1500) return;
 
                 if (!validateAllFields()) {
-                    formStatus.textContent = 'Please fix the highlighted fields.';
+                    formStatus.textContent = 'Please fill the highlighted fields.';
                     formStatus.className = 'form-status show error';
                     const firstInvalid = contactForm.querySelector('.invalid');
                     if (firstInvalid) firstInvalid.focus();
@@ -1238,8 +1237,8 @@
                     await fetch(CONTACT_SHEET_ENDPOINT, {
                         method: 'POST',
                         mode: 'no-cors', // Apps Script web apps don't send back CORS headers, so the
-                                         // response body can't be read cross-origin — but the request
-                                         // itself still reaches the sheet reliably.
+                        // response body can't be read cross-origin — but the request
+                        // itself still reaches the sheet reliably.
                         keepalive: true, // lets the request finish even during a page transition
                         signal: controller.signal,
                         headers: { 'Content-Type': 'text/plain;charset=utf-8' },

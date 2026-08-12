@@ -1246,7 +1246,7 @@
                         keepalive: true, // lets the request finish even during a page transition
                         signal: controller.signal,
                         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                        body: JSON.stringify({ name, email, subject, message, page: window.location.href })
+                        body: JSON.stringify({ name, email, subject, message })
                     });
 
                     clearTimeout(timeoutId);

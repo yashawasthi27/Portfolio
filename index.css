@@ -528,9 +528,63 @@ img {
 
 .hero-cta-group {
     display: flex;
-    gap: 1rem;
+    flex-wrap: wrap;
+    gap: 0.85rem;
     opacity: 0;
     animation: reveal 1s var(--ease-out-expo) 0.6s forwards;
+}
+
+/* Small "open to opportunities" pill under the hero CTAs — a lighter-touch
+   way to point toward Contact than a third full-size button in the row. */
+.hero-contact-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 1.1rem;
+    padding: 0.5rem 1rem 0.5rem 0.85rem;
+    border-radius: var(--radius-full);
+    border: 1px solid rgba(9, 9, 11, 0.12);
+    background: var(--accent-mint-light);
+    color: var(--primary-green);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    opacity: 0;
+    animation: reveal 1s var(--ease-out-expo) 0.75s forwards;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.hero-contact-badge:hover {
+    border-color: var(--accent-mint);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+}
+
+.hero-contact-badge-dot {
+    width: 8px;
+    height: 8px;
+    flex-shrink: 0;
+    background-color: #22c55e;
+    border-radius: 50%;
+    position: relative;
+}
+
+.hero-contact-badge-dot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background-color: #22c55e;
+    animation: pulse-dot 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.hero-contact-badge-arrow {
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.hero-contact-badge:hover .hero-contact-badge-arrow {
+    transform: translateX(3px);
 }
 
 /* ══════════════════════════════
@@ -541,9 +595,10 @@ img {
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    padding: 0.75rem 1.6rem;
-    font-size: 0.95rem;
+    padding: 0.75rem 1.4rem;
+    font-size: 0.9rem;
     font-weight: 700;
+    white-space: nowrap;
     border-radius: var(--radius-md);
     cursor: pointer;
     text-decoration: none;
@@ -576,8 +631,8 @@ img {
 
 .btn-outline {
     background: transparent;
-    border: 1px solid rgba(9, 9, 11, 0.15);
-    color: var(--text-secondary);
+    border-color: var(--primary-green);
+    color: var(--primary-green);
 }
 
 .btn-outline:hover {
@@ -2212,6 +2267,17 @@ footer {
     .hero-cta-group .btn {
         width: 100%;
         justify-content: center;
+    }
+
+    .hero-contact-badge {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+        white-space: normal;
+    }
+
+    .hero-contact-badge-text {
+        white-space: normal;
     }
 
     .about-card {

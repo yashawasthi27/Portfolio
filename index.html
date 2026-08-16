@@ -187,6 +187,17 @@
                             Download Resume
                         </a>
                     </div>
+
+                    <a href="#contact" class="hero-contact-badge">
+                        <span class="hero-contact-badge-dot"></span>
+                        <span class="hero-contact-badge-text">Open to opportunities — let's connect</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                            stroke-linejoin="round" class="hero-contact-badge-arrow">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </a>
                 </div>
             </div>
 
@@ -1273,6 +1284,32 @@
         }
 
 
+        // ── Guarantee scroll room for the last section ──
+        // #contact is the final anchor target before the footer. On tall
+        // viewports / shorter screen content, the document may not have
+        // enough height below #contact for the browser to ever scroll its
+        // top edge fully under the fixed navbar — the scroll simply maxes
+        // out partway through the section ("stuck in the middle"). This
+        // adds just enough invisible bottom padding so every anchor,
+        // including the last one, can always reach its scroll-margin-top
+        // position.
+        function ensureLastSectionScrollRoom() {
+            const lastSection = document.getElementById('contact');
+            if (!lastSection) return;
+            const marginTop = parseFloat(getComputedStyle(lastSection).scrollMarginTop) || 0;
+            const targetY = lastSection.offsetTop - marginTop;
+            const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
+            const shortfall = targetY - maxScrollY;
+            document.body.style.paddingBottom = shortfall > 0 ? `${Math.ceil(shortfall)}px` : '';
+        }
+
+        window.addEventListener('load', ensureLastSectionScrollRoom);
+        window.addEventListener('resize', ensureLastSectionScrollRoom);
+        // Re-check shortly after load too, since webfonts/images can still
+        // shift layout height after the load event fires.
+        setTimeout(ensureLastSectionScrollRoom, 400);
+        ensureLastSectionScrollRoom();
+
         // ── Lenis smooth scroll (eased, 60fps momentum scrolling) ──
         // Skipped entirely for users who've asked the OS/browser for reduced
         // motion — native instant scroll stays the accessible default for them.
@@ -1430,6 +1467,15 @@
 
         function smoothScrollTo(target) {
             if (!target) return;
+            // Recompute scroll room synchronously right before scrolling.
+            // Doing this only on 'load'/resize wasn't enough for a click
+            // that happens the instant the page appears (e.g. the hero's
+            // "Contact Me" button) — fonts/images can still be settling,
+            // so the earlier padding calculation could be stale or zero
+            // by the time the very first click fires. Recalculating here
+            // guarantees the last section always has enough room *at the
+            // moment we actually scroll*.
+            ensureLastSectionScrollRoom();
             // Was: manually computing an absolute pixel offset
             // (getBoundingClientRect + hardcoded "-75") and calling
             // window.scrollTo. That snapshot-based target could land short

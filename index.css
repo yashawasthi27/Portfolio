@@ -74,15 +74,15 @@
     /* Hero load-up stagger. Kept as variables so the mobile media query
        below can slow the whole sequence down without touching each
        individual animation declaration. */
-    --reveal-duration: 0.8s;
-    --reveal-delay-1: 0.12s;
-    --reveal-delay-2: 0.2s;
-    --reveal-delay-3: 0.28s;
-    --reveal-delay-4: 0.36s;
-    --reveal-delay-5: 0.44s;
-    --reveal-delay-6: 0.52s;
-    --reveal-delay-7: 0.6s;
-    --reveal-delay-8: 0.68s;
+    --reveal-duration: 0.85s;
+    --reveal-delay-1: 0.25s;
+    --reveal-delay-2: 0.38s;
+    --reveal-delay-3: 0.51s;
+    --reveal-delay-4: 0.64s;
+    --reveal-delay-5: 0.77s;
+    --reveal-delay-6: 0.9s;
+    --reveal-delay-7: 1.03s;
+    --reveal-delay-8: 1.16s;
 }
 
 /* ══════════════════════════════
@@ -2204,15 +2204,15 @@ html.is-scrolling .navbar {
        between each element so the reveal reads as a stagger instead of
        everything popping in almost at once. */
     :root {
-        --reveal-duration: 0.9s;
-        --reveal-delay-1: 0.2s;
-        --reveal-delay-2: 0.32s;
-        --reveal-delay-3: 0.44s;
-        --reveal-delay-4: 0.56s;
-        --reveal-delay-5: 0.68s;
-        --reveal-delay-6: 0.8s;
-        --reveal-delay-7: 0.92s;
-        --reveal-delay-8: 1.04s;
+        --reveal-duration: 1s;
+        --reveal-delay-1: 0.35s;
+        --reveal-delay-2: 0.5s;
+        --reveal-delay-3: 0.65s;
+        --reveal-delay-4: 0.8s;
+        --reveal-delay-5: 0.95s;
+        --reveal-delay-6: 1.1s;
+        --reveal-delay-7: 1.25s;
+        --reveal-delay-8: 1.4s;
     }
 
     /* Mobile section vertical rhythm */

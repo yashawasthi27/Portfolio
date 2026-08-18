@@ -1329,6 +1329,19 @@
                 anchors: false       // we drive anchor-link scrolling ourselves below (see smoothScrollTo)
             });
             window.lenis = lenis;
+
+            // Toggle 'is-scrolling' on <html> while Lenis is actively
+            // animating the scroll, so expensive-to-repaint styles (navbar
+            // backdrop-filter) can be dropped for those frames — see the
+            // matching CSS rule for why this fixes the choppy feel.
+            let scrollStopTimer = null;
+            lenis.on('scroll', () => {
+                document.documentElement.classList.add('is-scrolling');
+                clearTimeout(scrollStopTimer);
+                scrollStopTimer = setTimeout(() => {
+                    document.documentElement.classList.remove('is-scrolling');
+                }, 120);
+            });
         }
 
         // ── Scroll reveal observer ──

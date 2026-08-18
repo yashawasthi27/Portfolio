@@ -2043,6 +2043,18 @@ footer {
     }
 }
 
+/* Performance: Lenis re-triggers native scrollTo() every animation frame,
+   so a persistent backdrop-filter on the fixed navbar gets re-blurred 60+
+   times a second on desktop too — this is what makes Lenis scroll feel
+   choppy even on decent hardware. Drop the blur only while actively
+   scrolling (class toggled from JS below) and restore it once scroll
+   settles, so it still looks glassy at rest but costs nothing mid-scroll. */
+html.is-scrolling .navbar {
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
 /* ══════════════════════════════
    ANIMATIONS & TRANSITIONS
    ══════════════════════════════ */

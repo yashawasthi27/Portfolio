@@ -1368,20 +1368,21 @@
         syncNavbarHeight();
         window.addEventListener('load', syncNavbarHeight);
 
-        // Remove the preload guard once the DOM has settled.
-        // Strategy: DOMContentLoaded fires as soon as HTML is parsed and deferred
-        // scripts have run — well before images/fonts finish loading. The 100 ms
-        // setTimeout gives the browser exactly one repaint cycle to apply the
-        // visibility:hidden state on .mobile-menu before we re-enable transitions,
-        // eliminating the one-frame FOUC without making the user wait for heavy assets.
-        document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                document.documentElement.classList.remove('preload');
-                document.body.classList.remove('preload');
-            }, 100);
-        });
-        // Belt-and-suspenders: if DOMContentLoaded already fired (script ran late),
-        // fall back to window.load + double-rAF so we never block transitions forever.
+        // Remove the preload guard so transitions and animations are enabled.
+        // This script runs at the bottom of <body>, so DOMContentLoaded has
+        // already fired by the time we reach this line — registering a
+        // DOMContentLoaded listener here would be a no-op and permanently
+        // block all animations. Instead, call setTimeout directly: the DOM is
+        // already ready, and the 100 ms delay gives the browser one repaint
+        // cycle to commit visibility:hidden on .mobile-menu before transitions
+        // are re-enabled, eliminating the one-frame mobile-menu FOUC.
+        setTimeout(() => {
+            document.documentElement.classList.remove('preload');
+            document.body.classList.remove('preload');
+        }, 100);
+        // Belt-and-suspenders: window.load + double-rAF ensures the class is
+        // removed even if something delays the 100 ms timeout (e.g. a long
+        // synchronous script running above this block).
         window.addEventListener('load', () => {
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {

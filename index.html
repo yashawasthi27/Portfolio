@@ -1331,17 +1331,24 @@
             window.lenis = lenis;
 
             // Toggle 'is-scrolling' on <html> while Lenis is actively
-            // animating the scroll, so expensive-to-repaint styles (navbar
-            // backdrop-filter) can be dropped for those frames — see the
-            // matching CSS rule for why this fixes the choppy feel.
-            let scrollStopTimer = null;
-            lenis.on('scroll', () => {
-                document.documentElement.classList.add('is-scrolling');
-                clearTimeout(scrollStopTimer);
-                scrollStopTimer = setTimeout(() => {
-                    document.documentElement.classList.remove('is-scrolling');
-                }, 120);
-            });
+            // animating the scroll, so the navbar's backdrop-filter blur
+            // (expensive to repaint every rAF frame) can be dropped for
+            // those frames — see the matching CSS rule. Desktop only:
+            // touch devices already get a permanently-blurless navbar via
+            // the (hover:none) media query, so running this on mobile just
+            // adds pointless classList churn on every native touch-scroll
+            // event, which is what caused the mobile jerking.
+            const isFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+            if (isFinePointer) {
+                let scrollStopTimer = null;
+                lenis.on('scroll', () => {
+                    document.documentElement.classList.add('is-scrolling');
+                    clearTimeout(scrollStopTimer);
+                    scrollStopTimer = setTimeout(() => {
+                        document.documentElement.classList.remove('is-scrolling');
+                    }, 120);
+                });
+            }
         }
 
         // ── Scroll reveal observer ──

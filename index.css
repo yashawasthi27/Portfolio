@@ -318,16 +318,16 @@ img {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
     transform: translate3d(0, -110%, 0);
     opacity: 0;
-    /* visibility is the hard guarantee here: on the very first paint, a
-       fixed + backdrop-filter element can render at its untransformed
-       position for a frame before the browser promotes it to its own
-       compositing layer — that's the "flashes open for a second on load"
-       bug. transform/opacity alone don't stop that frame from painting;
-       visibility:hidden does, since nothing renders until it flips. */
+    /* visibility:hidden is the hard guarantee: on the very first paint a
+       fixed + backdrop-filter element can appear at its untransformed
+       position for one frame before the compositing layer is promoted.
+       transform/opacity alone don't prevent that frame; visibility:hidden
+       does, because nothing is rendered until it flips to visible.
+       NOTE: will-change is intentionally omitted here — promoting the GPU
+       layer in the closed/hidden state can race with visibility:hidden on
+       some WebKit versions and cause the FOUC we are preventing. It is
+       only applied when the menu is .active (see below). */
     visibility: hidden;
-    /* Promote the compositing layer immediately in the closed state too,
-       instead of lazily the first time .active is toggled. */
-    will-change: transform, opacity;
     transition: transform 0.4s var(--ease-out-expo), opacity 0.3s ease, visibility 0s linear 0.4s;
     z-index: 999;
     pointer-events: none;

@@ -1,15 +1,18 @@
 /* ══════════════════════════════
    PRELOAD GUARD
    ══════════════════════════════
-   Blocks all CSS transitions and animations on the very first paint so
-   elements like the hamburger bars and mobile dropdown never visibly
-   animate/jitter into place before JS has finished syncing layout.
+   Blocks CSS transitions on the very first paint so elements like the
+   hamburger bars and mobile dropdown never visibly animate/jitter into
+   place before JS has finished syncing layout. Intentionally does NOT
+   block `animation` — the hero's staggered entrance (`animation: reveal
+   ... backwards`) relies on running immediately from first paint. Killing
+   it here and letting it snap back on when the class is removed caused
+   the hero to flash fully visible, blink to opacity:0, then fade back in.
    The class is removed by JS (double-rAF after window.load). */
 .preload *,
 .preload *::before,
 .preload *::after {
     transition: none !important;
-    animation: none !important;
 }
 
 /* ═════════════════════════════

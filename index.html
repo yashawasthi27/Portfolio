@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="preload">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -41,7 +41,7 @@
     <link rel="preconnect" href="https://raw.githubusercontent.com">
     <link rel="dns-prefetch" href="https://raw.githubusercontent.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./index.css?v=13">
+    <link rel="stylesheet" href="./index.css?v=14">
 
     <!-- Lenis smooth scroll (60fps eased scrolling) -->
     <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.23/dist/lenis.css">
@@ -1306,49 +1306,35 @@
         }
 
         window.addEventListener('load', ensureLastSectionScrollRoom);
-        window.addEventListener('resize', ensureLastSectionScrollRoom);
-        // Re-check shortly after load too, since webfonts/images can still
-        // shift layout height after the load event fires.
-        setTimeout(ensureLastSectionScrollRoom, 400);
-        ensureLastSectionScrollRoom();
 
-        // ── Lenis smooth scroll (eased, 60fps momentum scrolling) ──
-        // Skipped entirely for users who've asked the OS/browser for reduced
-        // motion — native instant scroll stays the accessible default for them.
+        // ── Lenis smooth scroll (desktop fine pointer only) ──
+        // On touchscreens and mobile devices, native hardware scrolling is
+        // 120Hz/60Hz jitter-free. Virtual scroll hijacking on touch causes
+        // stutter and fights momentum scrolling, so Lenis is enabled only on desktop.
+        const isDesktopFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches && window.innerWidth > 768;
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         let lenis = null;
-        if (!prefersReducedMotion && typeof Lenis !== 'undefined') {
+        if (!prefersReducedMotion && isDesktopFinePointer && typeof Lenis !== 'undefined') {
             lenis = new Lenis({
                 autoRaf: true,       // Lenis drives its own requestAnimationFrame loop
                 duration: 1.15,      // scroll-to-target animation length (seconds)
-                lerp: 0.1,           // wheel/touch easing intensity — lower = smoother/slower
+                lerp: 0.1,           // wheel easing intensity
                 wheelMultiplier: 1,
-                touchMultiplier: 1.5,
                 smoothWheel: true,
-                syncTouch: false,    // native touch feel on mobile, eased on desktop wheel/trackpad
-                anchors: false       // we drive anchor-link scrolling ourselves below (see smoothScrollTo)
+                anchors: false       // driven manually via smoothScrollTo
             });
             window.lenis = lenis;
 
             // Toggle 'is-scrolling' on <html> while Lenis is actively
-            // animating the scroll, so the navbar's backdrop-filter blur
-            // (expensive to repaint every rAF frame) can be dropped for
-            // those frames — see the matching CSS rule. Desktop only:
-            // touch devices already get a permanently-blurless navbar via
-            // the (hover:none) media query, so running this on mobile just
-            // adds pointless classList churn on every native touch-scroll
-            // event, which is what caused the mobile jerking.
-            const isFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-            if (isFinePointer) {
-                let scrollStopTimer = null;
-                lenis.on('scroll', () => {
-                    document.documentElement.classList.add('is-scrolling');
-                    clearTimeout(scrollStopTimer);
-                    scrollStopTimer = setTimeout(() => {
-                        document.documentElement.classList.remove('is-scrolling');
-                    }, 120);
-                });
-            }
+            // animating the scroll, so the navbar's backdrop-filter blur can be dropped
+            let scrollStopTimer = null;
+            lenis.on('scroll', () => {
+                document.documentElement.classList.add('is-scrolling');
+                clearTimeout(scrollStopTimer);
+                scrollStopTimer = setTimeout(() => {
+                    document.documentElement.classList.remove('is-scrolling');
+                }, 120);
+            });
         }
 
         // ── Scroll reveal observer ──
@@ -1359,7 +1345,7 @@
                     observerInstance.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+        }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
 
         document.querySelectorAll('.sr').forEach(el => observer.observe(el));
 
@@ -1372,9 +1358,7 @@
 
         let lockedScrollY = 0;
 
-        // Keep the mobile dropdown pinned exactly to the navbar's real rendered
-        // height (instead of guessing with hardcoded px per breakpoint — that's
-        // what caused the gap/overlap bug on smaller phones).
+        // Keep the mobile dropdown pinned to navbar height
         function syncNavbarHeight() {
             if (navbarEl) {
                 document.documentElement.style.setProperty('--navbar-height', `${navbarEl.offsetHeight}px`);
@@ -1382,35 +1366,25 @@
         }
         syncNavbarHeight();
         window.addEventListener('load', syncNavbarHeight);
-        // Release the preload guard only after layout (navbar height, fonts,
-        // images) has settled, so nothing animates in on first paint —
-        // this is what causes the hamburger icon to "glitch" on load.
-        window.addEventListener('load', () => {
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    document.documentElement.classList.remove('preload');
-                });
-            });
-        });
-        // Safety net: never leave transitions permanently disabled if the
-        // load event is delayed by a slow-loading asset.
-        setTimeout(() => document.documentElement.classList.remove('preload'), 2500);
+
+        // Consolidated resize listener: only recalculates on actual width change (e.g. orientation flip),
+        // preventing mobile address-bar hide/show vertical resizes from thrashing layout during scroll.
+        let lastInnerWidth = window.innerWidth;
         let resizeTicking = false;
         window.addEventListener('resize', () => {
-            // Throttle to one layout read/write per frame — resize can fire
-            // in rapid bursts (drag-resizing, rotation) and syncNavbarHeight
-            // reads offsetHeight, which forces a reflow if run unthrottled.
             if (resizeTicking) return;
             resizeTicking = true;
             requestAnimationFrame(() => {
-                syncNavbarHeight();
-                // If the viewport is resized/rotated past the mobile breakpoint while
-                // the menu is open (e.g. tablet rotation, browser resize), close it
-                // instead of leaving it stuck open with scroll locked.
-                if (window.innerWidth > 768 && menuToggle && menuToggle.classList.contains('active')) {
-                    menuToggle.classList.remove('active');
-                    mobileMenu.classList.remove('active');
-                    closeMobileMenu();
+                const currentWidth = window.innerWidth;
+                if (currentWidth !== lastInnerWidth) {
+                    lastInnerWidth = currentWidth;
+                    syncNavbarHeight();
+                    ensureLastSectionScrollRoom();
+                    if (currentWidth > 768 && menuToggle && menuToggle.classList.contains('active')) {
+                        menuToggle.classList.remove('active');
+                        mobileMenu.classList.remove('active');
+                        closeMobileMenu();
+                    }
                 }
                 resizeTicking = false;
             });
@@ -1421,18 +1395,12 @@
             lockedScrollY = window.scrollY || window.pageYOffset;
             document.body.style.top = `-${lockedScrollY}px`;
             document.body.classList.add('menu-open');
-            // Pause Lenis while the body is pinned via position:fixed, so its
-            // internal target-scroll value doesn't drift away from the real
-            // (frozen) scroll position while the menu is open.
             if (lenis) lenis.stop();
         }
 
         function closeMobileMenu() {
             document.body.classList.remove('menu-open');
             document.body.style.top = '';
-            // Instant, not smooth — this is just correcting the scroll-lock hack
-            // (the page never actually visually moved), so it must not compete
-            // with the smooth-scroll navigation that may run right after it.
             window.scrollTo({ top: lockedScrollY, left: 0, behavior: 'instant' });
             if (lenis) {
                 lenis.start();

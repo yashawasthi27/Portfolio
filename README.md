@@ -29,16 +29,6 @@ Welcome to my personal portfolio repository! This is a modern, high-performance,
 - **Passive Scroll Listeners** + `requestAnimationFrame` throttling on scroll-driven UI (e.g. the back-to-top button).
 - **Cache-Busted Assets**: Versioned stylesheet query strings (`index.css?v=`) paired with no-cache meta headers to ensure visitors always see the latest deploy.
 
-## 🗂️ Featured Projects
-
-- **HR Attrition Dashboard** — End-to-end HR analytics & employee attrition dashboard (Python, PostgreSQL, Power BI)
-- **Job Salary Dashboard** — Data Analyst job salary dashboard built in Excel (XLOOKUP, FILTER, MEDIAN+IF)
-- **Finance Dashboard** — Power BI finance analysis dashboard with DAX measures
-- **Sales Analytics** — Power BI sales analytics dashboard
-- **Retail SQL Analysis** — E-commerce sales analytics using PostgreSQL and advanced SQL
-- **Face Detective** — Biometric face-detection attendance system (TypeScript)
-
-Each project card links to its live GitHub repo and opens a detail modal with the project's rendered README.
 
 ## ♿ Accessibility & SEO
 

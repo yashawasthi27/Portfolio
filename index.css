@@ -70,6 +70,19 @@
     --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-slow: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+    /* Hero load-up stagger. Kept as variables so the mobile media query
+       below can slow the whole sequence down without touching each
+       individual animation declaration. */
+    --reveal-duration: 0.8s;
+    --reveal-delay-1: 0.12s;
+    --reveal-delay-2: 0.2s;
+    --reveal-delay-3: 0.28s;
+    --reveal-delay-4: 0.36s;
+    --reveal-delay-5: 0.44s;
+    --reveal-delay-6: 0.52s;
+    --reveal-delay-7: 0.6s;
+    --reveal-delay-8: 0.68s;
 }
 
 /* ══════════════════════════════
@@ -419,7 +432,7 @@ img {
     justify-content: center;
     align-items: center;
     opacity: 1;
-    animation: reveal 0.8s var(--ease-out-expo) 0.05s backwards;
+    animation: reveal var(--reveal-duration) var(--ease-out-expo) var(--reveal-delay-1) backwards;
 }
 
 .profile-img-wrapper {
@@ -506,7 +519,7 @@ img {
     color: var(--primary-green);
     margin-bottom: 0.5rem;
     opacity: 1;
-    animation: reveal 0.8s var(--ease-out-expo) 0.1s backwards;
+    animation: reveal var(--reveal-duration) var(--ease-out-expo) var(--reveal-delay-2) backwards;
 }
 
 .hero-title {
@@ -517,7 +530,7 @@ img {
     color: var(--text-primary);
     margin-bottom: 1rem;
     opacity: 1;
-    animation: reveal 0.8s var(--ease-out-expo) 0.15s backwards;
+    animation: reveal var(--reveal-duration) var(--ease-out-expo) var(--reveal-delay-3) backwards;
 }
 
 .hero-tagline {
@@ -527,7 +540,7 @@ img {
     color: var(--text-primary);
     margin-bottom: 1.2rem;
     opacity: 1;
-    animation: reveal 0.8s var(--ease-out-expo) 0.2s backwards;
+    animation: reveal var(--reveal-duration) var(--ease-out-expo) var(--reveal-delay-4) backwards;
 }
 
 .hero-tagline span.highlight {
@@ -553,7 +566,7 @@ img {
     line-height: 1.6;
     margin-bottom: 2.2rem;
     opacity: 1;
-    animation: reveal 0.8s var(--ease-out-expo) 0.25s backwards;
+    animation: reveal var(--reveal-duration) var(--ease-out-expo) var(--reveal-delay-5) backwards;
 }
 
 .hero-cta-group {
@@ -561,7 +574,7 @@ img {
     flex-wrap: wrap;
     gap: 0.85rem;
     opacity: 1;
-    animation: reveal 0.8s var(--ease-out-expo) 0.3s backwards;
+    animation: reveal var(--reveal-duration) var(--ease-out-expo) var(--reveal-delay-6) backwards;
 }
 
 /* ══════════════════════════════
@@ -635,7 +648,7 @@ img {
     background-size: 100% 1.5px;
     padding-bottom: 2px;
     opacity: 1;
-    animation: reveal 0.8s var(--ease-out-expo) 0.35s backwards;
+    animation: reveal var(--reveal-duration) var(--ease-out-expo) var(--reveal-delay-7) backwards;
     transition: gap 0.2s ease;
 }
 
@@ -660,7 +673,7 @@ img {
     margin: 2.5rem auto 0;
     padding: 0;
     opacity: 1;
-    animation: reveal 0.8s var(--ease-out-expo) 0.4s backwards;
+    animation: reveal var(--reveal-duration) var(--ease-out-expo) var(--reveal-delay-8) backwards;
 }
 
 .overview-strip {
@@ -2184,6 +2197,23 @@ html.is-scrolling .navbar {
 }
 
 @media (max-width: 768px) {
+
+    /* Slow the hero load-up stagger down on mobile. Same 8-step sequence
+       as desktop, just stretched out — a bigger starting delay so the
+       page has a beat to settle before anything moves, and wider gaps
+       between each element so the reveal reads as a stagger instead of
+       everything popping in almost at once. */
+    :root {
+        --reveal-duration: 0.9s;
+        --reveal-delay-1: 0.2s;
+        --reveal-delay-2: 0.32s;
+        --reveal-delay-3: 0.44s;
+        --reveal-delay-4: 0.56s;
+        --reveal-delay-5: 0.68s;
+        --reveal-delay-6: 0.8s;
+        --reveal-delay-7: 0.92s;
+        --reveal-delay-8: 1.04s;
+    }
 
     /* Mobile section vertical rhythm */
     .section {

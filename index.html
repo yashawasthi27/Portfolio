@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="preload">
 
 <head>
     <meta charset="UTF-8">
@@ -1366,6 +1366,20 @@
         }
         syncNavbarHeight();
         window.addEventListener('load', syncNavbarHeight);
+
+        // Remove preload guard once layout has settled so transitions and
+        // animations are enabled. The guard (.preload *) is what prevents the
+        // hamburger bars and mobile dropdown from visibly animating in on the
+        // very first paint before the page is fully ready.
+        window.addEventListener('load', () => {
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    document.documentElement.classList.remove('preload');
+                });
+            });
+        });
+        // Safety net in case the load event is delayed by a slow asset.
+        setTimeout(() => document.documentElement.classList.remove('preload'), 2500);
 
         // Consolidated resize listener: only recalculates on actual width change (e.g. orientation flip),
         // preventing mobile address-bar hide/show vertical resizes from thrashing layout during scroll.

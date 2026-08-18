@@ -1,3 +1,17 @@
+/* ══════════════════════════════
+   PRELOAD GUARD
+   ══════════════════════════════
+   Blocks all CSS transitions and animations on the very first paint so
+   elements like the hamburger bars and mobile dropdown never visibly
+   animate/jitter into place before JS has finished syncing layout.
+   The class is removed by JS (double-rAF after window.load). */
+.preload *,
+.preload *::before,
+.preload *::after {
+    transition: none !important;
+    animation: none !important;
+}
+
 /* ═════════════════════════════
    DESIGN SYSTEM & VARIABLES
    ═════════════════════════════ */

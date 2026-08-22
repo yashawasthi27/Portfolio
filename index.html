@@ -1267,7 +1267,7 @@
                     if (loadedAtInput) loadedAtInput.value = String(Date.now());
                     if (messageCounter) messageCounter.textContent = '0/2000';
                     Object.keys(fieldValidators).forEach((fieldName) => setFieldError(fieldName, ''));
-                    formStatus.textContent = 'Message sent — thanks! I\'ll get back to you soon.';
+                    formStatus.textContent = 'Message sent thanks! I\'ll get back to you soon.';
                     formStatus.className = 'form-status show success';
                     showToast('Message sent successfully!');
                 } catch (err) {

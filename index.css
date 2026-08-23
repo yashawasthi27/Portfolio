@@ -2654,35 +2654,39 @@ html.is-scrolling .navbar {
     .certs-marquee-track {
         --marquee-gap: 1rem;
         justify-content: flex-start;
-        width: max-content;
-        will-change: transform;
-        animation: certs-marquee-scroll 22s linear infinite;
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x proximity;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        scrollbar-color: var(--card-border) transparent;
+        /* Room for the scrollbar so it doesn't sit flush under the cards */
+        padding-bottom: 0.75rem;
     }
 
-    .certs-marquee-track.is-paused {
-        animation-play-state: paused;
+    .certs-marquee-track::-webkit-scrollbar {
+        height: 6px;
     }
 
-    /* Re-show the duplicate set — it's what makes the loop seamless. */
+    .certs-marquee-track::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .certs-marquee-track::-webkit-scrollbar-thumb {
+        background: var(--card-border);
+        border-radius: var(--radius-full);
+    }
+
+    /* Duplicate set was only needed for the auto-loop; user now scrolls
+       manually, so keep only the real (labelled/focusable) cards. */
     .certs-marquee-track > [aria-hidden="true"] {
-        display: flex;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-        .certs-marquee-track {
-            animation: none;
-            width: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .certs-marquee-track > [aria-hidden="true"] {
-            display: none;
-        }
+        display: none;
     }
 
     .cert-marquee-card {
         width: 200px;
+        scroll-snap-align: start;
     }
 
     /* Certificate lightbox: side-by-side doesn't fit narrow screens,

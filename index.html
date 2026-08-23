@@ -2175,27 +2175,6 @@
             }
         });
 
-        // ── Certificate Marquee: pause the mobile auto-loop on touch/focus ──
-        // (No-op on desktop/tablet, since the animation there is disabled
-        // by CSS — the media query is what actually controls the loop.)
-        (function initCertsMarquee() {
-            const marquee = document.getElementById('certsMarquee');
-            const track = document.getElementById('certsTrack');
-            if (!marquee || !track) return;
-
-            const pause = () => track.classList.add('is-paused');
-            const resume = () => track.classList.remove('is-paused');
-
-            marquee.addEventListener('mouseenter', pause);
-            marquee.addEventListener('mouseleave', resume);
-            marquee.addEventListener('touchstart', pause, { passive: true });
-            marquee.addEventListener('touchend', resume);
-            // Keyboard users tabbing through cards get the same pause, so the
-            // strip doesn't drift away from the card they're reading.
-            marquee.addEventListener('focusin', pause);
-            marquee.addEventListener('focusout', resume);
-        })();
-
         // ── Back to Top ──
         const backToTopBtn = document.getElementById('backToTop');
         if (backToTopBtn) {

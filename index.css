@@ -799,13 +799,11 @@ img {
     opacity: 0;
     transform: translateY(16px);
     transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: opacity, transform;
 }
 
 .sr.visible {
     opacity: 1;
     transform: translateY(0);
-    will-change: auto;
 }
 
 .sr-delay-1 {
@@ -1197,6 +1195,301 @@ img {
 
 .project-card-github:hover {
     opacity: 1;
+}
+
+/* ══════════════════════════════
+   CERTIFICATIONS SECTION
+   Desktop/tablet: static centered row (all 4 cards fit, no scroll needed)
+   Mobile: seamless auto-looping marquee (screen too narrow to fit all 4)
+   ══════════════════════════════ */
+.certs-marquee {
+    position: relative;
+    width: 100%;
+}
+
+.certs-marquee-track {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    justify-content: center;
+    --marquee-gap: 1.5rem;
+    gap: var(--marquee-gap);
+    width: 100%;
+    overflow-x: visible;
+}
+
+/* Duplicate cards exist only to make the mobile infinite-loop seamless.
+   Hidden by default (desktop/tablet don't loop); re-shown inside the
+   mobile media query below. */
+.certs-marquee-track > [aria-hidden="true"] {
+    display: none;
+}
+
+.cert-marquee-card {
+    flex: 0 0 auto;
+    width: 260px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--card-shadow);
+    cursor: pointer;
+    transition: transform 0.25s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.2, 1, 0.3, 1);
+}
+
+@keyframes certs-marquee-scroll {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        /* Track holds two identical sets back-to-back (8 cards, 7 uniform
+           gaps). translateX(-50%) shifts by half the TOTAL track width
+           (4 cards + 3.5 gaps), but the true "one set + its connecting
+           gap" width is 4 cards + 4 gaps — a mismatch of half a gap that
+           causes a visible pop/jump at every loop reset. Subtracting half
+           the gap here corrects it so the loop is pixel-perfect seamless. */
+        transform: translateX(calc(-50% - (var(--marquee-gap) / 2)));
+    }
+}
+
+.cert-marquee-card:hover,
+.cert-marquee-card:focus-visible {
+    transform: translateY(-5px);
+    box-shadow: var(--card-shadow-hover);
+}
+
+.cert-marquee-card:focus-visible {
+    outline: 2px solid var(--primary-green);
+    outline-offset: 2px;
+}
+
+.cert-marquee-card[aria-hidden="true"] {
+    cursor: default;
+}
+
+.cert-marquee-card .cert-card-thumb {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: #e2e8f0;
+    contain: paint;
+}
+
+.cert-marquee-card .cert-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    transition: transform 0.4s var(--ease-out-expo);
+    -webkit-user-drag: none;
+}
+
+.cert-marquee-card:hover .cert-card-image,
+.cert-marquee-card:focus-visible .cert-card-image {
+    transform: scale(1.05);
+}
+
+.cert-marquee-card .cert-card-badge {
+    z-index: 2;
+}
+
+.cert-marquee-card .cert-card-scrim {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, rgba(9, 9, 11, 0) 40%, rgba(9, 9, 11, 0.55) 100%);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.cert-marquee-card:hover .cert-card-scrim,
+.cert-marquee-card:focus-visible .cert-card-scrim {
+    opacity: 1;
+}
+
+.cert-marquee-card .cert-card-view-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #ffffff;
+    color: var(--primary-green);
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-full);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(8px);
+    transition: transform 0.25s ease;
+}
+
+.cert-marquee-card:hover .cert-card-view-pill,
+.cert-marquee-card:focus-visible .cert-card-view-pill {
+    transform: translateY(0);
+}
+
+.cert-marquee-card .cert-card-body {
+    padding: 1.1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.cert-marquee-card .cert-card-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    color: var(--text-primary);
+    /* Keep card heights consistent across the strip regardless of title length */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 2.5em;
+}
+
+.cert-marquee-card .cert-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.cert-marquee-card .cert-card-dot {
+    opacity: 0.5;
+}
+
+/* ══════════════════════════════
+   CERTIFICATE LIGHTBOX (left image / right info, no scroll)
+   ══════════════════════════════ */
+.cert-modal-box {
+    max-width: 1040px;
+    width: 92vw;
+    max-height: 88vh;
+    position: relative;
+    overflow: hidden;
+}
+
+.cert-modal-close-btn {
+    position: absolute;
+    top: 0.85rem;
+    right: 0.85rem;
+    z-index: 5;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+}
+
+.cert-modal-close-btn:hover {
+    background: #ffffff;
+}
+
+.cert-modal-body {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    width: 100%;
+    max-height: 88vh;
+    overflow: hidden;
+}
+
+.cert-modal-image-col {
+    flex: 1.15;
+    min-width: 0;
+    background: #f4f4f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.75rem;
+}
+
+.cert-modal-image {
+    max-width: 100%;
+    max-height: calc(88vh - 3.5rem);
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: var(--radius-md);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12);
+}
+
+.cert-modal-info-col {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.5rem;
+    padding: 2.5rem 2.5rem 2.5rem 1.25rem;
+    overflow-y: auto;
+}
+
+.cert-modal-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+}
+
+.cert-modal-issuer-tag {
+    align-self: flex-start;
+    background: var(--accent-mint-light);
+    color: var(--primary-green);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.3rem 0.65rem;
+    border-radius: var(--radius-sm);
+}
+
+.cert-modal-title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    color: var(--text-primary);
+}
+
+.cert-modal-date {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.cert-modal-skills {
+    width: 100%;
+}
+
+.cert-modal-skills-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 0.65rem;
+}
+
+.cert-modal-skills-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.cert-modal-skill-tag {
+    background: rgba(9, 9, 11, 0.04);
+    border: 1px solid rgba(9, 9, 11, 0.08);
+    color: var(--primary-green);
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.35rem 0.75rem;
+    border-radius: var(--radius-sm);
 }
 
 /* ══════════════════════════════
@@ -2192,6 +2485,14 @@ html.is-scrolling .navbar {
         gap: 1.5rem;
     }
 
+    .certs-marquee-track {
+        --marquee-gap: 1.25rem;
+    }
+
+    .cert-marquee-card {
+        width: 230px;
+    }
+
     .footer-container {
         grid-template-columns: 1.2fr 1fr;
         gap: 2rem;
@@ -2344,6 +2645,81 @@ html.is-scrolling .navbar {
         gap: 1.25rem;
     }
 
+    .certs-marquee {
+        overflow: hidden;
+        -webkit-mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
+        mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
+    }
+
+    .certs-marquee-track {
+        --marquee-gap: 1rem;
+        justify-content: flex-start;
+        width: max-content;
+        will-change: transform;
+        animation: certs-marquee-scroll 22s linear infinite;
+    }
+
+    .certs-marquee-track.is-paused {
+        animation-play-state: paused;
+    }
+
+    /* Re-show the duplicate set — it's what makes the loop seamless. */
+    .certs-marquee-track > [aria-hidden="true"] {
+        display: flex;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .certs-marquee-track {
+            animation: none;
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .certs-marquee-track > [aria-hidden="true"] {
+            display: none;
+        }
+    }
+
+    .cert-marquee-card {
+        width: 200px;
+    }
+
+    /* Certificate lightbox: side-by-side doesn't fit narrow screens,
+       so stack image above info. Image height is capped to leave the
+       info column (title + skills + button) visible without the box
+       exceeding the viewport; overflow-y on the info column is a
+       fallback only for unusually long content, not the normal case. */
+    .cert-modal-box {
+        width: 94vw;
+        max-height: 92vh;
+    }
+
+    .cert-modal-body {
+        flex-direction: column;
+        max-height: 92vh;
+        overflow-y: auto;
+    }
+
+    .cert-modal-image-col {
+        padding: 1.25rem 1.25rem 0.75rem;
+        flex: none;
+    }
+
+    .cert-modal-image {
+        max-height: 34vh;
+    }
+
+    .cert-modal-info-col {
+        padding: 1rem 1.5rem 1.5rem;
+        gap: 1.1rem;
+        overflow-y: visible;
+    }
+
+    .cert-modal-title {
+        font-size: 1.2rem;
+    }
+
     .contact-layout {
         grid-template-columns: 1fr;
         gap: 2rem;
@@ -2443,6 +2819,14 @@ html.is-scrolling .navbar {
     .skill-badge {
         padding: 0.45rem 0.9rem;
         font-size: 0.82rem;
+    }
+
+    /* Let each card take most of the viewport width so one card is fully
+       in view with the next peeking in at the edge — a clear visual hint
+       that the row is swipeable on small phones. */
+    .cert-marquee-card {
+        width: 76vw;
+        max-width: 280px;
     }
 
     /* Proportional heading scale for small phones */

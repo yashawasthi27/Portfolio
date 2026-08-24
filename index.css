@@ -111,7 +111,6 @@ body {
 html {
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
-    scroll-behavior: smooth;
 }
 
 /* Removes the ~300ms tap delay and gray flash on tap for buttons/links on mobile */
@@ -2670,14 +2669,29 @@ html.is-scrolling .navbar {
        predictable on touch than our custom drag/rAF logic, and the browser
        already handles tap-vs-scroll disambiguation for free. JS skips the
        duplication + auto-scroll + pointer-drag setup entirely at this
-       breakpoint and just wires the two arrow buttons to scrollBy(). */
+       breakpoint and just wires the two arrow buttons to scrollBy().
+
+       The scroll container is .certs-grid, NOT .certs-marquee — the prev/
+       next buttons live inside .certs-marquee alongside .certs-grid, so if
+       .certs-marquee itself were the scrolling element, the buttons (its
+       direct descendants) would scroll along with the cards instead of
+       staying pinned to the left/right edges. Keeping .certs-marquee
+       static and scoping the scroll to .certs-grid alone is what keeps the
+       buttons fixed in place while only the cards move. */
     .certs-marquee {
+        cursor: default;
+    }
+
+    .certs-grid {
+        display: flex;
+        width: max-content;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         scroll-behavior: smooth;
-        cursor: default;
-        -webkit-mask-image: none;
-        mask-image: none;
+        scroll-snap-type: x mandatory;
+        scroll-padding-inline: 1.25rem;
+        padding-inline: 1.25rem;
+        gap: 1.25rem;
         scrollbar-width: none;
         /* Contain the horizontal swipe to this carousel only — without
            this, hitting the first/last card and continuing to swipe can
@@ -2686,17 +2700,8 @@ html.is-scrolling .navbar {
         overscroll-behavior-x: contain;
     }
 
-    .certs-marquee::-webkit-scrollbar {
+    .certs-grid::-webkit-scrollbar {
         display: none;
-    }
-
-    .certs-grid {
-        display: flex;
-        width: max-content;
-        scroll-snap-type: x mandatory;
-        scroll-padding-inline: 1.25rem;
-        padding-inline: 1.25rem;
-        gap: 1.25rem;
     }
 
     .certs-nav {

@@ -43,10 +43,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=block" rel="stylesheet">
     <link rel="stylesheet" href="./index.css?v=19">
 
-    <!-- Lenis smooth scroll (60fps eased scrolling) -->
-    <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.23/dist/lenis.css">
-    <script src="https://unpkg.com/lenis@1.3.23/dist/lenis.min.js" defer></script>
-
     <!-- Marked.js for markdown parsing -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
 
@@ -89,7 +85,7 @@
             <a href="#about" class="nav-link" data-section="about">About</a>
             <a href="#skills" class="nav-link" data-section="skills">Skills</a>
             <a href="#projects" class="nav-link" data-section="projects">Projects</a>
-            <a href="resume/Yash_Awasthi_Resume.pdf" class="nav-link resume-preview-trigger" target="_blank"
+            <a href="resume/Yash_Awasthi_Resume.pdf" class="nav-link resume-preview-trigger"
                 rel="noopener noreferrer">Resume</a>
             <a href="#contact" class="nav-link" data-section="contact">Contact</a>
         </nav>
@@ -1294,13 +1290,21 @@
         // ── Email copy ──
         const copyEmail = (e) => {
             e.preventDefault();
-            navigator.clipboard.writeText('yashonwork247@gmail.com').then(() => {
-                showToast('Email copied to clipboard!');
-            });
+            const email = 'yashonwork247@gmail.com';
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(email).then(() => {
+                    showToast('Email copied to clipboard!');
+                }).catch(() => {
+                    window.location.href = `mailto:${email}`;
+                });
+            } else {
+                window.location.href = `mailto:${email}`;
+            }
         };
-        document.getElementById('emailBtn').addEventListener('click', copyEmail);
-        document.getElementById('footerEmailBtn').addEventListener('click', copyEmail);
-        document.getElementById('heroEmailBtn').addEventListener('click', copyEmail);
+        ['emailBtn', 'footerEmailBtn', 'heroEmailBtn'].forEach((id) => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('click', copyEmail);
+        });
 
         // ── Contact form → Google Sheet (via Google Apps Script Web App) ──
         // 1. Open the Google Sheet → Extensions → Apps Script, paste the Code.gs
@@ -1411,8 +1415,10 @@
                 if (loadedAt && Date.now() - loadedAt < 1500) return;
 
                 if (!validateAllFields()) {
-                    formStatus.textContent = 'Please fill the highlighted fields.';
-                    formStatus.className = 'form-status show error';
+                    if (formStatus) {
+                        formStatus.textContent = 'Please fill the highlighted fields.';
+                        formStatus.className = 'form-status show error';
+                    }
                     const firstInvalid = contactForm.querySelector('.invalid');
                     if (firstInvalid) firstInvalid.focus();
                     return;
@@ -1424,11 +1430,14 @@
                 const message = contactForm.message.value.trim();
 
                 if (CONTACT_SHEET_ENDPOINT.includes('PASTE_YOUR')) {
-                    formStatus.textContent = 'Form isn\'t connected to a sheet yet — see setup notes.';
-                    formStatus.className = 'form-status show error';
+                    if (formStatus) {
+                        formStatus.textContent = 'Form isn\'t connected to a sheet yet — see setup notes.';
+                        formStatus.className = 'form-status show error';
+                    }
                     return;
                 }
 
+                if (!contactSubmitBtn) return;
                 contactSubmitBtn.disabled = true;
                 contactSubmitBtn.setAttribute('aria-busy', 'true');
                 contactSubmitBtn.classList.add('is-loading');
@@ -1492,40 +1501,23 @@
             const targetY = lastSection.offsetTop - marginTop;
             const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
             const shortfall = targetY - maxScrollY;
-            document.body.style.paddingBottom = shortfall > 0 ? `${Math.ceil(shortfall)}px` : '';
+            document.body.style.paddingBottom = shortfall > 0 ? `${Math.ceil(shortfall)}px` : '0px';
         }
 
         window.addEventListener('load', ensureLastSectionScrollRoom);
 
-        // ── Lenis smooth scroll (desktop fine pointer only) ──
-        // On touchscreens and mobile devices, native hardware scrolling is
-        // 120Hz/60Hz jitter-free. Virtual scroll hijacking on touch causes
-        // stutter and fights momentum scrolling, so Lenis is enabled only on desktop.
-        const isDesktopFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches && window.innerWidth > 768;
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        let lenis = null;
-        if (!prefersReducedMotion && isDesktopFinePointer && typeof Lenis !== 'undefined') {
-            lenis = new Lenis({
-                autoRaf: true,       // Lenis drives its own requestAnimationFrame loop
-                duration: 1.15,      // scroll-to-target animation length (seconds)
-                lerp: 0.1,           // wheel easing intensity
-                wheelMultiplier: 1,
-                smoothWheel: true,
-                anchors: false       // driven manually via smoothScrollTo
-            });
-            window.lenis = lenis;
-
-            // Toggle 'is-scrolling' on <html> while Lenis is actively
-            // animating the scroll, so the navbar's backdrop-filter blur can be dropped
-            let scrollStopTimer = null;
-            lenis.on('scroll', () => {
-                document.documentElement.classList.add('is-scrolling');
-                clearTimeout(scrollStopTimer);
-                scrollStopTimer = setTimeout(() => {
-                    document.documentElement.classList.remove('is-scrolling');
-                }, 120);
-            });
-        }
+        // ── Smooth scroll ──
+        // Previously used Lenis for desktop wheel/trackpad easing, but Lenis
+        // re-triggers window.scrollTo() on every animation frame while
+        // scrolling (see the old .is-scrolling comment in the CSS for why
+        // that was already a performance concern), and on some laptop
+        // trackpads that pile-up of scroll calls froze scrolling entirely
+        // instead of just feeling choppy. Removed rather than patched
+        // further, since every place `lenis` was used already had a native
+        // fallback (lenis.scrollTo → scrollIntoView, lenis.stop/start →
+        // the native body-lock in lockBodyScroll/unlockBodyScroll below),
+        // so native scrolling is all this site relies on now.
+        const lenis = null;
 
         // ── Scroll reveal observer ──
         const observer = new IntersectionObserver((entries, observerInstance) => {
@@ -1620,7 +1612,7 @@
         function closeMobileMenu() {
             document.body.classList.remove('menu-open');
             document.body.style.top = '';
-            window.scrollTo({ top: lockedScrollY, left: 0, behavior: 'instant' });
+            window.scrollTo({ top: lockedScrollY, left: 0, behavior: 'auto' });
             if (lenis) {
                 lenis.start();
                 lenis.scrollTo(lockedScrollY, { immediate: true });
@@ -1763,7 +1755,10 @@
                     }
                 }
             });
-        }, { threshold: 0.2 });
+        }, {
+            rootMargin: `-${Math.max(1, (navbarEl ? navbarEl.offsetHeight : 0) + 12)}px 0px -55% 0px`,
+            threshold: 0
+        });
 
         sections.forEach(s => s && navObserver.observe(s));
 
@@ -1784,7 +1779,7 @@
         function unlockBodyScroll() {
             document.body.classList.remove('menu-open');
             document.body.style.top = '';
-            window.scrollTo({ top: modalLockedScrollY, left: 0, behavior: 'instant' });
+            window.scrollTo({ top: modalLockedScrollY, left: 0, behavior: 'auto' });
             if (lenis) {
                 lenis.start();
                 lenis.scrollTo(modalLockedScrollY, { immediate: true });
@@ -1956,11 +1951,9 @@
             });
         });
 
-        closeModalBtn.addEventListener('click', closeModal);
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                closeModal();
-            }
+        if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+        if (modal) modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
         });
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && modal.classList.contains('show')) {
@@ -1991,6 +1984,7 @@
 
         resumeTriggers.forEach(trigger => {
             trigger.addEventListener('click', (e) => {
+                if (!resumeModal || !resumeIframe) return;
                 e.preventDefault();
 
                 // If opened from inside the mobile dropdown, close that first
@@ -2005,11 +1999,9 @@
             });
         });
 
-        closeResumeModalBtn.addEventListener('click', closeResumeModal);
-        resumeModal.addEventListener('click', (e) => {
-            if (e.target === resumeModal) {
-                closeResumeModal();
-            }
+        if (closeResumeModalBtn) closeResumeModalBtn.addEventListener('click', closeResumeModal);
+        if (resumeModal) resumeModal.addEventListener('click', (e) => {
+            if (e.target === resumeModal) closeResumeModal();
         });
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && resumeModal.classList.contains('show')) {
@@ -2037,6 +2029,7 @@
         // Either way, a click just opens the lightbox.
 
         function openCertModal(card) {
+            if (!card || !certModal || !certModalImage || !certModalTitle || !certModalIssuer || !certModalDate || !certModalSkillsTags || !certModalSkills) return;
             const img = card.getAttribute('data-cert-img');
             const title = card.getAttribute('data-cert-title');
             const issuer = card.getAttribute('data-cert-issuer');
@@ -2100,7 +2093,7 @@
                 const trackStyles = getComputedStyle(certsTrack);
                 const gap = parseFloat(trackStyles.columnGap || trackStyles.gap || '0');
                 const step = (firstCard.getBoundingClientRect().width + gap) * direction;
-                certsMarquee.scrollBy({ left: step, behavior: 'smooth' });
+                certsTrack.scrollBy({ left: step, behavior: 'smooth' });
             }
 
             if (certsPrevBtn) certsPrevBtn.addEventListener('click', () => scrollByOneCard(-1));
@@ -2113,11 +2106,9 @@
 
 
 
-        closeCertModalBtn.addEventListener('click', closeCertModal);
-        certModal.addEventListener('click', (e) => {
-            if (e.target === certModal) {
-                closeCertModal();
-            }
+        if (closeCertModalBtn) closeCertModalBtn.addEventListener('click', closeCertModal);
+        if (certModal) certModal.addEventListener('click', (e) => {
+            if (e.target === certModal) closeCertModal();
         });
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && certModal.classList.contains('show')) {

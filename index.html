@@ -1506,21 +1506,10 @@
         }
 
         window.addEventListener('load', ensureLastSectionScrollRoom);
+        // ── Native smooth scroll ──
+        // Lenis has been completely removed; native browser scrolling is used.
 
-        // ── Smooth scroll ──
-        // Previously used Lenis for desktop wheel/trackpad easing, but Lenis
-        // re-triggers window.scrollTo() on every animation frame while
-        // scrolling (see the old .is-scrolling comment in the CSS for why
-        // that was already a performance concern), and on some laptop
-        // trackpads that pile-up of scroll calls froze scrolling entirely
-        // instead of just feeling choppy. Removed rather than patched
-        // further, since every place `lenis` was used already had a native
-        // fallback (lenis.scrollTo → scrollIntoView, lenis.stop/start →
-        // the native body-lock in lockBodyScroll/unlockBodyScroll below),
-        // so native scrolling is all this site relies on now.
-        const lenis = null;
-
-        // ── Native wheel / touchpad scroll safety ──
+// ── Native wheel / touchpad scroll safety ──
         // Some laptop browsers can stop dispatching the wheel gesture to the
         // document when a fixed/animated layer is present. Keep normal native
         // scrolling for inner scrollable elements, but guarantee page scrolling
@@ -1625,17 +1614,12 @@
             lockedScrollY = window.scrollY || window.pageYOffset;
             document.body.style.top = `-${lockedScrollY}px`;
             document.body.classList.add('menu-open');
-            if (lenis) lenis.stop();
         }
 
         function closeMobileMenu() {
             document.body.classList.remove('menu-open');
             document.body.style.top = '';
             window.scrollTo({ top: lockedScrollY, left: 0, behavior: 'auto' });
-            if (lenis) {
-                lenis.start();
-                lenis.scrollTo(lockedScrollY, { immediate: true });
-            }
         }
 
         if (menuToggle && mobileMenu) {
@@ -1703,22 +1687,10 @@
             // the navbar's real rendered height — leaving nav clicks
             // stopping partway between sections instead of at the top of
             // the target.
-            if (lenis) {
-                // Lenis's scrollTo doesn't read the CSS scroll-margin-top box
-                // model property itself, so we read the same value the browser
-                // would've used for scrollIntoView and pass it as an offset —
-                // this keeps every section landing exactly below the navbar.
-                const marginTop = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
-                lenis.scrollTo(target, { offset: -marginTop, duration: 1.15 });
-            } else {
-                // Fallback when Lenis hasn't loaded (e.g. CDN blocked) or
-                // reduced motion is requested — native smooth scroll still
-                // respects each section's scroll-margin-top automatically.
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
         }
 
         function handleLinkClick(e) {
@@ -1792,17 +1764,12 @@
             modalLockedScrollY = window.scrollY || window.pageYOffset;
             document.body.style.top = `-${modalLockedScrollY}px`;
             document.body.classList.add('menu-open');
-            if (lenis) lenis.stop();
         }
 
         function unlockBodyScroll() {
             document.body.classList.remove('menu-open');
             document.body.style.top = '';
             window.scrollTo({ top: modalLockedScrollY, left: 0, behavior: 'auto' });
-            if (lenis) {
-                lenis.start();
-                lenis.scrollTo(modalLockedScrollY, { immediate: true });
-            }
         }
 
         // ── Project Details Modal Logic ──
@@ -2150,11 +2117,7 @@
             }, { passive: true });
 
             backToTopBtn.addEventListener('click', () => {
-                if (lenis) {
-                    lenis.scrollTo(0, { duration: 1.15 });
-                } else {
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             });
         }
     </script>

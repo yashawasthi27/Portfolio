@@ -1524,9 +1524,9 @@
 
         if (window.Lenis && !prefersReducedMotion) {
             lenis = new Lenis({
-                duration: 1.1,
+                duration: 1.2,
                 easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-                wheelMultiplier: 1,
+                wheelMultiplier: 0.9,
                 touchMultiplier: 1.2,
                 // Modal/cert bodies (.modal-body, .resume-modal-body,
                 // .cert-modal-body) keep their own native wheel scroll
@@ -1537,6 +1537,32 @@
                 syncTouch: false,
                 autoRaf: true
             });
+
+            // ── Hero parallax ──
+            // Rides on Lenis's own 'scroll' event (fired every tick of its
+            // existing autoRaf loop) instead of a second rAF loop, so this
+            // adds zero extra scroll-handler overhead. Purely a transform
+            // (compositor-only, no layout/paint cost) and clamped to the
+            // hero's own height so it settles to a fixed offset the moment
+            // the user scrolls past it — it never fights the sections below.
+            const heroEl = document.getElementById('hero');
+            const heroProfileWrapper = document.querySelector('.profile-img-wrapper');
+            const heroTextColumn = document.querySelector('.hero-text-column');
+            if (heroEl && heroProfileWrapper) {
+                let heroHeight = heroEl.offsetHeight;
+                window.addEventListener('resize', () => {
+                    heroHeight = heroEl.offsetHeight;
+                }, { passive: true });
+
+                lenis.on('scroll', ({ scroll }) => {
+                    const progress = Math.min(Math.max(scroll / heroHeight, 0), 1);
+                    heroProfileWrapper.style.transform = `translate3d(0, ${(progress * 34).toFixed(2)}px, 0)`;
+                    if (heroTextColumn) {
+                        heroTextColumn.style.transform = `translate3d(0, ${(progress * 16).toFixed(2)}px, 0)`;
+                        heroTextColumn.style.opacity = `${1 - progress * 0.6}`;
+                    }
+                });
+            }
         } else {
             // ── Native wheel / touchpad scroll safety (fallback only) ──
             // Some laptop browsers can stop dispatching the wheel gesture to
@@ -1729,7 +1755,7 @@
                 // to clear the fixed navbar) as Lenis's offset, so both
                 // scroll paths land in exactly the same spot.
                 const marginTop = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
-                lenis.scrollTo(target, { offset: -marginTop, duration: 1.1 });
+                lenis.scrollTo(target, { offset: -marginTop, duration: 1.2 });
             } else {
                 target.scrollIntoView({
                     behavior: 'smooth',

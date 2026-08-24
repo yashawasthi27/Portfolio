@@ -46,6 +46,13 @@
     <!-- Marked.js for markdown parsing -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
 
+    <!-- Lenis smooth-scroll: loaded + initialized before the main deferred
+         script below runs (defer scripts execute in source order), and
+         gracefully no-ops if the CDN is blocked or the user prefers
+         reduced motion (see the main script's Lenis init block). -->
+    <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.26/dist/lenis.css">
+    <script src="https://unpkg.com/lenis@1.3.26/dist/lenis.min.js" defer></script>
+
     <!-- Structured data for search engines -->
     <script type="application/ld+json">
     {
@@ -1506,26 +1513,50 @@
         }
 
         window.addEventListener('load', ensureLastSectionScrollRoom);
-        // ── Native smooth scroll ──
-        // Lenis has been completely removed; native browser scrolling is used.
 
-// ── Native wheel / touchpad scroll safety ──
-        // Some laptop browsers can stop dispatching the wheel gesture to the
-        // document when a fixed/animated layer is present. Keep normal native
-        // scrolling for inner scrollable elements, but guarantee page scrolling
-        // for mouse wheels and two-finger touchpad gestures.
-        window.addEventListener('wheel', (e) => {
-            if (document.body.classList.contains('menu-open')) return;
+        // ── Lenis smooth scroll ──
+        // Skip entirely if the CDN was blocked (window.Lenis missing) or the
+        // visitor has asked the OS for reduced motion — in both cases the
+        // page falls back to plain native scrolling below, so it's never
+        // left without a working scroll experience.
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let lenis = null;
 
-            const target = e.target instanceof Element ? e.target : null;
-            const scrollable = target && target.closest('[data-wheel-scroll], .modal-body, .resume-modal-body, .cert-modal-body');
-            if (scrollable) return;
+        if (window.Lenis && !prefersReducedMotion) {
+            lenis = new Lenis({
+                duration: 1.1,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                wheelMultiplier: 1,
+                touchMultiplier: 1.2,
+                // Modal/cert bodies (.modal-body, .resume-modal-body,
+                // .cert-modal-body) keep their own native wheel scroll
+                // instead of dragging the page along with them.
+                allowNestedScroll: true,
+                // Touch stays native (iOS/Android already scroll smoothly);
+                // Lenis only takes over wheel/trackpad input.
+                syncTouch: false,
+                autoRaf: true
+            });
+        } else {
+            // ── Native wheel / touchpad scroll safety (fallback only) ──
+            // Some laptop browsers can stop dispatching the wheel gesture to
+            // the document when a fixed/animated layer is present. Keep
+            // normal native scrolling for inner scrollable elements, but
+            // guarantee page scrolling for mouse wheels and two-finger
+            // touchpad gestures.
+            window.addEventListener('wheel', (e) => {
+                if (document.body.classList.contains('menu-open')) return;
 
-            if (Math.abs(e.deltaY) > 0) {
-                e.preventDefault();
-                window.scrollBy({ top: e.deltaY, left: e.deltaX || 0, behavior: 'auto' });
-            }
-        }, { passive: false });
+                const target = e.target instanceof Element ? e.target : null;
+                const scrollable = target && target.closest('[data-wheel-scroll], .modal-body, .resume-modal-body, .cert-modal-body');
+                if (scrollable) return;
+
+                if (Math.abs(e.deltaY) > 0) {
+                    e.preventDefault();
+                    window.scrollBy({ top: e.deltaY, left: e.deltaX || 0, behavior: 'auto' });
+                }
+            }, { passive: false });
+        }
 
         // ── Scroll reveal observer ──
         const observer = new IntersectionObserver((entries, observerInstance) => {
@@ -1614,12 +1645,18 @@
             lockedScrollY = window.scrollY || window.pageYOffset;
             document.body.style.top = `-${lockedScrollY}px`;
             document.body.classList.add('menu-open');
+            // Pause Lenis's rAF loop while the body is pinned in place, so
+            // it isn't fighting the position:fixed trick underneath.
+            if (lenis) lenis.stop();
         }
 
         function closeMobileMenu() {
             document.body.classList.remove('menu-open');
             document.body.style.top = '';
             window.scrollTo({ top: lockedScrollY, left: 0, behavior: 'auto' });
+            // Resume after the native scrollTo above has already restored
+            // the real position, so Lenis resyncs from the correct spot.
+            if (lenis) lenis.start();
         }
 
         if (menuToggle && mobileMenu) {
@@ -1687,10 +1724,18 @@
             // the navbar's real rendered height — leaving nav clicks
             // stopping partway between sections instead of at the top of
             // the target.
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
+            if (lenis) {
+                // Reuse the section's own scroll-margin-top (already tuned
+                // to clear the fixed navbar) as Lenis's offset, so both
+                // scroll paths land in exactly the same spot.
+                const marginTop = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
+                lenis.scrollTo(target, { offset: -marginTop, duration: 1.1 });
+            } else {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
         }
 
         function handleLinkClick(e) {
@@ -1764,12 +1809,14 @@
             modalLockedScrollY = window.scrollY || window.pageYOffset;
             document.body.style.top = `-${modalLockedScrollY}px`;
             document.body.classList.add('menu-open');
+            if (lenis) lenis.stop();
         }
 
         function unlockBodyScroll() {
             document.body.classList.remove('menu-open');
             document.body.style.top = '';
             window.scrollTo({ top: modalLockedScrollY, left: 0, behavior: 'auto' });
+            if (lenis) lenis.start();
         }
 
         // ── Project Details Modal Logic ──
@@ -2117,7 +2164,11 @@
             }, { passive: true });
 
             backToTopBtn.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                if (lenis) {
+                    lenis.scrollTo(0, { duration: 1.2 });
+                } else {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
             });
         }
     </script>

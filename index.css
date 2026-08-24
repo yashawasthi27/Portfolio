@@ -101,6 +101,11 @@ body {
     max-width: 100%;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
+    /* Stops a horizontal swipe (e.g. the certs carousel hitting its edge)
+       or a vertical overscroll from chaining into the page's own bounce,
+       which is what exposes the browser's default white canvas behind the
+       fixed gradient layer for a frame on iOS/Android. */
+    overscroll-behavior: none;
 }
 
 html {
@@ -118,7 +123,10 @@ button {
 
 body {
     font-family: var(--font-sans);
-    background: transparent;
+    /* Fallback matches the gradient's own tone (instead of transparent) so
+       if .bg-fixed ever lags a frame behind during a fast scroll/bounce,
+       what's revealed is this off-white, not stark browser-white. */
+    background: #f4f4f5;
     color: var(--text-primary);
     line-height: 1.5;
 }
@@ -794,16 +802,25 @@ img {
     border-radius: var(--radius-sm);
 }
 
+/* Certifications heading only — "Verified Learning" label + title
+   centered, unlike every other section's left-aligned heading. */
+#certifications .section-label,
+#certifications .section-title {
+    text-align: center;
+}
+
 /* Scroll reveal helper */
 .sr {
     opacity: 0;
     transform: translateY(16px);
     transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
 }
 
 .sr.visible {
     opacity: 1;
     transform: translateY(0);
+    will-change: auto;
 }
 
 .sr-delay-1 {
@@ -1199,104 +1216,110 @@ img {
 
 /* ══════════════════════════════
    CERTIFICATIONS SECTION
-   Desktop/tablet: static centered row (all 4 cards fit, no scroll needed)
-   Mobile: seamless auto-looping marquee (screen too narrow to fit all 4)
+   Desktop/tablet: plain static grid, all cards visible, no motion.
+   Mobile only (media query further down): swipeable snap-carousel.
    ══════════════════════════════ */
 .certs-marquee {
     position: relative;
-    width: 100%;
 }
 
-.certs-marquee-track {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: stretch;
-    justify-content: center;
-    --marquee-gap: 1.5rem;
-    gap: var(--marquee-gap);
-    width: 100%;
-    overflow-x: visible;
+.certs-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
 }
 
-/* Duplicate cards exist only to make the mobile infinite-loop seamless.
-   Hidden by default (desktop/tablet don't loop); re-shown inside the
-   mobile media query below. */
-.certs-marquee-track > [aria-hidden="true"] {
+/* Prev/next arrow buttons only exist for the mobile carousel — hidden here,
+   shown in the mobile media query further down. */
+.certs-nav {
     display: none;
+    position: absolute;
+    top: 42%;
+    z-index: 10;
+    width: 2.5rem;
+    height: 3.5rem;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary-green);
+    color: #ffffff;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    transition: background 0.15s ease, transform 0.15s ease;
 }
 
-.cert-marquee-card {
-    flex: 0 0 auto;
-    width: 260px;
-    background: rgba(255, 255, 255, 0.92);
+.certs-nav:hover,
+.certs-nav:focus-visible {
+    background: var(--primary-green-hover);
+}
+
+.certs-nav:active {
+    transform: translateY(-50%) scale(0.92);
+}
+
+.certs-nav-prev {
+    left: 0.4rem;
+    transform: translateY(-50%);
+}
+
+.certs-nav-next {
+    right: 0.4rem;
+    transform: translateY(-50%);
+}
+
+
+.cert-card {
+    background: rgba(255, 255, 255, 0.85);
     border: 1px solid var(--card-border);
     border-radius: var(--radius-lg);
     overflow: hidden;
     display: flex;
     flex-direction: column;
     box-shadow: var(--card-shadow);
-    cursor: pointer;
     transition: transform 0.25s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.2, 1, 0.3, 1);
+    cursor: pointer;
 }
 
-@keyframes certs-marquee-scroll {
-    from {
-        transform: translateX(0);
-    }
-
-    to {
-        /* Track holds two identical sets back-to-back (8 cards, 7 uniform
-           gaps). translateX(-50%) shifts by half the TOTAL track width
-           (4 cards + 3.5 gaps), but the true "one set + its connecting
-           gap" width is 4 cards + 4 gaps — a mismatch of half a gap that
-           causes a visible pop/jump at every loop reset. Subtracting half
-           the gap here corrects it so the loop is pixel-perfect seamless. */
-        transform: translateX(calc(-50% - (var(--marquee-gap) / 2)));
-    }
-}
-
-.cert-marquee-card:hover,
-.cert-marquee-card:focus-visible {
+.cert-card:hover,
+.cert-card:focus-visible {
     transform: translateY(-5px);
     box-shadow: var(--card-shadow-hover);
+    will-change: transform;
 }
 
-.cert-marquee-card:focus-visible {
+.cert-card:focus-visible {
     outline: 2px solid var(--primary-green);
     outline-offset: 2px;
 }
 
-.cert-marquee-card[aria-hidden="true"] {
-    cursor: default;
-}
-
-.cert-marquee-card .cert-card-thumb {
+.cert-card-thumb {
     position: relative;
     aspect-ratio: 4 / 3;
     overflow: hidden;
     background: #e2e8f0;
-    contain: paint;
 }
 
-.cert-marquee-card .cert-card-image {
+.cert-card-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: top;
     transition: transform 0.4s var(--ease-out-expo);
-    -webkit-user-drag: none;
 }
 
-.cert-marquee-card:hover .cert-card-image,
-.cert-marquee-card:focus-visible .cert-card-image {
+.cert-card:hover .cert-card-image,
+.cert-card:focus-visible .cert-card-image {
     transform: scale(1.05);
+    will-change: transform;
 }
 
-.cert-marquee-card .cert-card-badge {
+.cert-card-badge {
+    /* Reuses .project-card-badge positioning/typography; only overrides needed */
     z-index: 2;
 }
 
-.cert-marquee-card .cert-card-scrim {
+.cert-card-scrim {
     position: absolute;
     inset: 0;
     display: flex;
@@ -1307,12 +1330,12 @@ img {
     transition: opacity 0.25s ease;
 }
 
-.cert-marquee-card:hover .cert-card-scrim,
-.cert-marquee-card:focus-visible .cert-card-scrim {
+.cert-card:hover .cert-card-scrim,
+.cert-card:focus-visible .cert-card-scrim {
     opacity: 1;
 }
 
-.cert-marquee-card .cert-card-view-pill {
+.cert-card-view-pill {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
@@ -1327,33 +1350,27 @@ img {
     transition: transform 0.25s ease;
 }
 
-.cert-marquee-card:hover .cert-card-view-pill,
-.cert-marquee-card:focus-visible .cert-card-view-pill {
+.cert-card:hover .cert-card-view-pill,
+.cert-card:focus-visible .cert-card-view-pill {
     transform: translateY(0);
 }
 
-.cert-marquee-card .cert-card-body {
+.cert-card-body {
     padding: 1.1rem 1.25rem;
     display: flex;
     flex-direction: column;
     gap: 0.35rem;
 }
 
-.cert-marquee-card .cert-card-title {
+.cert-card-title {
     font-size: 0.95rem;
     font-weight: 800;
     letter-spacing: -0.01em;
     line-height: 1.3;
     color: var(--text-primary);
-    /* Keep card heights consistent across the strip regardless of title length */
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    min-height: 2.5em;
 }
 
-.cert-marquee-card .cert-card-meta {
+.cert-card-meta {
     display: flex;
     align-items: center;
     gap: 0.4rem;
@@ -1362,7 +1379,7 @@ img {
     color: var(--text-secondary);
 }
 
-.cert-marquee-card .cert-card-dot {
+.cert-card-dot {
     opacity: 0.5;
 }
 
@@ -2485,12 +2502,8 @@ html.is-scrolling .navbar {
         gap: 1.5rem;
     }
 
-    .certs-marquee-track {
-        --marquee-gap: 1.25rem;
-    }
-
-    .cert-marquee-card {
-        width: 230px;
+    .certs-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .footer-container {
@@ -2645,48 +2658,49 @@ html.is-scrolling .navbar {
         gap: 1.25rem;
     }
 
+    .cert-card {
+        flex-basis: 82vw;
+        width: 82vw;
+        max-width: 300px;
+        scroll-snap-align: center;
+    }
+
+    /* Mobile: swap the desktop auto-scrolling marquee for a native,
+       swipeable snap-carousel — finger-drag scrolling is smoother and more
+       predictable on touch than our custom drag/rAF logic, and the browser
+       already handles tap-vs-scroll disambiguation for free. JS skips the
+       duplication + auto-scroll + pointer-drag setup entirely at this
+       breakpoint and just wires the two arrow buttons to scrollBy(). */
     .certs-marquee {
-        overflow: hidden;
-        -webkit-mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
-        mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
-    }
-
-    .certs-marquee-track {
-        --marquee-gap: 1rem;
-        justify-content: flex-start;
-        width: 100%;
         overflow-x: auto;
-        overflow-y: hidden;
-        scroll-snap-type: x proximity;
         -webkit-overflow-scrolling: touch;
-        scrollbar-width: thin;
-        scrollbar-color: var(--card-border) transparent;
-        /* Room for the scrollbar so it doesn't sit flush under the cards */
-        padding-bottom: 0.75rem;
+        scroll-behavior: smooth;
+        cursor: default;
+        -webkit-mask-image: none;
+        mask-image: none;
+        scrollbar-width: none;
+        /* Contain the horizontal swipe to this carousel only — without
+           this, hitting the first/last card and continuing to swipe can
+           chain into the page's own vertical bounce, which is what was
+           flashing a white box in the background. */
+        overscroll-behavior-x: contain;
     }
 
-    .certs-marquee-track::-webkit-scrollbar {
-        height: 6px;
-    }
-
-    .certs-marquee-track::-webkit-scrollbar-track {
-        background: transparent;
-    }
-
-    .certs-marquee-track::-webkit-scrollbar-thumb {
-        background: var(--card-border);
-        border-radius: var(--radius-full);
-    }
-
-    /* Duplicate set was only needed for the auto-loop; user now scrolls
-       manually, so keep only the real (labelled/focusable) cards. */
-    .certs-marquee-track > [aria-hidden="true"] {
+    .certs-marquee::-webkit-scrollbar {
         display: none;
     }
 
-    .cert-marquee-card {
-        width: 200px;
-        scroll-snap-align: start;
+    .certs-grid {
+        display: flex;
+        width: max-content;
+        scroll-snap-type: x mandatory;
+        scroll-padding-inline: 1.25rem;
+        padding-inline: 1.25rem;
+        gap: 1.25rem;
+    }
+
+    .certs-nav {
+        display: flex;
     }
 
     /* Certificate lightbox: side-by-side doesn't fit narrow screens,
@@ -2825,18 +2839,18 @@ html.is-scrolling .navbar {
         font-size: 0.82rem;
     }
 
-    /* Let each card take most of the viewport width so one card is fully
-       in view with the next peeking in at the edge — a clear visual hint
-       that the row is swipeable on small phones. */
-    .cert-marquee-card {
-        width: 76vw;
-        max-width: 280px;
-    }
-
     /* Proportional heading scale for small phones */
     .section-title {
         font-size: 1.85rem;
         margin-bottom: 2rem;
+    }
+
+    /* "Certifications & Credentials" is long enough to wrap to two lines
+       at the regular mobile heading size — scale it down with the
+       viewport instead so it always stays on one line. */
+    #certifications .section-title {
+        font-size: clamp(1.05rem, 6.5vw, 1.85rem);
+        white-space: nowrap;
     }
 
     .hero-description {

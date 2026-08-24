@@ -2119,18 +2119,121 @@
 
         // Mobile-only prev/next arrows (hidden via CSS on desktop) — nudge
         // the carousel by one card width using native smooth scrolling.
+        // Mobile also loops in both directions (see below): swiping or
+        // clicking past either end glides into a duplicate set instead of
+        // stopping dead, then silently rewinds onto the matching real card.
         if (certsTrack && certsMarquee) {
-            function scrollByOneCard(direction) {
-                const firstCard = certsTrack.querySelector('.cert-card');
-                if (!firstCard) return;
+            function getCardStep() {
+                const card = certsTrack.querySelector('.cert-card:not([data-loop-clone])') || certsTrack.querySelector('.cert-card');
+                if (!card) return 0;
                 const trackStyles = getComputedStyle(certsTrack);
                 const gap = parseFloat(trackStyles.columnGap || trackStyles.gap || '0');
-                const step = (firstCard.getBoundingClientRect().width + gap) * direction;
-                certsTrack.scrollBy({ left: step, behavior: 'smooth' });
+                return card.getBoundingClientRect().width + gap;
+            }
+
+            function scrollByOneCard(direction) {
+                certsTrack.scrollBy({ left: getCardStep() * direction, behavior: 'smooth' });
             }
 
             if (certsPrevBtn) certsPrevBtn.addEventListener('click', () => scrollByOneCard(-1));
             if (certsNextBtn) certsNextBtn.addEventListener('click', () => scrollByOneCard(1));
+
+            // ── Infinite loop (mobile carousel only) ──
+            // Desktop/tablet keeps the plain static grid untouched — looping
+            // only applies to the swipeable mobile carousel. A full duplicate
+            // set of cards is inserted before the first and after the last
+            // real card, so scrolling past either end glides into a
+            // duplicate instead of hitting a hard stop. Once that scroll
+            // settles, scrollLeft is silently shifted by exactly one full
+            // set's width to land back on the matching *real* card —
+            // imperceptible to the user, but it means the carousel can keep
+            // scrolling in that direction indefinitely.
+            const loopMql = window.matchMedia('(max-width: 768px)');
+            let realSetSpan = 0;
+            let firstRealLeft = 0;
+            let scrollEndTimer = null;
+
+            function teardownCertsLoop() {
+                certsTrack.querySelectorAll('[data-loop-clone]').forEach(el => el.remove());
+                certsTrack.scrollLeft = 0;
+                realSetSpan = 0;
+            }
+
+            function setupCertsLoop() {
+                teardownCertsLoop();
+
+                const realCards = Array.from(certsTrack.querySelectorAll('.cert-card'));
+                if (realCards.length < 2) return;
+
+                const makeCloneSet = () => {
+                    const frag = document.createDocumentFragment();
+                    realCards.forEach(card => {
+                        const clone = card.cloneNode(true);
+                        // Clones are purely visual filler for the loop — hide
+                        // them from assistive tech / tab order and skip the
+                        // scroll-reveal animation so they render immediately.
+                        clone.classList.remove('sr', 'sr-delay-1');
+                        clone.setAttribute('data-loop-clone', 'true');
+                        clone.setAttribute('aria-hidden', 'true');
+                        clone.setAttribute('tabindex', '-1');
+                        frag.appendChild(clone);
+                    });
+                    return frag;
+                };
+
+                certsTrack.insertBefore(makeCloneSet(), certsTrack.firstChild);
+                certsTrack.appendChild(makeCloneSet());
+
+                // Land on the real first card with no animation, so the
+                // visible starting state is identical to before looping.
+                const trackRect = certsTrack.getBoundingClientRect();
+                const firstRealRect = realCards[0].getBoundingClientRect();
+                firstRealLeft = certsTrack.scrollLeft + (firstRealRect.left - trackRect.left);
+                realSetSpan = getCardStep() * realCards.length;
+                certsTrack.scrollLeft = firstRealLeft;
+            }
+
+            function handleCertsScrollSettled() {
+                if (!loopMql.matches || !realSetSpan) return;
+                const step = getCardStep();
+                const pos = certsTrack.scrollLeft;
+                if (pos < firstRealLeft - step / 2) {
+                    certsTrack.scrollLeft = pos + realSetSpan;
+                } else if (pos > firstRealLeft + realSetSpan - step / 2) {
+                    certsTrack.scrollLeft = pos - realSetSpan;
+                }
+            }
+
+            certsTrack.addEventListener('scroll', () => {
+                clearTimeout(scrollEndTimer);
+                scrollEndTimer = setTimeout(handleCertsScrollSettled, 120);
+            }, { passive: true });
+
+            function handleLoopBreakpoint(e) {
+                if (e.matches) {
+                    setupCertsLoop();
+                } else {
+                    teardownCertsLoop();
+                }
+            }
+
+            if (loopMql.addEventListener) {
+                loopMql.addEventListener('change', handleLoopBreakpoint);
+            } else if (loopMql.addListener) {
+                // Safari <14 fallback
+                loopMql.addListener(handleLoopBreakpoint);
+            }
+            handleLoopBreakpoint(loopMql);
+
+            // Card width can change on resize while staying in mobile mode
+            // (e.g. rotating the phone) — rebuild so the loop geometry
+            // (card step, set span, rest position) stays exact.
+            let certsResizeTimer = null;
+            window.addEventListener('resize', () => {
+                if (!loopMql.matches) return;
+                clearTimeout(certsResizeTimer);
+                certsResizeTimer = setTimeout(setupCertsLoop, 150);
+            }, { passive: true });
         }
 
 

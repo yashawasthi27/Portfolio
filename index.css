@@ -70,6 +70,7 @@
     --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-slow: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --navbar-height: 72px;
 
     /* Hero load-up stagger. Kept as variables so the mobile media query
        below can slow the whole sequence down without touching each
@@ -2519,6 +2520,7 @@ html.is-scrolling .navbar {
        between each element so the reveal reads as a stagger instead of
        everything popping in almost at once. */
     :root {
+        --navbar-height: 60px;
         --reveal-duration: 1s;
         --reveal-delay-1: 0.35s;
         --reveal-delay-2: 0.5s;
@@ -2684,7 +2686,8 @@ html.is-scrolling .navbar {
 
     .certs-grid {
         display: flex;
-        width: max-content;
+        width: 100%;
+        min-width: 0;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         scroll-behavior: smooth;
@@ -2809,6 +2812,10 @@ html.is-scrolling .navbar {
 }
 
 @media (max-width: 480px) {
+    :root {
+        --navbar-height: 56px;
+    }
+
     .navbar {
         padding: 0.6rem 1rem;
     }
@@ -2868,6 +2875,10 @@ html.is-scrolling .navbar {
 }
 
 @media (max-width: 390px) {
+    :root {
+        --navbar-height: 50px;
+    }
+
     .navbar {
         padding: 0.5rem 0.75rem;
     }

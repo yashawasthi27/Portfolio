@@ -1554,8 +1554,17 @@
                     heroHeight = heroEl.offsetHeight;
                 }, { passive: true });
 
+                // Lenis fires 'scroll' on every tick for the whole page, not
+                // just while the hero is in view — once progress clamps to 1
+                // it stays exactly 1 for the rest of the scroll session, so
+                // skip the two style writes when the value hasn't actually
+                // changed. Keeps this handler from doing work on every frame
+                // you scroll through sections well past the hero.
+                let lastHeroProgress = -1;
                 lenis.on('scroll', ({ scroll }) => {
                     const progress = Math.min(Math.max(scroll / heroHeight, 0), 1);
+                    if (progress === lastHeroProgress) return;
+                    lastHeroProgress = progress;
                     heroProfileWrapper.style.transform = `translate3d(0, ${(progress * 34).toFixed(2)}px, 0)`;
                     if (heroTextColumn) {
                         heroTextColumn.style.transform = `translate3d(0, ${(progress * 16).toFixed(2)}px, 0)`;

@@ -816,17 +816,21 @@ img {
 }
 
 /* Scroll reveal helper */
+/* No will-change here on purpose: with ~20+ .sr elements on the page,
+   a persistent hint on every one of them promotes that many idle
+   compositor layers for the entire scroll session, even for sections
+   far below the fold that haven't revealed yet. Opacity/transform
+   transitions already get auto-promoted by the browser the moment
+   they actually start, so the layer only exists while it's needed. */
 .sr {
     opacity: 0;
     transform: translateY(22px) scale(0.98);
     transition: opacity 0.65s var(--ease-out-expo), transform 0.65s var(--ease-out-expo);
-    will-change: opacity, transform;
 }
 
 .sr.visible {
     opacity: 1;
     transform: translateY(0) scale(1);
-    will-change: auto;
 }
 
 .sr-delay-1 {
@@ -959,6 +963,7 @@ img {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 1.5rem;
+    contain: layout style;
 }
 
 .skill-category {
@@ -1233,6 +1238,7 @@ img {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 1.5rem;
+    contain: layout style;
 }
 
 /* Prev/next arrow buttons only exist for the mobile carousel — hidden here,
@@ -1285,6 +1291,10 @@ img {
     box-shadow: var(--card-shadow);
     transition: transform 0.25s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.2, 1, 0.3, 1);
     cursor: pointer;
+    /* Matches .project-card-image-wrapper: isolates the hover-triggered
+       image scale so its repaint stays inside this card instead of
+       being considered against the rest of the grid. */
+    contain: paint;
 }
 
 .cert-card:hover,

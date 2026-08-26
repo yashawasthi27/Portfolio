@@ -2182,16 +2182,21 @@
             });
         }
 
-        // Prev/next arrows nudge the carousel by one card width. Uses a
-        // custom rAF-driven scroll (instead of the browser's native
-        // `scrollBy({ behavior: 'smooth' })`) for two reasons: native smooth
-        // scroll duration/easing varies noticeably across browsers (and can
-        // feel abrupt), and this version can be re-targeted mid-flight so
-        // rapid repeated clicks glide continuously instead of queuing up
-        // separate scroll animations. Also loops in both directions (see
-        // below): scrolling past either end glides into a duplicate set
-        // instead of stopping dead, then silently rewinds onto the matching
-        // real card.
+        // Prev/next arrows nudge the carousel by one card width using the
+        // browser's native smooth scroll (scroll-behavior: smooth + scrollBy).
+        // This is the standard approach for scroll-snap carousels — the
+        // browser's scrolling engine already handles easing, interrupting an
+        // in-flight scroll on a new click, and staying correctly in sync with
+        // touch/trackpad input, all of which a hand-rolled animation has to
+        // reimplement (and is prone to subtly fighting with, e.g. scroll-snap
+        // pulling toward the wrong point mid-animation). Reduced motion is
+        // handled in CSS (see .certs-grid's prefers-reduced-motion override)
+        // rather than branching here, so every scroll on the page — button,
+        // swipe, or wheel — respects it the same way.
+        //
+        // Also loops in both directions (see below): scrolling past either
+        // end glides into a duplicate set instead of stopping dead, then
+        // silently rewinds onto the matching real card.
         if (certsTrack && certsMarquee) {
             function getCardStep() {
                 const card = certsTrack.querySelector('.cert-card:not([data-loop-clone])') || certsTrack.querySelector('.cert-card');
@@ -2201,41 +2206,8 @@
                 return card.getBoundingClientRect().width + gap;
             }
 
-            // Mirrors the site's --ease-out-expo curve (cubic-bezier(0.16, 1,
-            // 0.3, 1)) so button-driven navigation glides with the same feel
-            // as the rest of the page's motion.
-            function easeOutExpo(t) {
-                return t >= 1 ? 1 : 1 - Math.pow(2, -10 * t);
-            }
-
-            let certsScrollFrame = null;
-            let certsScrollToken = 0;
-
-            function smoothScrollCertsTo(target, duration = 550) {
-                const start = certsTrack.scrollLeft;
-                const change = target - start;
-                if (Math.abs(change) < 1) return;
-
-                if (prefersReducedMotion) {
-                    certsTrack.scrollLeft = target;
-                    return;
-                }
-
-                const startTime = performance.now();
-                const token = ++certsScrollToken; // supersedes any in-flight animation
-                if (certsScrollFrame) cancelAnimationFrame(certsScrollFrame);
-
-                function step(now) {
-                    if (token !== certsScrollToken) return; // a newer scroll took over
-                    const t = Math.min((now - startTime) / duration, 1);
-                    certsTrack.scrollLeft = start + change * easeOutExpo(t);
-                    certsScrollFrame = t < 1 ? requestAnimationFrame(step) : null;
-                }
-                certsScrollFrame = requestAnimationFrame(step);
-            }
-
             function scrollByOneCard(direction) {
-                smoothScrollCertsTo(certsTrack.scrollLeft + getCardStep() * direction);
+                certsTrack.scrollBy({ left: getCardStep() * direction, behavior: 'smooth' });
             }
 
             if (certsPrevBtn) certsPrevBtn.addEventListener('click', () => scrollByOneCard(-1));
@@ -2289,22 +2261,42 @@
 
                 // Land on the real first card with no animation, so the
                 // visible starting state is identical to before looping.
+                // Same instant-jump technique as the rewind correction below
+                // — otherwise scroll-behavior: smooth can animate this initial
+                // positioning into a visible scroll on page load/resize.
                 const trackRect = certsTrack.getBoundingClientRect();
                 const firstRealRect = realCards[0].getBoundingClientRect();
                 firstRealLeft = certsTrack.scrollLeft + (firstRealRect.left - trackRect.left);
                 realSetSpan = getCardStep() * realCards.length;
+                certsTrack.style.scrollBehavior = 'auto';
                 certsTrack.scrollLeft = firstRealLeft;
+                void certsTrack.offsetHeight;
+                certsTrack.style.scrollBehavior = '';
             }
 
             function handleCertsScrollSettled() {
                 if (!loopMql.matches || !realSetSpan) return;
                 const step = getCardStep();
                 const pos = certsTrack.scrollLeft;
+                let next = null;
                 if (pos < firstRealLeft - step / 2) {
-                    certsTrack.scrollLeft = pos + realSetSpan;
+                    next = pos + realSetSpan;
                 } else if (pos > firstRealLeft + realSetSpan - step / 2) {
-                    certsTrack.scrollLeft = pos - realSetSpan;
+                    next = pos - realSetSpan;
                 }
+                if (next === null) return;
+
+                // This correction has to be instant and invisible — it's what
+                // makes the loop feel infinite. scroll-behavior: smooth (used
+                // for the arrow buttons) also applies to direct scrollLeft
+                // assignment in modern browsers, so left on, it would animate
+                // this "teleport" jump into a visible stutter/snap-back. Switch
+                // it off for this one write, force layout so the jump lands
+                // before flipping it back, then restore it for the buttons.
+                certsTrack.style.scrollBehavior = 'auto';
+                certsTrack.scrollLeft = next;
+                void certsTrack.offsetHeight;
+                certsTrack.style.scrollBehavior = '';
             }
 
             certsTrack.addEventListener('scroll', () => {
@@ -2354,20 +2346,29 @@
             }
         });
 
-        // ── Back to Top ──
+        // ── Scroll-driven UI: back-to-top visibility, navbar elevation ──
+        // Both read/write on scroll, so they share one rAF-throttled
+        // listener instead of two separate ones each scheduling their own
+        // frame — the standard pattern for batching scroll-driven DOM work.
         const backToTopBtn = document.getElementById('backToTop');
-        if (backToTopBtn) {
+        if (backToTopBtn || navbarEl) {
             let ticking = false;
+            const updateScrollUI = () => {
+                const y = window.scrollY;
+                if (backToTopBtn) backToTopBtn.classList.toggle('visible', y > 500);
+                if (navbarEl) navbarEl.classList.toggle('navbar-scrolled', y > 40);
+                ticking = false;
+            };
             window.addEventListener('scroll', () => {
                 if (!ticking) {
-                    window.requestAnimationFrame(() => {
-                        backToTopBtn.classList.toggle('visible', window.scrollY > 500);
-                        ticking = false;
-                    });
+                    window.requestAnimationFrame(updateScrollUI);
                     ticking = true;
                 }
             }, { passive: true });
+            updateScrollUI(); // set correct initial state on load (e.g. a reload mid-page)
+        }
 
+        if (backToTopBtn) {
             backToTopBtn.addEventListener('click', () => {
                 if (lenis) {
                     lenis.scrollTo(0, { duration: 1.2 });

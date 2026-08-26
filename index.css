@@ -200,6 +200,17 @@ img {
     z-index: 200;
     box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.02);
     transform: translateZ(0);
+    /* Only background/blur/shadow animate on scroll (see .navbar-scrolled) —
+       deliberately not padding/height, since --navbar-height is read from
+       the navbar's rendered height in a few places (scroll-margin-top,
+       Lenis's anchor-scroll offset) and a height that shifts on every
+       scroll tick would throw those off by a few px. */
+    transition: background 0.3s var(--ease-out-expo), box-shadow 0.3s var(--ease-out-expo);
+}
+
+.navbar.navbar-scrolled {
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.12);
 }
 
 .logo-container {
@@ -1238,14 +1249,7 @@ img {
     display: flex;
     gap: 1.5rem;
     overflow-x: auto;
-    /* Deliberately NOT scroll-behavior: smooth — the carousel's JS now
-       drives its own eased animation frame-by-frame via scrollLeft.
-       Modern browsers apply scroll-behavior to *any* scrollLeft write, not
-       just scrollTo()/scrollBy() calls, so leaving "smooth" on here made
-       the browser layer its own native smooth-scroll on top of every one
-       of those writes — two animations fighting over the same property,
-       which is what caused the jankiness. */
-    scroll-behavior: auto;
+    scroll-behavior: smooth;
     scroll-snap-type: x mandatory;
     scroll-padding-inline: 3.5rem;
     padding-inline: 3.5rem;
@@ -1253,6 +1257,12 @@ img {
     scrollbar-width: none;
     contain: layout style;
     overscroll-behavior-x: contain;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .certs-grid {
+        scroll-behavior: auto;
+    }
 }
 
 .certs-grid::-webkit-scrollbar {

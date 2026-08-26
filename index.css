@@ -1235,16 +1235,26 @@ img {
 }
 
 .certs-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    display: flex;
     gap: 1.5rem;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 3.5rem;
+    padding-inline: 3.5rem;
+    padding-block: 0.5rem;
+    scrollbar-width: none;
     contain: layout style;
+    overscroll-behavior-x: contain;
 }
 
-/* Prev/next arrow buttons only exist for the mobile carousel — hidden here,
-   shown in the mobile media query further down. */
-.certs-nav {
+.certs-grid::-webkit-scrollbar {
     display: none;
+}
+
+/* Prev/next arrow buttons for the carousel. */
+.certs-nav {
+    display: flex;
     position: absolute;
     top: 42%;
     z-index: 10;
@@ -1295,6 +1305,13 @@ img {
        image scale so its repaint stays inside this card instead of
        being considered against the rest of the grid. */
     contain: paint;
+    /* Fixed carousel width (overridden with a viewport-relative width on
+       phones below) — flex-shrink:0 keeps every card at full size instead
+       of squashing to fit the row, which is what made 5 cards look small
+       in the old grid. */
+    flex: 0 0 300px;
+    width: 300px;
+    scroll-snap-align: start;
 }
 
 .cert-card:hover,
@@ -2513,10 +2530,6 @@ footer {
         gap: 1.5rem;
     }
 
-    .certs-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
     .footer-container {
         grid-template-columns: 1.2fr 1fr;
         gap: 2rem;
@@ -2683,12 +2696,9 @@ footer {
         scroll-snap-align: center;
     }
 
-    /* Mobile: swap the desktop auto-scrolling marquee for a native,
-       swipeable snap-carousel — finger-drag scrolling is smoother and more
-       predictable on touch than our custom drag/rAF logic, and the browser
-       already handles tap-vs-scroll disambiguation for free. JS skips the
-       duplication + auto-scroll + pointer-drag setup entirely at this
-       breakpoint and just wires the two arrow buttons to scrollBy().
+    /* Phone-specific tuning: tighter edge padding and viewport-relative
+       card width than the shared desktop/tablet carousel above (which uses
+       a fixed 300px card and wider edge padding for the arrow buttons).
 
        The scroll container is .certs-grid, NOT .certs-marquee — the prev/
        next buttons live inside .certs-marquee alongside .certs-grid, so if
@@ -2702,13 +2712,9 @@ footer {
     }
 
     .certs-grid {
-        display: flex;
         width: 100%;
         min-width: 0;
-        overflow-x: auto;
         -webkit-overflow-scrolling: touch;
-        scroll-behavior: smooth;
-        scroll-snap-type: x mandatory;
         scroll-padding-inline: 1.25rem;
         padding-inline: 1.25rem;
         gap: 1.25rem;
@@ -2722,10 +2728,6 @@ footer {
 
     .certs-grid::-webkit-scrollbar {
         display: none;
-    }
-
-    .certs-nav {
-        display: flex;
     }
 
     /* Certificate lightbox: side-by-side doesn't fit narrow screens,

@@ -1238,7 +1238,14 @@ img {
     display: flex;
     gap: 1.5rem;
     overflow-x: auto;
-    scroll-behavior: smooth;
+    /* Deliberately NOT scroll-behavior: smooth — the carousel's JS now
+       drives its own eased animation frame-by-frame via scrollLeft.
+       Modern browsers apply scroll-behavior to *any* scrollLeft write, not
+       just scrollTo()/scrollBy() calls, so leaving "smooth" on here made
+       the browser layer its own native smooth-scroll on top of every one
+       of those writes — two animations fighting over the same property,
+       which is what caused the jankiness. */
+    scroll-behavior: auto;
     scroll-snap-type: x mandatory;
     scroll-padding-inline: 3.5rem;
     padding-inline: 3.5rem;

@@ -46,12 +46,16 @@
     <!-- Marked.js for markdown parsing -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
 
-    <!-- Lenis smooth-scroll: loaded + initialized before the main deferred
-         script below runs (defer scripts execute in source order), and
-         gracefully no-ops if the CDN is blocked or the user prefers
-         reduced motion (see the main script's Lenis init block). -->
-    <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.26/dist/lenis.css">
-    <script src="https://unpkg.com/lenis@1.3.26/dist/lenis.min.js" defer></script>
+    <!-- Lenis smooth-scroll: self-hosted (v1.3.26) instead of the unpkg CDN.
+         Loaded + initialized before the main deferred script below runs
+         (defer scripts execute in source order), and gracefully no-ops if
+         the user prefers reduced motion (see the main script's Lenis init
+         block). Self-hosting removes the unpkg round-trip and the chance
+         an ad-blocker/corporate proxy silently strips the CDN script,
+         which was previously the most likely cause of scroll falling back
+         to the plain-native path on some visitors' machines. -->
+    <link rel="stylesheet" href="./vendor/lenis.css">
+    <script src="./vendor/lenis.min.js" defer></script>
 
     <!-- Structured data for search engines -->
     <script type="application/ld+json">

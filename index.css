@@ -2121,7 +2121,26 @@ footer {
     min-height: 0;
     border: 1px solid rgba(9, 9, 11, 0.08);
     border-radius: var(--radius-md);
-    background: #f4f4f5;
+    background: var(--accent-mint-light);
+}
+
+/* Sits over the iframe while the PDF is loading, matching the spinner
+   pattern already used for project-README fetches (.modal-loader +
+   .spinner) so the resume preview doesn't feel like a blank/broken box
+   on slower connections. Hidden on the iframe's load event via JS. */
+.resume-iframe-loader {
+    position: absolute;
+    inset: 0;
+    background: var(--accent-mint-light);
+    border-radius: var(--radius-md);
+    padding: 0;
+    transition: opacity var(--transition-normal), visibility var(--transition-normal);
+}
+
+.resume-iframe-loader.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
 }
 
 .resume-fallback-note {

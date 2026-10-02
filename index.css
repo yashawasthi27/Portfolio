@@ -343,9 +343,15 @@ img {
 .hamburger-btn {
     display: none;
     flex-direction: column;
-    justify-content: space-between;
-    width: 22px;
-    height: 15px;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    /* 44x44px touch target (was 22x15 — easy to miss and tap the neighbouring
+       email button instead). Negative margins keep the visible bars and the
+       navbar height exactly where they were. */
+    width: 44px;
+    height: 44px;
+    margin: -8px -11px -8px -6px;
     background: transparent;
     border: none;
     cursor: pointer;
@@ -354,7 +360,7 @@ img {
 }
 
 .hamburger-btn .bar {
-    width: 100%;
+    width: 22px;
     height: 2px;
     background-color: var(--primary-green);
     border-radius: 2px;
@@ -2633,7 +2639,7 @@ footer {
 
     /* Hamburger to X state toggles */
     .hamburger-btn.active .bar:nth-child(1) {
-        transform: translateY(6px) rotate(45deg);
+        transform: translateY(7px) rotate(45deg);
     }
 
     .hamburger-btn.active .bar:nth-child(2) {
@@ -2641,7 +2647,7 @@ footer {
     }
 
     .hamburger-btn.active .bar:nth-child(3) {
-        transform: translateY(-6px) rotate(-45deg);
+        transform: translateY(-7px) rotate(-45deg);
     }
 
     #hero {

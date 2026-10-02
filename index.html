@@ -129,7 +129,8 @@
                     </svg>
                 </a>
             </div>
-            <button class="hamburger-btn" id="menuToggle">
+            <button type="button" class="hamburger-btn" id="menuToggle" aria-label="Open menu" aria-expanded="false"
+                aria-controls="mobileMenu">
                 <span class="bar"></span>
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -1558,77 +1559,97 @@
         // page falls back to plain native scrolling below, so it's never
         // left without a working scroll experience.
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        // Phones/tablets always use the browser's native scrolling. Lenis only
+        // ever smoothed wheel/trackpad input (syncTouch is off), so on touch
+        // devices it added nothing — but its internal scroll position went
+        // stale whenever the menu/modal scroll-lock pinned the body, which is
+        // what broke tapping a mobile menu link.
+        const isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
         let lenis = null;
 
-        if (window.Lenis && !prefersReducedMotion) {
-            lenis = new Lenis({
-                duration: 1.2,
-                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-                wheelMultiplier: 0.9,
-                touchMultiplier: 1.2,
-                // Modal/cert bodies (.modal-body, .resume-modal-body,
-                // .cert-modal-body) keep their own native wheel scroll
-                // instead of dragging the page along with them.
-                allowNestedScroll: true,
-                // Touch stays native (iOS/Android already scroll smoothly);
-                // Lenis only takes over wheel/trackpad input.
-                syncTouch: false,
-                autoRaf: true
-            });
-
-            // ── Hero parallax ──
-            // Rides on Lenis's own 'scroll' event (fired every tick of its
-            // existing autoRaf loop) instead of a second rAF loop, so this
-            // adds zero extra scroll-handler overhead. Purely a transform
-            // (compositor-only, no layout/paint cost) and clamped to the
-            // hero's own height so it settles to a fixed offset the moment
-            // the user scrolls past it — it never fights the sections below.
-            const heroEl = document.getElementById('hero');
-            const heroProfileWrapper = document.querySelector('.profile-img-wrapper');
-            const heroTextColumn = document.querySelector('.hero-text-column');
-            if (heroEl && heroProfileWrapper) {
-                let heroHeight = heroEl.offsetHeight;
-                window.addEventListener('resize', () => {
-                    heroHeight = heroEl.offsetHeight;
-                }, { passive: true });
-
-                // Lenis fires 'scroll' on every tick for the whole page, not
-                // just while the hero is in view — once progress clamps to 1
-                // it stays exactly 1 for the rest of the scroll session, so
-                // skip the two style writes when the value hasn't actually
-                // changed. Keeps this handler from doing work on every frame
-                // you scroll through sections well past the hero.
-                let lastHeroProgress = -1;
-                lenis.on('scroll', ({ scroll }) => {
-                    const progress = Math.min(Math.max(scroll / heroHeight, 0), 1);
-                    if (progress === lastHeroProgress) return;
-                    lastHeroProgress = progress;
-                    heroProfileWrapper.style.transform = `translate3d(0, ${(progress * 34).toFixed(2)}px, 0)`;
-                    if (heroTextColumn) {
-                        heroTextColumn.style.transform = `translate3d(0, ${(progress * 16).toFixed(2)}px, 0)`;
-                        heroTextColumn.style.opacity = `${1 - progress * 0.6}`;
-                    }
+        function initSmoothScroll() {
+            if (window.Lenis && !prefersReducedMotion && !isTouchDevice) {
+                lenis = new Lenis({
+                    duration: 1.2,
+                    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                    wheelMultiplier: 0.9,
+                    touchMultiplier: 1.2,
+                    // Modal/cert bodies (.modal-body, .resume-modal-body,
+                    // .cert-modal-body) keep their own native wheel scroll
+                    // instead of dragging the page along with them.
+                    allowNestedScroll: true,
+                    // Touch stays native (iOS/Android already scroll smoothly);
+                    // Lenis only takes over wheel/trackpad input.
+                    syncTouch: false,
+                    autoRaf: true
                 });
-            }
-        } else {
-            // ── Native wheel / touchpad scroll safety (fallback only) ──
-            // Some laptop browsers can stop dispatching the wheel gesture to
-            // the document when a fixed/animated layer is present. Keep
-            // normal native scrolling for inner scrollable elements, but
-            // guarantee page scrolling for mouse wheels and two-finger
-            // touchpad gestures.
-            window.addEventListener('wheel', (e) => {
-                if (document.body.classList.contains('menu-open')) return;
 
-                const target = e.target instanceof Element ? e.target : null;
-                const scrollable = target && target.closest('[data-wheel-scroll], .modal-body, .resume-modal-body, .cert-modal-body');
-                if (scrollable) return;
+                // ── Hero parallax ──
+                // Rides on Lenis's own 'scroll' event (fired every tick of its
+                // existing autoRaf loop) instead of a second rAF loop, so this
+                // adds zero extra scroll-handler overhead. Purely a transform
+                // (compositor-only, no layout/paint cost) and clamped to the
+                // hero's own height so it settles to a fixed offset the moment
+                // the user scrolls past it — it never fights the sections below.
+                const heroEl = document.getElementById('hero');
+                const heroProfileWrapper = document.querySelector('.profile-img-wrapper');
+                const heroTextColumn = document.querySelector('.hero-text-column');
+                if (heroEl && heroProfileWrapper) {
+                    let heroHeight = heroEl.offsetHeight;
+                    window.addEventListener('resize', () => {
+                        heroHeight = heroEl.offsetHeight;
+                    }, { passive: true });
 
-                if (Math.abs(e.deltaY) > 0) {
-                    e.preventDefault();
-                    window.scrollBy({ top: e.deltaY, left: e.deltaX || 0, behavior: 'auto' });
+                    // Lenis fires 'scroll' on every tick for the whole page, not
+                    // just while the hero is in view — once progress clamps to 1
+                    // it stays exactly 1 for the rest of the scroll session, so
+                    // skip the two style writes when the value hasn't actually
+                    // changed. Keeps this handler from doing work on every frame
+                    // you scroll through sections well past the hero.
+                    let lastHeroProgress = -1;
+                    lenis.on('scroll', ({ scroll }) => {
+                        const progress = Math.min(Math.max(scroll / heroHeight, 0), 1);
+                        if (progress === lastHeroProgress) return;
+                        lastHeroProgress = progress;
+                        heroProfileWrapper.style.transform = `translate3d(0, ${(progress * 34).toFixed(2)}px, 0)`;
+                        if (heroTextColumn) {
+                            heroTextColumn.style.transform = `translate3d(0, ${(progress * 16).toFixed(2)}px, 0)`;
+                            heroTextColumn.style.opacity = `${1 - progress * 0.6}`;
+                        }
+                    });
                 }
-            }, { passive: false });
+            } else if (!isTouchDevice) {
+                // ── Native wheel / touchpad scroll safety (fallback only) ──
+                // Some laptop browsers can stop dispatching the wheel gesture to
+                // the document when a fixed/animated layer is present. Keep
+                // normal native scrolling for inner scrollable elements, but
+                // guarantee page scrolling for mouse wheels and two-finger
+                // touchpad gestures.
+                window.addEventListener('wheel', (e) => {
+                    if (document.body.classList.contains('menu-open')) return;
+
+                    const target = e.target instanceof Element ? e.target : null;
+                    const scrollable = target && target.closest('[data-wheel-scroll], .modal-body, .resume-modal-body, .cert-modal-body');
+                    if (scrollable) return;
+
+                    if (Math.abs(e.deltaY) > 0) {
+                        e.preventDefault();
+                        window.scrollBy({ top: e.deltaY, left: e.deltaX || 0, behavior: 'auto' });
+                    }
+                }, { passive: false });
+            }
+        }
+
+        // IMPORTANT: this is an inline script, and `defer` has no effect on
+        // inline scripts — it runs immediately while the page is still being
+        // parsed, BEFORE the deferred ./vendor/lenis.min.js has executed. So
+        // `window.Lenis` was always undefined here and Lenis silently never
+        // started. Waiting for DOMContentLoaded guarantees every deferred
+        // script (Lenis, marked) has run first.
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initSmoothScroll);
+        } else {
+            initSmoothScroll();
         }
 
         // ── Scroll reveal observer ──
@@ -1703,65 +1724,70 @@
                     lastInnerWidth = currentWidth;
                     syncNavbarHeight();
                     ensureLastSectionScrollRoom();
-                    if (currentWidth > 768 && menuToggle && menuToggle.classList.contains('active')) {
-                        menuToggle.classList.remove('active');
-                        mobileMenu.classList.remove('active');
-                        closeMobileMenu();
-                    }
+                    if (currentWidth > 768) setMenuOpen(false);
                 }
                 resizeTicking = false;
             });
         }, { passive: true });
+
+        // Releases the body scroll-lock and restores the exact scroll position.
+        // ORDER MATTERS when Lenis is running: lenis.stop() puts `overflow: clip`
+        // on <html>, and a clipped root silently ignores window.scrollTo(). So
+        // Lenis must be started (un-clipped) BEFORE the position is restored,
+        // then re-synced — otherwise the page lands at 0 and the next anchor
+        // jump is computed from that stale value.
+        function releaseScrollLock(y) {
+            document.body.classList.remove('menu-open');
+            document.body.style.top = '';
+            if (lenis) lenis.start();
+            window.scrollTo({ top: y, left: 0, behavior: 'auto' });
+            if (lenis) lenis.resize();
+        }
 
         function openMobileMenu() {
             syncNavbarHeight();
             lockedScrollY = window.scrollY || window.pageYOffset;
             document.body.style.top = `-${lockedScrollY}px`;
             document.body.classList.add('menu-open');
-            // Pause Lenis's rAF loop while the body is pinned in place, so
-            // it isn't fighting the position:fixed trick underneath.
+            // Pause Lenis while the body is pinned in place, so it isn't
+            // fighting the position:fixed trick underneath.
             if (lenis) lenis.stop();
         }
 
         function closeMobileMenu() {
-            document.body.classList.remove('menu-open');
-            document.body.style.top = '';
-            window.scrollTo({ top: lockedScrollY, left: 0, behavior: 'auto' });
-            // Resume after the native scrollTo above has already restored
-            // the real position, so Lenis resyncs from the correct spot.
-            if (lenis) lenis.start();
+            releaseScrollLock(lockedScrollY);
+        }
+
+        // Single source of truth for the dropdown's open/closed state, so the
+        // button, the panel, ARIA attributes and the scroll-lock can never
+        // get out of sync (a stuck scroll-lock = "can't navigate").
+        function setMenuOpen(open) {
+            if (!menuToggle || !mobileMenu) return;
+            if (open === menuToggle.classList.contains('active')) return;
+            menuToggle.classList.toggle('active', open);
+            mobileMenu.classList.toggle('active', open);
+            menuToggle.setAttribute('aria-expanded', String(open));
+            menuToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+            if (open) openMobileMenu(); else closeMobileMenu();
         }
 
         if (menuToggle && mobileMenu) {
             menuToggle.addEventListener('click', () => {
-                const isActive = menuToggle.classList.toggle('active');
-                mobileMenu.classList.toggle('active');
-                if (isActive) {
-                    openMobileMenu();
-                } else {
-                    closeMobileMenu();
-                }
+                setMenuOpen(!menuToggle.classList.contains('active'));
             });
 
-            // Tap/click anywhere outside the open menu closes it — standard
-            // real-world hamburger menu behavior.
+            // Tap/click anywhere outside the open menu closes it.
             document.addEventListener('click', (e) => {
                 if (!menuToggle.classList.contains('active')) return;
-                const clickedInsideMenu = mobileMenu.contains(e.target);
-                const clickedToggle = menuToggle.contains(e.target);
-                if (!clickedInsideMenu && !clickedToggle) {
-                    menuToggle.classList.remove('active');
-                    mobileMenu.classList.remove('active');
-                    closeMobileMenu();
+                if (!mobileMenu.contains(e.target) && !menuToggle.contains(e.target)) {
+                    setMenuOpen(false);
                 }
             });
 
             // Escape key closes the menu, same as the project modal.
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape' && menuToggle.classList.contains('active')) {
-                    menuToggle.classList.remove('active');
-                    mobileMenu.classList.remove('active');
-                    closeMobileMenu();
+                    setMenuOpen(false);
                     menuToggle.focus();
                 }
             });
@@ -1798,11 +1824,10 @@
             // stopping partway between sections instead of at the top of
             // the target.
             if (lenis) {
-                // Reuse the section's own scroll-margin-top (already tuned
-                // to clear the fixed navbar) as Lenis's offset, so both
-                // scroll paths land in exactly the same spot.
-                const marginTop = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
-                lenis.scrollTo(target, { offset: -marginTop, duration: 1.2 });
+                // Lenis reads the target's own scroll-margin-top (already tuned
+                // to clear the fixed navbar) automatically — passing it again
+                // as `offset` would double it and land sections too low.
+                lenis.scrollTo(target, { duration: 1.2 });
             } else {
                 target.scrollIntoView({
                     behavior: 'smooth',
@@ -1816,11 +1841,15 @@
             e.preventDefault();
             const target = document.getElementById(this.dataset.section);
 
-            // Close mobile menu first so scroll position is restored before navigating
-            if (menuToggle && mobileMenu && menuToggle.classList.contains('active')) {
-                menuToggle.classList.remove('active');
-                mobileMenu.classList.remove('active');
-                closeMobileMenu();
+            // Close mobile menu first so the pinned body is released and the
+            // real scroll position is restored before navigating.
+            if (menuToggle && menuToggle.classList.contains('active')) {
+                setMenuOpen(false);
+                // Give the browser one frame to apply the un-pinned layout
+                // (iOS Safari can ignore a scroll started in the same task
+                // that released position:fixed), then scroll.
+                requestAnimationFrame(() => smoothScrollTo(target));
+                return;
             }
 
             smoothScrollTo(target);
@@ -1886,10 +1915,7 @@
         }
 
         function unlockBodyScroll() {
-            document.body.classList.remove('menu-open');
-            document.body.style.top = '';
-            window.scrollTo({ top: modalLockedScrollY, left: 0, behavior: 'auto' });
-            if (lenis) lenis.start();
+            releaseScrollLock(modalLockedScrollY);
         }
 
         // ── Project Details Modal Logic ──
@@ -2105,11 +2131,7 @@
 
                 // If opened from inside the mobile dropdown, close that first
                 // so we don't end up with the menu and the modal both open.....
-                if (menuToggle && menuToggle.classList.contains('active')) {
-                    menuToggle.classList.remove('active');
-                    mobileMenu.classList.remove('active');
-                    closeMobileMenu();
-                }
+                setMenuOpen(false);
 
                 openResumeModal();
             });

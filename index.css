@@ -97,16 +97,19 @@
     box-sizing: border-box;
 }
 
-html,
+html {
+    max-width: 100%;
+    /* Only the root (viewport) may own scrolling. Do NOT put overflow-x:hidden
+       on both html AND body: that turns body into its own scroll container
+       and breaks touch scrolling on mobile. */
+    overscroll-behavior-y: none;
+}
+
 body {
     max-width: 100%;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-    /* Stops a horizontal swipe (e.g. the certs carousel hitting its edge)
-       or a vertical overscroll from chaining into the page's own bounce,
-       which is what exposes the browser's default white canvas behind the
-       fixed gradient layer for a frame on iOS/Android. */
-    overscroll-behavior: none;
+    /* `clip` hides horizontal overflow WITHOUT creating a scroll container
+       (unlike `hidden`), so touch scroll stays on the page. */
+    overflow-x: clip;
 }
 
 html {

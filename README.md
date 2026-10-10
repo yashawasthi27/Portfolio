@@ -9,8 +9,9 @@ Welcome to my personal portfolio repository! This is a modern, high-performance,
 ## ✨ Core Features
 
 - **Minimalist Monochrome Design**: A clean, black-and-white design system with subtle glassmorphism, smooth transitions, and full responsiveness across desktop and mobile.
-- **Unified Navbar**: Logo, centered navigation (Home / About / Skills / Projects / Resume / Contact), and social links (LinkedIn/GitHub/Email) all in one sticky bar — collapses into a hamburger menu with a scroll-locked background on mobile.
+- **Unified Navbar**: Logo, centered navigation (Home / About / Skills / Experience / Projects / Resume / Contact), and social links (LinkedIn/GitHub/Email) all in one sticky bar — collapses into a hamburger menu with a scroll-locked background on mobile.
 - **Hero Section**: Profile photo with glow effect, quick intro, primary CTAs ("View My Work" / "Download Resume"), and a "Let's talk" link into the contact section, backed by a four-item quick-overview strip (Education, Focus, Tech Stack, Career Goal).
+- **Internship Experience**: Timeline-style card for the IBM SkillsBuild Data Analytics with AI Internship (BharatCares, AICTE and IBM SkillsBuild, Aug–Sep 2026), with responsibilities, a Key Project summary, clearly labelled project-dataset results, and a certificate link that reuses the existing lightbox.
 - **Scroll-Reveal Animations**: Sections and cards fade/slide into view using the `IntersectionObserver` API — no scroll-position polling, no layout thrashing.
 - **Smooth Scrolling**: Lenis-powered 60fps eased scrolling across the page.
 - **Live Project Details**: Clicking a project card opens a modal that fetches that repo's README directly from GitHub and renders it client-side, with embedded fallback content for offline/error cases.

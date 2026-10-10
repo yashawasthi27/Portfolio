@@ -2540,6 +2540,478 @@ footer {
 }
 
 /* ══════════════════════════════
+   EXPERIENCE SECTION
+   Reuses the site tokens (--card-border, --card-shadow, --radius-*, --text-*).
+   Everything is scoped under .exp-* so nothing else on the page is affected.
+   ══════════════════════════════ */
+.exp-item {
+    --exp-rail: 9.5rem;
+    --exp-gap: 3rem;
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--exp-rail) minmax(0, 1fr);
+    column-gap: var(--exp-gap);
+    align-items: start;
+}
+
+/* Timeline: one hairline + one node. It fades out because the entry is
+   the start of a story, not the end of one. */
+.exp-item::before {
+    content: '';
+    position: absolute;
+    top: 0.5rem;
+    bottom: 0;
+    left: calc(var(--exp-rail) + var(--exp-gap) / 2);
+    width: 1px;
+    background: linear-gradient(to bottom, rgba(9, 9, 11, 0.22), rgba(9, 9, 11, 0.03));
+}
+
+.exp-item::after {
+    content: '';
+    position: absolute;
+    top: 0.4rem;
+    left: calc(var(--exp-rail) + var(--exp-gap) / 2 - 5.5px);
+    width: 11px;
+    height: 11px;
+    box-sizing: border-box;
+    border-radius: 50%;
+    background: var(--bg-light);
+    border: 2px solid var(--primary-green);
+}
+
+.exp-rail {
+    text-align: right;
+}
+
+.exp-rail p {
+    margin: 0;
+}
+
+.exp-rail-date {
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.5;
+    color: var(--text-primary);
+}
+
+.exp-rail-sub {
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+.exp-card {
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    padding: 2.25rem 2.5rem;
+    box-shadow: var(--card-shadow);
+    transition: box-shadow var(--transition-normal);
+}
+
+.exp-card:hover {
+    box-shadow: var(--card-shadow-hover);
+}
+
+.exp-head {
+    margin-bottom: 1.5rem;
+}
+
+.exp-role {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    color: var(--text-primary);
+}
+
+.exp-programme {
+    margin: 0.4rem 0 0;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+/* Role details */
+.exp-meta {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.1rem 2rem;
+    margin: 0 0 1.75rem;
+    padding: 1.25rem 0;
+    border-top: 1px solid var(--card-border);
+    border-bottom: 1px solid var(--card-border);
+}
+
+.exp-meta-item dt {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin: 0 0 0.2rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.exp-meta-item dt svg {
+    flex: none;
+    opacity: 0.8;
+}
+
+.exp-meta-item dd {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--text-primary);
+}
+
+.exp-subhead {
+    margin: 0 0 0.75rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--text-primary);
+}
+
+/* Responsibilities */
+.exp-list {
+    list-style: none;
+    margin: 0 0 2rem;
+    padding: 0;
+}
+
+.exp-list li {
+    position: relative;
+    margin-bottom: 0.55rem;
+    padding-left: 1.15rem;
+    font-size: 0.98rem;
+    line-height: 1.65;
+    color: var(--text-secondary);
+}
+
+.exp-list li:last-child {
+    margin-bottom: 0;
+}
+
+.exp-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.8em;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(9, 9, 11, 0.4);
+}
+
+/* Key project */
+.exp-project {
+    padding: 1.5rem 1.6rem;
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    background: rgba(9, 9, 11, 0.025);
+}
+
+.exp-project .exp-subhead {
+    margin-bottom: 0.25rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.exp-project-name {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.35;
+    color: var(--text-primary);
+}
+
+.exp-project-desc {
+    max-width: 70ch;
+    margin: 0.55rem 0 1rem;
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: var(--text-secondary);
+}
+
+.exp-tech {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    color: var(--text-secondary);
+}
+
+.exp-tech>svg {
+    flex: none;
+    margin-top: 0.4rem;
+}
+
+.exp-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.exp-chips li {
+    padding: 0.25rem 0.6rem;
+    border: 1px solid rgba(9, 9, 11, 0.12);
+    border-radius: var(--radius-full);
+    background: #ffffff;
+    font-size: 0.8rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--text-primary);
+}
+
+/* Results: deliberately small and quiet */
+.exp-results {
+    margin-top: 1.25rem;
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--card-border);
+}
+
+.exp-results-caption {
+    margin: 0 0 0.9rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+.exp-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem 1.25rem;
+    margin: 0;
+}
+
+.exp-stat {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    gap: 0.15rem;
+}
+
+.exp-stat dd {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-primary);
+}
+
+.exp-stat dt {
+    font-size: 0.78rem;
+    line-height: 1.35;
+    color: var(--text-secondary);
+}
+
+.exp-results-note {
+    margin: 0.9rem 0 0;
+    font-size: 0.78rem;
+    line-height: 1.55;
+    color: var(--text-secondary);
+}
+
+/* Text links */
+.exp-link {
+    display: inline-block;
+    margin-top: 1.25rem;
+    padding-bottom: 1px;
+    border-bottom: 1px solid rgba(9, 9, 11, 0.3);
+    font-size: 0.92rem;
+    font-weight: 700;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.exp-link:hover {
+    border-bottom-color: var(--primary-green);
+}
+
+.exp-link:focus-visible {
+    outline: 2px solid var(--primary-green);
+    outline-offset: 4px;
+    border-radius: 2px;
+}
+
+.exp-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.75rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--card-border);
+}
+
+.exp-foot span {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.exp-link-quiet {
+    margin-top: 0;
+    border-bottom-color: transparent;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.exp-link-quiet:hover {
+    color: var(--text-primary);
+    border-bottom-color: rgba(9, 9, 11, 0.3);
+}
+
+.exp-visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Tablet: narrower rail, tighter card */
+@media (max-width: 1024px) {
+    .exp-item {
+        --exp-rail: 7.5rem;
+        --exp-gap: 2.25rem;
+    }
+
+    .exp-card {
+        padding: 2rem 2rem;
+    }
+}
+
+/* Mobile: the rail folds into a line above the card; timeline moves to the left edge */
+@media (max-width: 768px) {
+    .exp-item {
+        grid-template-columns: minmax(0, 1fr);
+        padding-left: 1.6rem;
+    }
+
+    .exp-item::before {
+        left: 5px;
+    }
+
+    .exp-item::after {
+        left: 0;
+    }
+
+    .exp-rail {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 0 0.65rem;
+        margin-bottom: 0.9rem;
+        text-align: left;
+    }
+
+    .exp-card {
+        padding: 1.5rem 1.25rem;
+    }
+
+    .exp-role {
+        font-size: 1.3rem;
+    }
+
+    .exp-meta {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 1rem;
+    }
+
+    .exp-project {
+        padding: 1.25rem 1.1rem;
+    }
+
+    .exp-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .exp-foot {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 390px) {
+    .exp-item {
+        padding-left: 1.35rem;
+    }
+
+    .exp-card {
+        padding: 1.25rem 1rem;
+    }
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .exp-card:hover {
+        box-shadow: var(--card-shadow);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .exp-item.sr,
+    .exp-item.sr.visible {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+    .exp-card,
+    .exp-link {
+        transition: none;
+    }
+}
+
+/* ══════════════════════════════
+   NAVBAR: tablet fit for the 7-link pill
+   Between the hamburger breakpoint (768px) and ~1100px the centred pill
+   collided with the logo and social icons. Tighten the pill only in that
+   range; desktop and mobile layouts are untouched.
+   ══════════════════════════════ */
+@media (min-width: 769px) and (max-width: 1100px) {
+    .nav-pill {
+        gap: 0.125rem;
+    }
+
+    .nav-link {
+        padding: 0.45rem 0.6rem;
+        font-size: 0.82rem;
+    }
+
+    .navbar-socials {
+        gap: 0.35rem;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 880px) {
+    .logo-text {
+        display: none;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 840px) {
+    .nav-link {
+        padding: 0.4rem 0.45rem;
+        font-size: 0.8rem;
+    }
+}
+
+/* ══════════════════════════════
    RESPONSIVE MEDIA QUERIES
    ══════════════════════════════ */
 @media (max-width: 1024px) {

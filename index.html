@@ -41,7 +41,7 @@
     <link rel="preconnect" href="https://raw.githubusercontent.com">
     <link rel="dns-prefetch" href="https://raw.githubusercontent.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=block" rel="stylesheet">
-    <link rel="stylesheet" href="./index.css?v=19">
+    <link rel="stylesheet" href="./index.css?v=20">
 
     <!-- Marked.js for markdown parsing -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
@@ -479,6 +479,175 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ════════════ EXPERIENCE ════════════ -->
+    <section id="experience" class="section">
+        <div class="section-inner">
+            <span class="section-label sr">Applied learning</span>
+            <h2 class="section-title sr sr-delay-1">Internship <span>Experience</span></h2>
+
+            <div class="exp-item sr sr-delay-2">
+                <!-- Timeline rail -->
+                <div class="exp-rail">
+                    <p class="exp-rail-date">
+                        <time datetime="2026-08-17">Aug</time> &ndash; <time datetime="2026-09-30">Sep 2026</time>
+                    </p>
+                    <p class="exp-rail-sub">6 weeks, virtual</p>
+                </div>
+
+                <article class="exp-card" aria-labelledby="exp-role">
+                    <header class="exp-head">
+                        <h3 class="exp-role" id="exp-role">Data Analytics with AI Intern</h3>
+                        <p class="exp-programme">AICTE &times; IBM SkillsBuild Academic Internship, delivered with
+                            BharatCares</p>
+                        <p class="exp-summary">Completed a virtual academic internship in data analytics with AI,
+                            applying it to an end-to-end analysis of employee attrition: from data preparation and
+                            exploratory analysis to a predictive model and retention recommendations.</p>
+                        <p class="exp-head-link">
+                            <!-- Opens the existing certificate lightbox when JS is available; otherwise opens the
+                                 image in a new tab. To change the file, edit href and data-cert-img together. -->
+                            <a class="exp-link exp-link-quiet exp-cert-link"
+                                href="images/certs/ibm-skillsbuild-internship-certificate.jpg" target="_blank"
+                                rel="noopener noreferrer"
+                                data-cert-img="images/certs/ibm-skillsbuild-internship-certificate.jpg"
+                                data-cert-title="AICTE | IBM SkillsBuild Academic Internship - Data Analytics with AI | Certificate of Training"
+                                data-cert-issuer="BharatCares · AICTE · IBM SkillsBuild" data-cert-date="Aug – Sep 2026"
+                                data-cert-skills="Data Analytics,Artificial Intelligence (AI),IBM SkillsBuild">View
+                                Certificate &#8599;</a>
+                        </p>
+                    </header>
+
+                    <dl class="exp-meta">
+                        <div class="exp-meta-item">
+                            <dt>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" aria-hidden="true">
+                                    <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+                                    <path d="M9 22v-4h6v4"></path>
+                                    <path
+                                        d="M8 6h.01M12 6h.01M16 6h.01M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M16 14h.01">
+                                    </path>
+                                </svg>
+                                Organisations
+                            </dt>
+                            <dd>BharatCares, AICTE and IBM SkillsBuild</dd>
+                        </div>
+                        <div class="exp-meta-item">
+                            <dt>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" aria-hidden="true">
+                                    <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                                    <path d="M16 2v4M8 2v4M3 10h18"></path>
+                                </svg>
+                                Duration
+                            </dt>
+                            <dd>
+                                <time datetime="2026-08-17">17 August 2026</time> &ndash;
+                                <time datetime="2026-09-30">30 September 2026</time>
+                            </dd>
+                        </div>
+                        <div class="exp-meta-item">
+                            <dt>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" aria-hidden="true">
+                                    <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+                                    <path d="M8 21h8M12 17v4"></path>
+                                </svg>
+                                Mode
+                            </dt>
+                            <dd>Virtual academic internship</dd>
+                        </div>
+                        <div class="exp-meta-item">
+                    </dl>
+
+                    <h4 class="exp-subhead">Key contributions</h4>
+                    <ul class="exp-list">
+                        <li>Cleaned the 35-column IBM HR dataset in pandas and excluded the employee ID from
+                            modelling.</li>
+                        <li>Compared attrition by department, job role, overtime, income and satisfaction.</li>
+                        <li>Trained a Random Forest classifier (stratified 80/20 split) and ranked its key drivers.
+                        </li>
+                        <li>Visualised findings with Matplotlib and Seaborn and summarised risks and recommended
+                            actions.</li>
+                        <li>Built a function that scores an employee profile for attrition risk.</li>
+                    </ul>
+
+                    <!-- Scoped style for the summary line only. -->
+                    <style>
+                        #experience .exp-card .exp-list {
+                            display: block;
+                            gap: .25rem;
+                            margin-top: .5rem;
+                        }
+
+                        #experience .exp-card .exp-list li {
+                            margin: 0 0 .25rem;
+                            padding-top: 0;
+                            padding-bottom: 0;
+                            line-height: 1.5;
+                            font-size: .95rem;
+                        }
+
+                        #experience .exp-card .exp-list li:last-child {
+                            margin-bottom: 0;
+                        }
+
+                        #experience .exp-card .exp-subhead {
+                            margin-bottom: 0;
+                        }
+
+                        #experience .exp-summary {
+                            margin: .5rem 0 0;
+                            max-width: 62ch;
+                            line-height: 1.6;
+                        }
+
+                        #experience .exp-head-link {
+                            margin: .5rem 0 0;
+                        }
+
+                        #experience .exp-head-link .exp-cert-link {
+                            min-height: 44px;
+                            display: inline-flex;
+                            align-items: center;
+                            gap: .35rem;
+                            padding: 0 1.25rem;
+                            border-radius: 999px;
+                            border: 1px solid #0a0a0a;
+                            background: #0a0a0a;
+                            color: #fff;
+                            font-weight: 700;
+                            text-decoration: none;
+                            transition: transform .15s ease, box-shadow .15s ease;
+                        }
+
+                        #experience .exp-head-link .exp-cert-link:hover {
+                            transform: translateY(-1px);
+                            box-shadow: 0 4px 12px rgba(0, 0, 0, .25);
+                        }
+
+                        #experience .exp-head-link .exp-cert-link:focus-visible {
+                            outline: 2px solid #0a0a0a;
+                            outline-offset: 3px;
+                        }
+
+                        @media (prefers-reduced-motion: reduce) {
+                            #experience .exp-head-link .exp-cert-link {
+                                transition: none;
+                            }
+
+                            #experience .exp-head-link .exp-cert-link:hover {
+                                transform: none;
+                            }
+                        }
+                    </style>
+                </article>
             </div>
         </div>
     </section>
@@ -1871,7 +2040,7 @@
             });
         });
 
-        const sections = ['hero', 'about', 'skills', 'projects', 'contact'].map(id => document.getElementById(id));
+        const sections = ['hero', 'about', 'skills', 'experience', 'projects', 'contact'].map(id => document.getElementById(id));
 
         const navObserver = new IntersectionObserver(entries => {
             entries.forEach(entry => {
@@ -2379,6 +2548,15 @@
         if (closeCertModalBtn) closeCertModalBtn.addEventListener('click', closeCertModal);
         if (certModal) certModal.addEventListener('click', (e) => {
             if (e.target === certModal) closeCertModal();
+        });
+        // Experience section: "View Certificate" reuses the certificate lightbox above.
+        // Without JS (or with ctrl/cmd/shift-click) the plain link opens the image in a new tab.
+        document.querySelectorAll('.exp-cert-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!certModal || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+                e.preventDefault();
+                openCertModal(link);
+            });
         });
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && certModal.classList.contains('show')) {

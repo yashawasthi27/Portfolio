@@ -563,7 +563,6 @@
                             </dt>
                             <dd>Virtual academic internship</dd>
                         </div>
-                        <div class="exp-meta-item">
                     </dl>
 
                     <h4 class="exp-subhead">Key contributions</h4>
@@ -596,6 +595,46 @@
 
                         #experience .exp-card .exp-list li:last-child {
                             margin-bottom: 0;
+                        }
+
+                        /* Organisations / Duration / Mode on one line; wraps on narrow screens */
+                        #experience .exp-card .exp-meta {
+                            display: flex;
+                            flex-wrap: nowrap;
+                            align-items: flex-start;
+                            gap: .75rem 1.5rem;
+                        }
+
+                        #experience .exp-card .exp-meta-item {
+                            flex: 0 1 auto;
+                            min-width: 0;
+                        }
+
+                        #experience .exp-card .exp-meta-item dd {
+                            margin: 0;
+                            font-size: .8rem;
+                            white-space: nowrap;
+                        }
+
+                        @media (max-width: 1100px) {
+                            #experience .exp-card .exp-meta {
+                                gap: .75rem 1.25rem;
+                            }
+
+                            #experience .exp-card .exp-meta-item dd {
+                                font-size: .72rem;
+                            }
+                        }
+
+                        @media (max-width: 900px) {
+                            #experience .exp-card .exp-meta {
+                                flex-wrap: wrap;
+                            }
+
+                            #experience .exp-card .exp-meta-item dd {
+                                font-size: .85rem;
+                                white-space: normal;
+                            }
                         }
 
                         #experience .exp-card .exp-subhead {
